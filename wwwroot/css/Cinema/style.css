@@ -1,0 +1,991 @@
+/* http://meyerweb.com/eric/tools/css/reset/ 
+   v2.0 | 20110126
+   License: none (public domain)
+
+   RESET CSS
+*/
+
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed, 
+figure, figcaption, footer, header, hgroup, 
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	box-sizing: border-box;
+}
+/* HTML5 display-role reset for older browsers */
+
+body {
+	line-height: 1;
+}
+ol, ul {
+	list-style: none;
+}
+blockquote, q {
+	quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+	content: '';
+	content: none;
+}
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+
+
+/* - Fim do reset CSS - */
+/* - Inicio do Global CSS - */
+
+.roboto-thin {
+  font-family: "Roboto", sans-serif;
+  font-weight: 100;
+  font-style: normal;
+}
+
+.roboto-light {
+  font-family: "Roboto", sans-serif;
+  font-weight: 300;
+  font-style: normal;
+}
+
+.roboto-regular {
+  font-family: "Roboto", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.roboto-medium {
+  font-family: "Roboto", sans-serif;
+  font-weight: 500;
+  font-style: normal;
+}
+
+.roboto-bold {
+  font-family: "Roboto", sans-serif;
+  font-weight: 700;
+  font-style: normal;
+}
+
+.roboto-black {
+  font-family: "Roboto", sans-serif;
+  font-weight: 900;
+  font-style: normal;
+}
+
+.roboto-thin-italic {
+  font-family: "Roboto", sans-serif;
+  font-weight: 100;
+  font-style: italic;
+}
+
+.roboto-light-italic {
+  font-family: "Roboto", sans-serif;
+  font-weight: 300;
+  font-style: italic;
+}
+
+.roboto-regular-italic {
+  font-family: "Roboto", sans-serif;
+  font-weight: 400;
+  font-style: italic;
+}
+
+.roboto-medium-italic {
+  font-family: "Roboto", sans-serif;
+  font-weight: 500;
+  font-style: italic;
+}
+
+.roboto-bold-italic {
+  font-family: "Roboto", sans-serif;
+  font-weight: 700;
+  font-style: italic;
+}
+
+.roboto-black-italic {
+  font-family: "Roboto", sans-serif;
+  font-weight: 900;
+  font-style: italic;
+}
+
+h1{ font-size: clamp(2.5rem, 2.5rem + 3vw, 3rem );}
+
+h2{ font-size: clamp(2rem, 2rem + 2vw, 2.4rem );}
+
+h3{ font-size: clamp(1.6rem, 1.6rem + 2vw, 2rem );}
+
+p{ font-size: clamp(1em, 1em + 2vw, 1.5em ); }
+
+body{
+	font-family: roboto;
+	width: 100%;
+	height: 100%;
+	min-height: 100%;
+	overflow-x: hidden;
+	background: #0a78e6;
+	background: radial-gradient(circle, #0a78e6 18%, #004c99 96%);
+	color: white;
+	position: relative;
+	display: flex;
+    flex-direction: column;
+}
+
+.geralContent{
+	width: 100%;
+	height: 100%;
+}
+
+main, footer, .filmecontainer {
+	background-color: rgba(0, 0, 0, 0.75);
+	margin: auto;
+}
+
+header{
+	position:fixed;
+	max-width: 1600px;
+	width: 100%;
+	background-color: rgba(0, 0, 0, 0.75);
+	margin: auto;
+	height: 120px;
+	top: 0;
+	display: flex;
+	justify-content:  space-around;
+	align-items: center;
+	border-radius: 0 0 1rem 1rem;
+	z-index: 50;
+}
+
+aside{
+	position: fixed;
+
+	height: 100vh;
+	float: right;
+	right: -300px;
+	width: 300px;
+	background: black;
+	z-index: 1;
+	transform: translate(300px, 0px);
+	transition: all 0.15s linear 1;
+	display: flex;
+	flex-direction: column;
+	display: none;
+}
+
+.exibirMenuAside{
+	transform: translate(-300px, 0px);
+	transition: all 0.15s linear 1;
+}
+
+main{
+	width: calc(100% - 2.5rem);
+	max-width: calc(1600px - 2rem);
+	padding: 1rem;
+	position: relative;
+	margin: 130px auto 60px;
+	border-radius: 1rem;
+}
+
+footer{
+	width: 100%;
+	height: 40px;
+	font-size: 0.6rem;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	position: fixed;
+	bottom: 0;
+	left: 50%;
+	margin-left: -50%;
+}
+
+.filmecontainer{
+	width: 100%;
+	border-radius: 0.5rem;
+	padding: 1rem;
+	margin-bottom: 0.8rem ;
+	display: flex;
+	flex-direction: row;
+	align-items: flex-start;
+}
+
+.filmecontainer img{
+	max-width: calc(150px + 10vw);
+	margin: 0 1rem 0 0;
+	border-radius:1rem;
+	object-fit: scale-down;
+	aspect-ratio: 15 / 22;
+	top: 0;
+	margin-top: 0;
+}
+
+.contentHeaderMenu, .contentHeaderLogo{
+	width: 50%;
+	background: transparent;
+	border: 0;
+	color: white;
+	box-sizing: border-box;
+	margin: 0;
+}
+
+.contentHeaderMenu{
+	text-align: right;
+}
+
+.contentHeaderLogo{
+	display: flex;
+	flex-direction: row;
+	width: 340px;
+	overflow: hidden;
+	cursor: pointer;
+}
+
+
+/* menu hamburger */
+
+.opMenu {
+	background: white;
+	cursor: pointer;
+	height: 45px;
+	padding-inline: 0.5rem;
+	font-weight: 600;
+	border-radius: 5px;
+}
+
+
+.opMenu:hover, .opMenu:focus {
+	background: whitesmoke;
+}
+/* fim menu hamburger */
+
+/* Botao fechar no menu */
+/* Menu lateral */
+.areaFechar{
+	display: inline-block;
+	width: 100%;
+}
+
+.botaoFechar {
+	position: relative;
+	float: right;
+	width: 40px; height: 40px;
+	vertical-align: middle;
+	line-height: 23px;
+	color: #ccc;
+	text-decoration: none;
+	font-size: 28px;
+	border: 3px solid transparent;
+	text-align: center;
+	-webkit-transition: all 0.3s ease-out;
+	transition: all 0.3s ease-out;
+	border-radius: 50%;
+	cursor: pointer;
+	box-sizing: border-box;
+	padding: 0;
+	background: transparent;
+	margin: 1rem 1 rem auto auto;
+}
+
+.botaoFechar:hover {
+	color: white;
+	border: 3px solid white;
+	transform: scale(0.8) rotateZ(90deg);
+}
+
+/*Fim botao fechar menu*/
+
+	.logoImgMenu, .logoImgMenu img{
+		height: 100px;
+		overflow: hidden ;
+	}
+
+	.logoImgMenu{
+		width: 200px;
+		margin: 1rem auto 3rem;
+	}
+
+	.perfil{
+		margin: 0rem auto 2rem;
+	}
+
+	.areaImagem{
+		width: 160px;
+		height: 160px;
+		border-radius: 50%;
+		overflow: hidden;
+		margin-bottom: 1rem;
+		margin-inline: auto;
+	}
+
+	.areaImagem img{
+		width: 160px;
+		height: 160px;
+	}
+
+	.listaMenu{
+		width: 80%;
+		margin: auto;
+
+	}
+
+	.listaMenu li{
+		font-size: 1.2rem;
+		padding: 0.8rem 0 0.8rem 2rem;
+	}
+
+	.listaMenu li a{
+		font-weight: 300;
+		color: white;
+		text-decoration: underline;
+		text-decoration-color: rgba(0, 76, 153, 0);
+		transition: all 0.5s ease;
+	}
+
+	.listaMenu li a:hover, .listaMenu li a:focus{
+		color: rgba(0, 76, 153, 1);
+		text-decoration-color: rgba(0, 76, 153, 1);
+		transition: all 0.25s ease;
+	}
+
+/* fim Menu lateral */
+
+.logoImg1, .logoImg2, .logoImg1 img, .logoImg2 img{
+	height: 80px;
+}
+
+.logoImg1{
+	width: 170px;
+	overflow: hidden;
+	position: absolute;
+	opacity: 0;
+	/* animation: logo1 5s linear 1 ; */
+}
+
+.logoImg2{
+	width: 167px;
+	overflow: hidden;
+	display: flex;
+	flex-direction: flex-end;
+	position: relative;
+	margin-left: 170px;
+	opacity: 0;
+	/* animation: logo2 5s linear 1; */
+}
+
+.logoImg2 span{
+	position: absolute;
+	left: -5px;
+	z-index: 1;
+	font-size: 55px;
+	bottom: 0;
+}
+
+.logoImg2 p{
+	position: absolute;
+	left: 18px;
+	z-index: 1;
+	font-size: 50px;
+	bottom: -2px;
+	/* animation: logop 5s linear 1 ; */
+}
+
+.logoImg2 img{
+	position: absolute;
+	margin-left: -300px;
+	z-index: 1;
+	/* animation: logoimg 5s linear 1 ; */
+}
+
+
+.animaImg1{
+	animation: logo1 5s linear 1 ;
+}
+
+.animaI2{
+	animation: logo2 5s linear 1;
+}
+
+.animaI2P{
+	animation: logop 5s linear 1 ;
+}
+
+.animaI2Img{
+	animation: logoimg 5s linear 1 ;
+}
+
+
+  @keyframes logo1 {
+  	0% {
+      transform: translate(120px, 0);
+      opacity: 0;
+    }
+  	5% {
+      transform: translate(120px, 0);
+      opacity: 0;
+    }
+    15% {
+      transform: translate(120px, 0);
+      opacity: 1;
+    }
+    22% {
+      transform: translate(0, 0);
+    }
+  }
+
+  @keyframes logo2 {
+	0% {
+      width: 0;
+    }
+    26% {
+      width: 0;
+    }
+    29% {
+      width: 168px;
+    }
+  }
+
+  @keyframes logoimg {
+	0% {
+      margin-left: -300px;
+    }
+    30% {
+      margin-left: -300px;
+    }
+    40% {
+      margin-left: -160px
+    }
+    75% {
+      margin-left: -160px
+    }
+    85% {
+      margin-left: -300px;
+    }
+  }
+
+  @keyframes logop {
+	0% {
+      left: -100px;
+    }
+    87% {
+      left: -100px;
+    }
+    95% {
+      left: 18px;
+    }
+  }
+
+/* Area dos filmes */
+.FilmeInfo{
+	width: calc(100% - 1rem);
+	margin-left: 1rem;
+}
+
+.filmeTitlulo {
+	margin-bottom: 1rem;
+}
+
+.filmeMenu{
+	font-size: 1.25rem;
+	color: #F6BE00;
+	margin-bottom: 1rem;
+}
+
+.filmeMenu a{
+	font-size: 1.25rem;
+	color: #F6BE00;
+	text-decoration-color: transparent ;
+	line-height: 2rem;
+}
+
+.filmeMenu a:hover, .filmeMenu a:focus{
+	font-size: 1.25rem;
+	color: white;
+}
+
+.filmeMenu .menuAtivo{
+		text-decoration-color: white;
+		color:white;
+}
+
+.sinopse, .fichaTecnica, .trailer, .ingresso {
+	margin: 0.5 auto;
+	font-size: 1.3rem;
+	font-weight: 300;
+	line-height: 2rem;
+}
+
+.fichaTecnica p{
+	font-size: 1.3rem;
+}
+
+.sinopse strong, .fichaTecnica strong{
+	font-size: 1.3rem;
+	font-weight: 500;
+}
+
+.trailer{
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	text-align: center;
+}
+
+.trailer iframe{
+	width: 90%;
+	aspect-ratio: 16/9;
+	height: auto;
+	margin: auto;
+
+}
+
+.itemInfo{
+	display: none;
+}
+
+.itemAtivo{
+	display: block !important;
+}
+
+.ingressosContainer{
+	width: 100%;
+	height: auto;
+	display: flex;
+	flex-direction: column;
+}
+
+.sessaoData {
+	width: 100%;
+	font-weight: 500;
+}
+
+.sessaoHorario{
+	position: relative;
+	display: flex;
+	flex-direction: row;
+	gap: 2rem;
+	align-items: flex-start;
+	justify-content:  flex-start;
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+	flex-wrap: wrap;
+	padding: 0.5rem;
+	margin-bottom: 2rem;
+}
+
+.ticketContainer{
+	position: relative;
+	width: 100%;
+	max-width: 300px;
+	aspect-ratio: 300 / 133;
+	height: 100%;
+	max-height: 150px;
+	display: block;
+}
+
+.ticketLink{
+	position: relative;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	aspect-ratio: 300 / 133;
+	scale: 95%;
+	transition: all 0.3s linear;
+	overflow: hidden;
+}
+
+.ticketLink:hover, .ticketLink:focus{
+	transition: all 0.1s linear;
+	transform: translate(0, -5px);
+	scale: 100%;
+}
+
+.ticketimg {
+	width: 100%;
+	max-width: 300px;
+	aspect-ratio: 300 / 133;
+	position: relative;
+	left: 3%;
+}
+
+.ticketHorario{
+	position: absolute;
+	font-size:  clamp(1.6rem, 1.6rem + 2vw, 2rem );
+	font-weight: bold;
+	color:#df7474;
+	position: absolute;
+  top: 50%;
+  left: 40%;
+  transform: translate(-50%, -50%);
+}
+
+/* fim da area dos filmes */
+/* selecionar assento */
+
+
+.selecAssentoContainer{
+	width: 95%;
+	margin: auto;
+	padding: 0.8rem;
+	border-radius: 1rem;
+	background: rgba(150,150,150, 0.75);
+}
+
+.AssentoFilmeTitulo{
+	text-align: center;
+	margin: 0.5rem;
+}
+
+.AssentoFilmeHora{
+	text-align: center;
+	font-weight: 300;
+	scale: 80%;
+	margin-bottom: 0.5rem;
+}
+
+.assentoContainer{
+	padding: 0.5rem;
+	background: white;
+	width: 100%;
+	border-radius: 0.5rem;
+}
+
+.legendaContainer{
+	background: white;
+	padding: 0.5rem;
+	width: calc(100% - 2rem);
+	margin: 1rem;
+	border: 2px solid gray;
+	color: gray;
+	border-radius: 5px;
+}
+
+.mapaCinema{
+	width: 100%;
+	position: relative;
+	margin: auto;
+	align-items: center;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+}
+
+.mapaTela{
+	background: gray;
+	width: 70%;
+	text-align: center;
+	padding: 2px;
+}
+
+.mapaEspacoTelaCadeira{
+	width: 100%;
+	height: 30%;
+	min-height: 5rem ;
+}
+
+.AreaCadeiras{
+	width: 90%;
+	position: relative;
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	margin-bottom: 3%;
+}
+
+.cadeiraContainer {
+	margin: 1%;
+	width: 8%;
+	aspect-ratio: 1 / 1;
+}
+
+.containerLegenda{
+	display: flex;
+	flex-direction: row;
+}
+
+.cadeiraExemploContainer {
+	margin: 1%;
+	width: 100%;
+	display: flex;
+	align-items: center;
+}
+
+.textoReferencia{
+	padding: 0.5rem;
+}
+
+.cadeiraExemplo1, .cadeiraExemplo2 {
+	width: 10%;
+	aspect-ratio: 1/1;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border-radius: 10px;
+	cursor: inherit;
+}
+
+.cadeiraAtivaContent {
+	background: #d7dbdd;
+	width: 100%;
+	height: 100%;
+	border: 1px solid black;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border-radius: 10px;
+	overflow: hidden;
+	cursor: pointer;
+}
+
+.cadeiraAtivaContent:hover, .cadeiraAtivaContent:focus{
+	background: #F6BE00;
+	color: white;
+	font-weight: 400;
+}
+
+.cadeiraInativaContent{
+	background: #515a5a !important;
+	color: white;
+	width: 100%;
+	height: 100%;
+	border: 1px solid black;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border-radius: 10px;
+	overflow: hidden;
+	cursor: inherit !important;
+}
+
+.cadeiraObeso{
+	width: 16% !important;
+	aspect-ratio: 2 / 1;
+}
+
+.cadeiraSelecionada{
+	width: 100%;
+	height: 100%;
+	border: 1px solid black;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border-radius: 10px;
+	overflow: hidden;
+	background: #004c99;
+	color: white;
+	font-weight: 600;
+}
+
+.formInfo{
+	text-align: center;
+	width: 90%;
+	font-size: 1rem;
+	margin: 2rem auto 0;
+}
+
+
+.button-Inativo {
+  appearance: none;
+  margin: 2rem auto;
+  backface-visibility: hidden;
+  background-color: #999;
+  border-radius: 10px;
+  border-style: none;
+  box-shadow: none;
+  box-sizing: border-box;
+  color: #bbb;
+  cursor: inherit;
+  display: inline-block;
+  font-size: 1.2rem;
+  font-weight: 500;
+  height: 50px;
+  letter-spacing: normal;
+  line-height: 1.4;
+  outline: none;
+  overflow: hidden;
+  padding: 1rem 2rem;
+  position: relative;
+  text-align: center;
+  text-decoration: none;
+  transform: translate3d(0, 0, 0);
+  transition: all .3s;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  vertical-align: top;
+  white-space: nowrap;
+}
+
+.button-Prosseguir {
+	
+	appearance: none;
+	margin: 2rem auto;
+	backface-visibility: hidden;
+	background-color: #00BD23;
+	border-radius: 10px;
+	border: 2px solid rgba(0, 255, 34,0);
+	box-shadow: none;
+	box-sizing: border-box;
+	color: #fff;
+	cursor: pointer;
+	display: inline-block;
+	font-size: 1.5rem;
+	font-weight: 500;
+	height: 50px;
+	letter-spacing: normal;
+	line-height: 1.0;
+	outline: none;
+	overflow: hidden;
+	padding: 0.5rem 2rem;
+	position: relative;
+	text-align: center;
+	text-decoration: none;
+	transform: translate3d(0, 0, 0);
+	transition: all .4s;
+	user-select: none;
+	-webkit-user-select: none;
+	touch-action: manipulation;
+	vertical-align: top;
+	white-space: nowrap;
+}
+
+.button-Prosseguir:hover, .button-Prosseguir:focus {
+  background-color: #00931b;
+  border: 2px solid rgba(0, 255, 34,0.6);
+  box-shadow: rgba(0, 0, 0, .05) 0 5px 30px, rgba(0, 0, 0, .05) 0 1px 4px;
+  opacity: 1;
+  transform: translateY(0);
+  transition-duration: .35s;
+}
+
+.button-Prosseguir:hover:after, .button-Prosseguir:focus:after {
+  opacity: .5;
+}
+
+.button-Prosseguir:active {
+  box-shadow: rgba(0, 0, 0, .1) 0 3px 6px 0, rgba(0, 0, 0, .1) 0 0 10px 0, rgba(0, 0, 0, .1) 0 1px 4px -1px;
+  transform: translateY(2px);
+  transition-duration: .35s;
+}
+
+.button-Prosseguir:active:after {
+  opacity: 1;
+}
+
+@media (min-width: 768px) {
+  .button-Prosseguir {
+    padding: 14px 22px;
+    width: 176px;
+  }
+}
+
+
+/* Fim selecionar assento */
+/* Area de pagamento */
+
+
+.pagamentoContainer{
+	width: 95%;
+	margin: auto;
+	padding: 2rem 4rem;
+	border-radius: 1rem;
+	background: rgba(150,150,150, 0.75);
+}
+
+.dadosRevisaoPedido1, .dadosRevisaoPedido2{
+	margin: auto;
+	width: 70%;
+}
+
+.dadosRevisaoPedido1 *, .dadosRevisaoPedido2 *{
+	font-size: 1.5rem;
+	line-height: 3rem
+}
+
+.dadosRevisaoPedido2{
+	display: flex;
+	justify-content: space-between;
+}
+
+.ingressoAdquirido1{
+	margin: 2rem auto;
+	width: 90%;
+	font-size: 1rem;
+	line-height: 2.5rem
+}
+
+.ingressoAdquirido2{
+	width: 50%;
+	background: white;
+	aspect-ratio: 1/1;
+	margin: 2rem auto 1rem;
+}
+
+
+
+/* Fim Area de pagamento */
+
+@media screen and (max-width: 767px) {
+		.contentHeaderLogo {
+			width: 80%;
+			scale: 0.8;
+		}
+		.contentHeaderMenu{
+			width:20%;
+			scale: 0.8;
+		}
+
+		.containerLegenda{
+			flex-direction: column;
+		}
+
+		.filmecontainer{
+			flex-direction: column;
+		}
+
+		.filmecontainer img{
+			max-width: calc(100% - 2rem);
+		}
+
+		.FilmeInfo{
+			width: 100%;
+			margin-left: 0;
+		}
+
+		.cadeiraExemplo1, .cadeiraExemplo2 {
+			width: 10%;
+		}
+		.AreaCadeiras{
+			width: 100%;
+		}
+		.cadeiraContainer{
+			width: 10%;
+			margin: 1% 0.5%;
+		}
+
+		.pagamentoContainer{
+			width: 95%;
+			margin: auto;
+			padding: 2rem 2rem;
+			border-radius: 1rem;
+			background: rgba(150,150,150, 0.75);
+		}
+
+		.dadosRevisaoPedido{
+			width: 100%;
+		}
+
+}

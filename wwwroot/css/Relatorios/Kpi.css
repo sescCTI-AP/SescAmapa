@@ -1,0 +1,75 @@
+﻿#DivFull {
+    overflow: auto;
+    background-color: white !important;
+    padding: 20px
+}
+
+#gauge_div > * {
+    background-color: transparent !important;
+    align-items: center !important
+}
+
+text {
+    font-size: 12px
+}
+
+div.grafico-rosca {
+    position: relative
+}
+
+    div.grafico-rosca h3 {
+        margin: 0;
+        position: absolute;
+        top: 55%;
+        left: 50%;
+        margin-right: -50%;
+        transform: translate(-50%, -50%)
+    }
+
+#renderizador {
+    padding-left: 0px !important;
+    padding-right: 0px !important
+}
+
+.bg-light {
+    background-color: white !important
+}
+
+.card-kpi {
+    width: 150px;
+    border-radius: 15px;
+    background-color: #F2F7FC;
+    border: none;
+    margin-left: 10px
+}
+
+.line-height-20 {
+    line-height: 40px
+}
+
+.dodgerblue {
+    color: #35b0e6
+}
+
+.yellow {
+    color: #d0bc5b
+}
+
+.ciano {
+    color: #00b3ac
+}
+
+.green {
+    color: #208234
+}
+
+.red {
+    color: red
+}
+
+.global{
+    text-align: right;
+    z-index: 99;
+    position: absolute;
+    color: dodgerblue
+}

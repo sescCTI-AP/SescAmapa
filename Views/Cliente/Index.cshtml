@@ -1,0 +1,143 @@
+﻿@using SiteSesc.Models.ModelPartialView;
+@{
+    ViewData["Title"] = "Espaço do cliente";
+    Layout = "~/Views/Shared/_LayoutCliente.cshtml";
+    var dependentes = ViewBag.Dependentes as List<ClienteDetails>;
+    var cobrancas = ViewBag.Cobrancas as List<CobrancaDetails>;
+    var inscricoes = ViewBag.Inscricoes as List<InscricaoDetails>;
+}
+
+<section id="hero" class="d-flex flex-column justify-content-center">
+    <div class="container" data-aos="zoom-in" data-aos-delay="100">
+        <h1>Olá!</h1>
+        <div class="social-links">
+            <a href="#" class="twitter" title="Recarga de Credencial sesc"><i class="fa-solid fa-piggy-bank font-size-48"></i></a>
+            <a href="#" class="google-plus" title="Meu consumo"><i class="fa-solid fa-hand-holding-dollar font-size-48"></i></a>
+            <a href="#" class="facebook" title="Agendamentos"><i class="bx bx-time font-size-48"></i></a>
+            <a href="#" class="linkedin" title="Meus cupons e descontos"><i class="bx bxs-badge-dollar font-size-48"></i></a>
+            <a href="#" class="linkedin" title="Ava"><i class="fa-solid fa-graduation-cap font-size-48"></i></a>
+        </div>
+        <div class="row text-center">
+            <div class="col-md-2">
+                <div class="btn-rounded bg-blue text-center mt-5"><a>Recarregar cartão Sesc</a></div>
+            </div>
+            <div class="col-md-2">
+                <div class="btn-rounded bg-transaparent text-center mt-5 "><a>Ver credencial</a></div>
+            </div>
+        </div>
+        <p>Saldo no cartão Sesc: R$ 15,00</p>
+    </div>
+</section>
+
+<main id="main">
+    <section id="about" class="about">
+        <div class="container" data-aos="fade-up">
+            <div class="section-title">
+                <h2>Meus dados</h2>
+                <p>Esses são os dados no Sesc, caso precise alterar alguma informação clique no ícone de editar</p>
+            </div>
+            <div class="row">
+                <div class="col-lg-4">
+                    <img src="~/images/pressets/profile-img.jpg" class="img-fluid" alt="" style="border-radius: 50%">
+                </div>
+                <div class="col-lg-8 pt-4 pt-lg-0 content">
+                    <h3>Marco Aurélio de Araújo Leal</h3>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <ul>
+                                <li><i class="bi bi-chevron-right"></i> <strong>Credencial Sesc:</strong> <span>0328-01222-4</span></li>
+                                <li><i class="bi bi-chevron-right"></i> <strong>Categoria:</strong> <span>Trabalhador do Comércio Funcionário</span><i class="bx bx-edit" style="margin-left: 10px;"></i></li>
+                                <li><i class="bi bi-chevron-right"></i> <strong>CPF:</strong> <span>123.456.079-11</span></li>
+                                <li><i class="bi bi-chevron-right"></i> <strong>RG:</strong> <span>1.023.520 SSP/TO</span></li>
+                                <li><i class="bi bi-chevron-right"></i> <strong>Endereço:</strong> <span>407 Norte Alameda 12 Lote 30, Palmas-TO</span><i class="bx bx-edit" style="margin-left: 10px;"></i></li>
+                                <li><i class="bi bi-chevron-right"></i> <strong>Email:</strong> <span>marco@sescto.com.br</span><i class="bx bx-edit" style="margin-left: 10px;"></i></li>
+                                <li><i class="bi bi-chevron-right"></i> <strong>Telefone:</strong> <span>(63) 3219-9164</span><i class="bx bx-edit" style="margin-left: 10px;"></i></li>
+                            </ul>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="resume" class="resume">
+        <div class="container" data-aos="fade-up">
+            <div class="section-title">
+                <h2>Minhas matrículas e serviços</h2>
+                <p>Essas são suas matrículas ativas no Sesc TO</p>
+            </div>
+            <div class="row">
+                @if (inscricoes != null)
+                {
+                    <div class="col-lg-6">
+                        <h3 class="resume-title">Esporte e Lazer</h3>
+                        @foreach (var insc in inscricoes)
+                        {
+                            @await Html.PartialAsync("PartialView/_PartialViewInscricoesDetails", insc)
+                        }
+                    </div>
+                    <div class="col-lg-6">
+                        <h3 class="resume-title">Saúde</h3>
+                        @foreach (var insc in inscricoes)
+                        {
+                            @await Html.PartialAsync("PartialView/_PartialViewInscricoesDetails", insc)
+
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+    </section>
+
+    <section id="portfolio" class="portfolio section-bg">
+        <div class="container" data-aos="fade-up">
+            <div class="section-title">
+                <h2>Dependentes</h2>
+                <p>Aqui estão relacionados seus dependentes</p>
+            </div>
+            @if (dependentes != null)
+            {
+                <div class="row">
+                    <div class="col-lg-12 d-flex justify-content-center" data-aos="fade-up" data-aos-delay="100">
+                        <ul id="portfolio-flters">
+                            <li data-filter="*" class="filter-active">Todos</li>
+                            @foreach (var dep in dependentes)
+                            {
+                                <li data-filter=".@dep.CssClass">@dep.Name</li>
+                            }
+                            <li><i class='bx bx-user-plus' style="font-size: 20px; margin-right: 5px;"></i>Adicionar</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="row portfolio-container" data-aos="fade-up" data-aos-delay="200">
+                    @foreach (var dep in dependentes)
+                    {
+                        @await Html.PartialAsync("PartialView/_PartialViewClienteDetails", dep)
+                    }
+                </div>
+            }
+        </div>
+    </section>
+
+    <section id="services" class="services">
+        <div class="container" data-aos="fade-up">
+
+            <div class="section-title">
+                <h2>Minhas cobranças</h2>
+                <p>Aqui estão relacionadas as próximas cobranças em aberto ou pendentes</p>
+                <br>
+                <a href="#"><p>Ver todas as cobranças</p></a>
+            </div>
+            @if (cobrancas != null)
+            {
+                <div class="row">
+                    @foreach (var cob in cobrancas)
+                    {
+                        @await Html.PartialAsync("PartialView/_PartialViewCobrancaDetails", cob)
+                    }
+                </div>
+            }
+        </div>
+    </section>
+</main>

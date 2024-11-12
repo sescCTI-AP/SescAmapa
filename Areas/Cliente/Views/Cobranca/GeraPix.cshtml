@@ -1,0 +1,24 @@
+﻿@model SiteSesc.Models.ApiPagamento.Pix.PixViewModel
+
+<div class="modal text-center" tabindex="-1" id="modal-pix">
+    <div class="modal-dialog modal-dialog-centered" style="max-width: 600px !important">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">PIX</h5>
+                <button type="button" class="btn-close" onclick="closeModal();" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>@Model.Atividade</p>
+                <p>R$ @Model.Valor</p>
+
+                <img id="img-pix" src="@Model.TextoImagem" width="200px" /><br />
+                <label style="font-size: 10px">@Model.Codigo</label>
+                <input id="codigo-pix" value="@Model.Codigo" hidden/>
+                <a class="btn btn-success" onclick="copiarCodigoPix()">Copiar código</a>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="closeModal();">Fechar</button>
+            </div>
+        </div>
+    </div>
+</div>

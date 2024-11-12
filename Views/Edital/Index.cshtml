@@ -1,0 +1,142 @@
+﻿@using SiteSesc.Models.Edital
+@{
+    var abertos = ViewBag.Abertos as List<edt_edital>;
+    var emAndamento = ViewBag.EmAndamento as List<edt_edital>;
+    var finalizados = ViewBag.Finalizados as List<edt_edital>;
+
+    var tipos = ViewBag.Tipos as List<edt_tipoEdital>;
+    var modalidades = ViewBag.Modalidades as List<edt_modalidade>;
+    var status = ViewBag.status as List<edt_statusEdital>;
+}
+
+<style>
+
+    .areaTitulo{
+        background: url("../images/credencial.webp") center no-repeat;
+        background-size: cover;
+        color: white;
+        min-height: 200px;
+        width: calc(100% - 2rem);
+        overflow: hidden;
+        padding: 0 1rem;
+        margin: 1rem;
+        border-radius: 0.5rem ;
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+    }
+
+    .areaTitulo h2{
+        color: white;
+        text-shadow: 0 0 50px black;
+        font-size: clamp(30px, 30px + 1vw, 46px)
+    }
+
+    .flex-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: flex-start;
+    }
+
+    .flex-item {
+        width: 400px;
+        margin: 5px;
+        text-align: center;
+    }
+
+        .flex-item:hover {
+            border: 2px solid dodgerblue;
+            border-radius: 10px
+        }
+</style>
+
+<div class="container pt-4 mb-5">
+
+    <div class="areaTitulo">
+        <h2>
+            Edital de Credenciamento
+        </h2>
+    </div>
+
+    <h7>Oportunidade para empresas e profissionais oferecerem serviços na área de educação, saúde, cultura, lazer e assistência
+         através de contratos com o Sesc. Participe!</h7>
+         <br>
+
+
+    <!-- Abas nav tabs -->
+    <ul class="nav nav-tabs" id="myTab" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="abertos-tab" data-bs-toggle="tab" data-bs-target="#abertos" type="button" role="tab" aria-controls="abertos" aria-selected="true">Abertos</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="andamento-tab" data-bs-toggle="tab" data-bs-target="#andamento" type="button" role="tab" aria-controls="andamento" aria-selected="false">Em andamento</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="finalizados-tab" data-bs-toggle="tab" data-bs-target="#finalizados" type="button" role="tab" aria-controls="finalizados" aria-selected="false">Finalizados</button>
+        </li>
+    </ul>
+
+    <!-- Conteúdo das Abas -->
+    <div class="tab-content" id="myTabContent">
+        <div class="tab-pane fade show active" id="abertos" role="tabpanel" aria-labelledby="abertos-tab">
+            @if (abertos != null)
+            {
+                if (abertos.Any())
+                {
+                    <div class="flex-container">
+                        @foreach (var item in abertos)
+                        {
+                            @await Html.PartialAsync("PartialView/_PartialViewCardEdital", item)
+                        }
+                    </div>
+                }
+                else
+                {
+                    <p>Não há editais abertos até o momento</p>
+                }
+            }
+
+        </div>
+        <div class="tab-pane fade" id="andamento" role="tabpanel" aria-labelledby="andamento-tab">
+            @if (emAndamento != null)
+            {
+                if (emAndamento.Any())
+                {
+                    <div class="flex-container">
+                        @foreach (var item in emAndamento)
+                        {
+                            @await Html.PartialAsync("PartialView/_PartialViewCardEdital", item)
+                        }
+                    </div>
+                }
+                else
+                {
+                    <p>Não há editais em andamento até o momento</p>
+                }
+            }
+
+        </div>
+        <div class="tab-pane fade" id="finalizados" role="tabpanel" aria-labelledby="finalizados-tab">
+            @if (finalizados != null)
+            {
+                if (finalizados.Any())
+                {
+                    <div class="flex-container">
+                        @foreach (var item in finalizados)
+                        {
+                            @await Html.PartialAsync("PartialView/_PartialViewCardEdital", item)
+                        }
+                    </div>
+                }
+                else
+                {
+                    <p>Não há editais finalizados até o momento</p>
+                }
+            }
+
+        </div>
+    </div>
+
+
+
+</div>

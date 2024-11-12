@@ -1,0 +1,175 @@
+﻿@model IEnumerable<SiteSesc.Models.SolicitacaoCadastroCliente>
+@using SiteSesc.Models.Licitacao
+@{
+    ViewBag.Title = "Solicitações de cadastro";
+}
+<style>
+    .card{
+        margin: 10px
+    }
+
+    @@media only screen and (max-width: 767px){
+        .containerSolicitacoes{
+            display: flex;
+            flex-direction: column;
+        }
+    }
+
+    @@media only screen and (max-width: 575px){
+
+    }
+</style>
+<div class="row">
+    <div class="col-md"></div>
+    <div class="col-md"></div>
+    <div class="col-md">
+        <div style="text-align: right; padding-top: 15px">
+            <a onclick="definirTelaInicial('/admin/clientes/dashboard')" id="btn-switch" class="btn btn-sm btn-outline-primary button-rounded btn-auto"><i class="fa-solid fa-home"></i> &nbsp;Definir como tela inicial</a>
+        </div>
+    </div>
+</div>
+<div id="cardLicitacoes" style="margin-right:0">
+    <div class="card-heading mb-3" style="padding-bottom: 0">
+        <div class="row">
+            <div class="col">
+                <div class="form-group">
+                    <a href="@Url.Action("SolicitacaoCadastroCliente")" class="btn btn-primary">Visualizar solicitações</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @if (Model.Any())
+    {
+        <div class="row" style="margin-left: 20px;">
+            <div class="row col containerSolicitacoes">
+                
+                <div class="col card card-dashboard text-center no-change-theme " style="background-color: #03b57e; color: white">
+                    <div class="card-header no-change-theme ">
+                        <label>SOLICITAÇÕES RECEBIDAS</label>
+                    </div>
+                    <div class="card-body no-change-theme">
+                        <h1 id="abertos" style="color: white">
+                            @ViewBag.Recebidas
+                        </h1>
+                    </div>
+                </div>
+
+                <div class="col card card-dashboard text-center no-change-theme" style="background-color: #ffb400; color: black">
+                    <div class="card-header no-change-theme ">
+                        <label>ATENDIDAS</label>
+                    </div>
+                    <div class="card-body no-change-theme">
+                        <h1 style="color: black">
+                            @ViewBag.Atendidas
+                        </h1>
+                    </div>
+                </div>
+
+                <div class="col card card-dashboard text-center no-change-theme" style="background-color: #e3e3e3; color: black">
+                    <div class="card-header no-change-theme ">
+                        <label>CLIENTES PLENO</label>
+                    </div>
+                    <div class="card-body no-change-theme">
+                        <h1 style="color: black">
+                            @ViewBag.Pleno
+                        </h1>
+                    </div>
+                </div>
+
+                <div class="col card card-dashboard text-center no-change-theme" style="background-color: #053268; color: white; margin-right: 0px">
+                    <div class="card-header no-change-theme ">
+                        <label>CLIENTES ATIVIDADES</label>
+                    </div>
+                    <div class="card-body no-change-theme">
+                        <h1 style="color: white">
+                            @ViewBag.Atividades
+                        </h1>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="row containerSolicitacoes" style="margin-left: 0; margin-right: 20px">
+            <div class="col-4">
+                <div style="margin-left: 8px">
+                    <table class="table table-bordered table-hover">
+                        <thread class="thead-dark">
+                            <tr>
+                                <th>
+                                    Tipo
+                                </th>
+                                <th>
+                                    Quantidade
+                                </th>
+                            </tr>
+                        </thread>
+                        <tbody>
+
+                                <tr>
+                                    <td class="text-left">
+                                        Renovações
+                                    </td>
+                                    <td>
+                                        @Model.Count(a => a.IsRenovacao)
+                                    </td>
+                                </tr>
+                            
+                            <tr>
+                                <td class="text-left">
+                                    Dependentes
+                                </td>
+                                <td>
+                                    @Model.Count(a => a.Cduotitul != null)
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="col-4">
+                <div style="margin-left: 8px">
+                    <table class="table table-bordered table-hover">
+                        <thread class="thead-dark">
+                            <tr>
+                                <th>
+                                    Tipo
+                                </th>
+                                <th>
+                                    Quantidade
+                                </th>
+                            </tr>
+                        </thread>
+                        <tbody>
+
+                                <tr>
+                                    <td class="text-left">
+                                        Novas Solicitações
+                                    </td>
+                                    <td>
+                                    @ViewBag.Novas
+                                    </td>
+                                </tr>
+                            <tr>
+                                <td class="text-left">
+                                    Enviadas para correção
+                                </td>
+                                <td>
+                                    @ViewBag.Correcoes
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div id="chart_div"></div>
+    }
+    else
+    {
+        <div class="alert alert-warning text-center" role="alert" style="margin: 15px 20px;">
+            Nenhuma solicitação recebida!
+        </div>
+    }
+</div>

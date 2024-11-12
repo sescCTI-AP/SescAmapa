@@ -1,0 +1,231 @@
+﻿@using SiteSesc.Models.ModelPartialView;
+
+@{
+    var listaCategorias = ViewBag.ListCategorias as List<CategoriaCard>;
+}
+<link href="~/css/public/credencial.css" rel="stylesheet" />
+<section class="banner-area p-3">
+    <div class="single-banner container-fluid container-custom-1 p-0">
+        <div class="container m-0 container-banner">
+            <div class="row align-items-center">
+                <div class=" p-0">
+                    @*<h1 style="z-index: 20; position: absolute; right: 20px; top: 20px" class="text-right">Faça já a sua <br />credencial<br />do Sesc</h1>*@
+                    <img class="img-banner" src="~/images/static/bg-credencial.jpg" />
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+
+<section>
+    <div class="container">
+        <div class="row text-center">
+            <div class="col-md p-5">
+                <h4>Cadastre-se</h4>
+                <a href="https://www.sesc-pa.com.br/novo-usuario"><img class="img-credencial" src="~/images/static/d1.png" /></a>
+            </div>
+            <div class="col-md p-5">
+                <h4>Renovação</h4>
+                <img class="img-credencial" src="~/images/static/d2.png" />
+            </div>
+            <div class="col-md p-5">
+                <h4 class="mb-0">Tire suas dúvidas</h4>
+                <a href="#">Clique aqui</a>
+                <img class="img-credencial" src="~/images/static/d3.png" />
+            </div>
+        </div>
+
+        <div class="row text-heiht">
+            <p><strong>O QUE &Eacute; A CREDENCIAL SESC?</strong></p>
+
+            <p>&Eacute; um direito gratuito garantido ao trabalhador do com&eacute;rcio que se enquadre nas caracter&iacute;sticas abaixo:</p>
+
+            <ul>
+                <li>Com carteira assinada no Com&eacute;rcio de Bens, Servi&ccedil;os ou Turismo.</li>
+                <li>Estiver exercendo atividades em empresas, entidades enquadradas no plano sindical da Confedera&ccedil;&atilde;o Nacional do Com&eacute;rcio ou vinculadas &agrave; Confedera&ccedil;&atilde;o Nacional dos Trabalhadores no Com&eacute;rcio.</li>
+                <li>Estiver exercendo atividades em empresas ou entidades contribuintes do Sesc.</li>
+            </ul>
+
+            <p>Este direito &eacute; assegurado &agrave; categoria em todo Territ&oacute;rio Nacional nos programas de Educa&ccedil;&atilde;o, Sa&uacute;de, Assist&ecirc;ncia, Cultura e Lazer.</p>
+
+            <p>&nbsp;</p>
+
+            <p><strong>Voc&ecirc; pode usar sua Credencial em qualquer unidade do Sesc no Brasil</strong></p>
+
+            <p>Aproveite tudo o que o Sesc pode oferecer!</p>
+
+            <p>&nbsp;</p>
+
+            <p><strong>CREDENCIAIS</strong></p>
+
+            <p><strong>Credencial Plena</strong> - Destinada aos trabalhadores do com&eacute;rcio de bens, servi&ccedil;os e turismo e seus dependentes, com acesso total aos servi&ccedil;os do Sesc em &acirc;mbito nacional, v&aacute;lida por 2 anos.</p>
+
+            <p>&nbsp;</p>
+
+            <p><strong>Credencial Atividades</strong> - Disponibilizada ao p&uacute;blico em geral, com acesso limitado a determinados servi&ccedil;os do Sesc somente no Par&aacute; e condicionada &agrave; disponibilidade de vagas, v&aacute;lida por 1 ano.</p>
+
+            <p>&nbsp;</p>
+
+            <p><strong>CLIENTES SESC</strong></p>
+
+            <p><strong>Trabalhador do com&eacute;rcio de bens, servi&ccedil;os e turismo e seus dependentes</strong></p>
+
+            <p>&Eacute; o <em>empregado</em>, o <em>aposentado</em>, o <em>estagi&aacute;rio</em> e o <em>aprendiz</em> de empresa ou entidade enquadrada no Plano Sindical da CNC; de institui&ccedil;&otilde;es vinculadas ao ex-Instituto de Aposentadoria e Pens&otilde;es dos Comerci&aacute;rios (IAPC); do Sesc e do Senac; da Federa&ccedil;&atilde;o do Com&eacute;rcio do Par&aacute;; de entidades sindicais do com&eacute;rcio filiadas &agrave; Federa&ccedil;&atilde;o do Com&eacute;rcio no Par&aacute;; e seus familiares.</p>
+
+            <p>&nbsp;</p>
+
+            <p><strong>P&uacute;blico Geral</strong></p>
+
+            <p>P&uacute;blico que n&atilde;o se enquadra com as &aacute;reas de trabalho acima, mas que manifesta desejo de usufruir dos servi&ccedil;os e programa&ccedil;&otilde;es ofertadas pelo Sesc: trabalhadores aut&ocirc;nomos, conv&ecirc;nio, servidores p&uacute;blicos.</p>
+
+            <p>&nbsp;</p>
+
+            <p><strong>PERGUNTAS FREQUENTES</strong></p>
+
+            <p><strong>Qual &eacute; a diferen&ccedil;a entre carteira, carteirinha, cart&atilde;o e credencial?</strong></p>
+
+            <p>N&atilde;o existe diferen&ccedil;a, todos os termos s&atilde;o utilizados para nomear o passaporte de acesso aos servi&ccedil;os do Sesc.</p>
+
+            <p>&nbsp;</p>
+
+            <p><strong>Como fazer a credencial?</strong></p>
+
+            <p>Para solicitar a credencial &eacute; preciso ir a uma unidade do Sesc e apresentar os documentos necess&aacute;rios &agrave; habilita&ccedil;&atilde;o: identidade, CPF, carteira de trabalho com v&iacute;nculo empregat&iacute;cio junto a empresa do setor de bens, servi&ccedil;os e turismo e o &uacute;ltimo contracheque.</p>
+
+            <p>Ela tamb&eacute;m pode ser solicitada pelo site <a href="http://www.sesc-pa.com.br">www.sesc-pa.com.br</a></p>
+
+            <p>&nbsp;</p>
+
+            <p><strong>Quem tem direito &agrave; credencial?</strong></p>
+
+            <p>A <em>Credencial Plena</em> &eacute; destinada aos trabalhadores do com&eacute;rcio de bens, servi&ccedil;os e turismo e seus dependentes.</p>
+
+            <p>Veja exemplos de empresas que possuem direito a&nbsp;<strong>Credencial Plena</strong>:</p>
+
+            <p>&nbsp;</p>
+
+            <ul>
+                <li>Com&eacute;rcio atacadista</li>
+                <li>Com&eacute;rcio varejista de bens s servi&ccedil;os (supermercados, sal&otilde;es e institutos de beleza, farm&aacute;cias, casas lot&eacute;ricas, lojas em geral, etc)</li>
+                <li>Turismo (hot&eacute;is, pousadas, ag&ecirc;ncias de turismo)</li>
+                <li>Alimenta&ccedil;&atilde;o (restaurantes, bares, caf&eacute;s)</li>
+                <li>Difus&atilde;o cultural e art&iacute;stica (museus, cinemas, teatros, bibliotecas)</li>
+                <li>Ensino particular (col&eacute;gios, autoescolas, faculdades, creches)</li>
+                <li>Esporte e lazer (academias e clubes recreativos)</li>
+                <li>Estabelecimentos hospitalares particulares (hospitais, laborat&oacute;rios, cl&iacute;nicas m&eacute;dicas e odontol&oacute;gicas)</li>
+                <li>Jornalismo ou publicidade (jornais, emissoras de r&aacute;dio e TV, produtoras)</li>
+                <li>Sindicatos (empregados de entidades sindicais do com&eacute;rcio de bens, servi&ccedil;os e turismo)</li>
+                <li>Servi&ccedil;os de administra&ccedil;&atilde;o e conserva&ccedil;&atilde;o de edif&iacute;cios</li>
+                <li>Escrit&oacute;rios de contabilidade</li>
+                <li>Escrit&oacute;rios de advocacia</li>
+            </ul>
+
+            <p>&nbsp;</p>
+
+            <p>A <em>Credencial Atividades</em> &eacute; destinada &agrave;s pessoas que n&atilde;o se enquadram nas categorias de benefici&aacute;rios acima.</p>
+
+            <p>Essa categoria d&aacute; acesso limitado aos servi&ccedil;os.</p>
+
+            <p>&nbsp;</p>
+
+            <p><strong>O que &eacute; credencial?</strong></p>
+
+            <ul>
+                <li>A credencial Sesc &eacute; o passaporte de acesso aos servi&ccedil;os e atividades disponibilizados pelo Sesc.</li>
+                <li><strong>Quais s&atilde;o os documentos necess&aacute;rios para fazer a Credencial?</strong></li>
+            </ul>
+
+            <p>&nbsp;</p><p>&nbsp;</p>
+
+            
+            <h4 style="text-align: center;"><strong>Trabalhador do Com&eacute;rcio de Bens, Servi&ccedil;os e Turismo</strong></h4>
+            
+            <p>&nbsp;</p>
+
+            <h6>Para todos os trabalhadores comerci&aacute;rios</h6>
+
+            <ul>
+                <li>Identidade;</li>
+                <li>Cadastro de Pessoa F&iacute;sica (CPF);</li>
+                <li>Comprovante de resid&ecirc;ncia;</li>
+                <li>Foto recente.</li>
+            </ul>
+
+            <p>&nbsp;</p>
+
+            <h5>Algumas observa&ccedil;&otilde;es:</h5>
+            <h6>Em atividade, licenciado, tempor&aacute;rio ou aprendiz</h6>
+            <li>Carteira de trabalho atualizada f&iacute;sica ou digital</li>
+            <li>&Uacute;ltimo comprovante de remunera&ccedil;&atilde;o</li>
+
+            <p>&nbsp;</p>
+            
+            <h6>Com contrato de trabalho suspenso temporariamente</h6>
+            <li>Carteira de trabalho atualizada, f&iacute;sica ou digital</li>
+            <li>&Uacute;ltimo comprovante de remunera&ccedil;&atilde;o</li>
+            <li>Termo de Acordo para Suspens&atilde;o do Contrato de Trabalho para o empregado com contrato de trabalho suspenso temporariamente</li>
+            
+            <p>&nbsp;</p>
+            
+            <h6>Aposentado</h6>
+            <li>Carteira de trabalho atualizada f&iacute;sica ou digital que comprove a condi&ccedil;&atilde;o de aposentado</li>
+            <li>Carta de concess&atilde;o de aposentadoria ou registro no Cadastro Nacional de Informa&ccedil;&otilde;es Sociais (CNIS) ou cadastro no aplicativo do INSS disponibilizado pelo Governo Federal</li>
+            <li>&Uacute;ltimo comprovante de remunera&ccedil;&atilde;o ou extrato do benef&iacute;cio</li>
+
+            <p>&nbsp;</p>
+            
+            <h6>Desempregado</h6>
+            <li>Carteira de trabalho atualizada f&iacute;sica ou digital com data de rescis&atilde;o do contrato</li>
+            <li>Estagi&aacute;rio</li>
+            <li>Declara&ccedil;&atilde;o de matr&iacute;cula com situa&ccedil;&atilde;o acad&ecirc;mica</li>
+            <li>C&oacute;pia do termo de compromisso</li>
+
+            <p>&nbsp;</p>
+
+            <h5><strong>D&Uacute;VIDAS E MAIS INFORMA&Ccedil;&Otilde;ES</strong></h5>
+            <li>Central de Relacionamento</li>
+            <li>(91) 4005-9501 atendimento@sescpa.movidesk.com</li>
+
+        </div>
+    </div>
+</section>
+
+<section class="category-area pt-120 pb-60">
+    <div class="container">
+        <div class="row">
+            <div class="col-xl-3 col-lg-3">
+                <div class="category-left pb-60">
+                    <div class="section-area">
+                        <h2 class="section-title mb-20">Aproveite nossos serviços</h2>
+                    </div>
+                    <div class="category-rol">
+                        <div class="category-prev">
+                            <i class="fa-solid fa-arrow-left"></i>
+                        </div>
+                        <div class="category-next">
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-9 col-lg-9">
+                <div class="category-wrap">
+                    <div class="category-active swiper pb-60">
+                        <div class="swiper-wrapper">
+                            @if (listaCategorias != null)
+                            {
+                                foreach (var categoria in listaCategorias)
+                                {
+                                    @await Html.PartialAsync("PartialView/_PartialViewCategoriaDetails", categoria)
+                                }
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

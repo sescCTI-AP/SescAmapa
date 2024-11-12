@@ -1,0 +1,189 @@
+﻿    @using SiteSesc.Models.ViewModel
+@model PaginatedListViewModel<SiteSesc.Models.ViewModel.UsuarioList>
+@using SiteSesc.Models.Enums
+@{
+    ViewBag.Title = "Usuários";
+    List<int> acoesModulo = ViewBag.Acoes as List<int>;
+}
+<link href="~/css/paginacao/paginacao.css" rel="stylesheet" />
+
+
+<style>
+    .ativo{
+        background-color: lightgreen;
+        color:green;
+        padding-left: 10px;
+        padding-right: 10px;
+        border-radius: 5px
+    }
+    .desativado{
+        background-color: lightpink;
+        color: red;
+        padding-left: 10px;
+        padding-right: 10px;
+        border-radius: 5px
+    }
+</style>
+
+<h2>Usuários</h2>
+
+<div class="card-heading">
+    <form>
+        <div class="row">
+            <div class="form-group mb-0">
+                <label>Busque pelo nome ou CPF</label>
+                <input type="text" id="busca" name="busca" class="form-control" placeholder="Nome ou CPF" />
+            </div>
+        </div>
+    </form>
+</div>
+
+<table class="table table-hover mt-4" id="tbUsuarios">
+    <thead >
+        <tr>
+            <th>
+                Nome
+            </th>
+            <th>
+                CPF
+            </th>
+            <th>
+                Email
+            </th>
+            <th>
+                Perfil
+            </th>
+            <th>Status</th>
+            <th>
+                Data de Cadastro
+            </th>
+            <th class="text-center" style="width: 180px">
+                <span class="fa fa-gears"></span> GERENCIAMENTO
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Items)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Nome)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Cpf)
+                </td>
+                <td id="email-user-@item.Id">
+                    @Html.DisplayFor(modelItem => item.Email)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Perfil)
+                </td>
+                <td>
+                    <span class="@item.ClassStatus">@item.Status</span>
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DataCadastro)
+                </td>
+                <td class="text-center">
+                    @if (acoesModulo.Contains((int)Permissao.Visualizar))
+                    {
+                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-manager" data-toggle="tooltip" title="Detalhes">
+                            <span class="fa fa-search-plus"></span>
+                        </a>
+                    }
+                    @if (acoesModulo.Contains((int)Permissao.Alterar))
+                    {
+@*                         <div class="toggle-checkbox checkbox-inline toggle-success toggle-sm" title="Ativar/Desativar Usuário">
+                            <input type="checkbox" id="btnAtivarDesativa-@item.Id" @(item.IsAtivo ? "checked" : "") onchange="alterarStatusUsuario('@item.Id');">
+                            <label for="btnAtivarDesativa-@item.Id" style="margin: 0"></label>
+                        </div> *@
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div class="pagination mb-5">
+    @if (Model.HasPreviousPage)
+    {
+        <a asp-action="Index" asp-route-pageNumber="@(Model.PageIndex - 1)">Anterior</a>
+    }
+    @if (Model.TotalPages > 15)
+    {
+        @for (var i = 1; i <= 14; i++)
+        {
+            <a asp-action="Index" asp-route-pageNumber="@i" class="@(i == Model.PageIndex ? "active" : "")">@i</a>
+        }
+        <a>...</a>
+        <a asp-action="Index" asp-route-pageNumber="@Model.TotalPages" class="@(Model.TotalPages == Model.PageIndex ? "active" : "")">@Model.TotalPages</a>
+
+    }else{
+        @for (var i = 1; i <= Model.TotalPages; i++)
+        {
+            <a asp-action="Index" asp-route-pageNumber="@i" class="@(i == Model.PageIndex ? "active" : "")">@i</a>
+        }
+    }
+
+    @if (Model.HasNextPage)
+    {
+        <a asp-action="Index" asp-route-pageNumber="@(Model.PageIndex + 1)">Próximo</a>
+    }
+</div>
+
+@section Scripts {
+    <script>
+        // $(document).ready(function () {
+        //     $('#tbUsuarios').DataTable({
+        //         pageLength: 20,
+        //         lengthChange: false,
+        //         language: {
+        //             url: "//cdn.datatables.net/plug-ins/1.10.19/i18n/Portuguese-Brasil.json"
+        //         },
+        //         info: true,
+        //         ordering: false,
+        //         searching: false
+        //     });
+        // });
+
+        function alterarStatusUsuario(id) {
+            $.ajax({
+                url: '@Url.Action("AlterarStatus")',
+                type: 'POST',
+                data: JSON.stringify(id),
+                dataType: "json",
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+                    if (data.Code == 1) {
+                        $('#tbUsuarios').load(location.href + ' #tbUsuarios>*',
+                            function () {
+                                $('[data-toggle="tooltip"]').tooltip();
+                            });
+                        noty({
+                            text: data.Message,
+                            type: data.ClassAlert,
+                            timeout: 2500,
+                            progressBar: true
+                        });
+                    } else {
+                        noty({
+                            text: data.Message,
+                            type: data.ClassAlert,
+                            timeout: 2500,
+                            progressBar: true
+                        });
+                    }
+                },
+                error: function (err) {
+                    noty({
+                        text: 'Falha ao atualizar o status de exibição do Usuário',
+                        type: 'error',
+                        timeout: 2500,
+                        progressBar: true
+                    });
+                }
+            });
+        }
+
+    </script>
+}

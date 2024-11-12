@@ -1,0 +1,16 @@
+﻿@model SiteSesc.Models.Licitacao.lct_licitacao
+
+<div class="flex-item">
+    <a asp-action="Details" asp-controller="Licitacao" asp-route-guid="@Model.Guid.ToString()">
+        <div class="blog_details-widget mb-0">
+            <h4 class="blog_details-widget-title mb-0">Licitação Nº @Model.NumeroEdital</h4>
+
+            <h6>@Model.Objeto</h6>
+            <p class="mb-0">
+                Data da reunião: @Model.DataReuniao.ToShortDateString()
+            </p>
+            <p class="mb-0">Situação: <b>@Model.lct_statusLicitacao.Descricao</b></p>
+        </div>
+
+    </a>
+</div>

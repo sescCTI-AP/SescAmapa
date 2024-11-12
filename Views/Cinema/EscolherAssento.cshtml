@@ -1,0 +1,319 @@
+@inject Microsoft.Extensions.Configuration.IConfiguration Configuration
+@using System.Web
+@using SiteSesc.Repositories;
+@{
+    Layout = "../Shared/_LayoutCinema.cshtml";
+    ViewBag.Title = "Cinema"; 
+}
+
+<div class="selecAssentoContainer">
+    <h2 class="AssentoFilmeTitulo">O Menino e o mundo</h2>
+    <h2 class="AssentoFilmeHora">Sessão - 20:00</h2>
+    <hr>
+    <h3 class="AssentoFilmeHora">Selecione um assento</h3>
+    
+    <div class="assentoContainer">
+        <div class="legendaContainer">
+            <p>Legenda</p>
+            <div class="containerLegenda">
+                <div class="cadeiraExemploContainer">
+                    <div class="cadeiraExemplo1">
+                        <button class="cadeiraAtivaContent" style="cursor: inherit;">
+                            XX
+                        </button>
+                    </div>
+                    <div class="textoReferencia">
+                    Assento disponível
+                    </div>
+                </div>
+                <div class="cadeiraExemploContainer">
+                    <div class="cadeiraExemplo1">
+                        <button class="cadeiraInativaContent">
+                            XX
+                        </button>
+                    </div>
+                    <div class="textoReferencia">
+                    Assento indisponível
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="mapaCinema">
+            <div class="mapaTela">tela</div>
+            <div class="mapaEspacoTelaCadeira"><br><br><br></div>
+
+            <div class="AreaCadeiras">
+                <div class="cadeiraContainer">
+                    <button class="cadeiraAtivaContent" onclick="selecionaCadeira(this)" onkeypress="selecionaCadeira(this)">
+                        A1
+                    </button>
+                </div>
+                <div class="cadeiraContainer">
+                    <button class="cadeiraAtivaContent" onclick="selecionaCadeira(this)" onkeypress="selecionaCadeira(this)">
+                        A2
+                    </button>
+                </div>
+                <div class="cadeiraContainer">
+                    <button class="cadeiraInativaContent" onclick="selecionaCadeira(this)" onkeypress="selecionaCadeira(this)">
+                        A3
+                    </button>
+                </div>
+                <div class="cadeiraContainer">
+                    <button class="cadeiraInativaContent" onclick="selecionaCadeira(this)" onkeypress="selecionaCadeira(this)">
+                        A4
+                    </button>
+                </div>
+                <div class="cadeiraContainer">
+                    <button class="cadeiraInativaContent" onclick="selecionaCadeira(this)" onkeypress="selecionaCadeira(this)">
+                        A5
+                    </button>
+                </div>
+                <div class="cadeiraContainer">
+                    <button class="cadeiraAtivaContent" onclick="selecionaCadeira(this)" onkeypress="selecionaCadeira(this)">
+                        A6
+                    </button>
+                </div>
+                <div class="cadeiraContainer">
+                    <button class="cadeiraAtivaContent" onclick="selecionaCadeira(this)" onkeypress="selecionaCadeira(this)">
+                        A7
+                    </button>
+                </div>
+                <div class="cadeiraContainer">
+                    <button class="cadeiraAtivaContent" onclick="selecionaCadeira(this)" onkeypress="selecionaCadeira(this)">
+                        A8
+                    </button>
+                </div>
+            </div>
+
+            <div class="AreaCadeiras">
+                <div class="cadeiraContainer">
+                    <button class="cadeiraAtivaContent" onclick="selecionaCadeira(this)" onkeypress="selecionaCadeira(this)">
+                        B1
+                    </button>
+                </div>
+                <div class="cadeiraContainer">
+                    <button class="cadeiraInativaContent">
+                        B2
+                    </button>
+                </div>
+                <div class="cadeiraContainer">
+                    <button class="cadeiraAtivaContent" onclick="selecionaCadeira(this)" onkeypress="selecionaCadeira(this)">
+                        B3
+                    </button>
+                </div>
+                <div class="cadeiraContainer">
+                    <button class="cadeiraInativaContent">
+                        B4
+                    </button>
+                </div>
+                <div class="cadeiraContainer">
+                    <button class="cadeiraAtivaContent" onclick="selecionaCadeira(this)" onkeypress="selecionaCadeira(this)">
+                        B5
+                    </button>
+                </div>
+                <div class="cadeiraContainer">
+                    <button class="cadeiraAtivaContent" onclick="selecionaCadeira(this)" onkeypress="selecionaCadeira(this)">
+                        B6
+                    </button>
+                </div>
+                <div class="cadeiraContainer">
+                    <button class="cadeiraAtivaContent" onclick="selecionaCadeira(this)" onkeypress="selecionaCadeira(this)">
+                        B7
+                    </button>
+                </div>
+                <div class="cadeiraContainer">
+                    <button class="cadeiraAtivaContent" onclick="selecionaCadeira(this)" onkeypress="selecionaCadeira(this)">
+                        B8
+                    </button>
+                </div>
+                <div class="cadeiraContainer">
+                    <button class="cadeiraInativaContent">
+                        B9
+                    </button>
+                </div>
+            </div>
+
+            <div class="AreaCadeiras">
+                <div class="cadeiraContainer">
+                    <button class="cadeiraAtivaContent" onclick="selecionaCadeira(this)" onkeypress="selecionaCadeira(this)">
+                        C1
+                    </button>
+                </div>
+                <div class="cadeiraContainer">
+                    <button class="cadeiraAtivaContent" onclick="selecionaCadeira(this)" onkeypress="selecionaCadeira(this)">
+                        C2
+                    </button>
+                </div>
+                <div class="cadeiraContainer">
+                    <button class="cadeiraAtivaContent" onclick="selecionaCadeira(this)" onkeypress="selecionaCadeira(this)">
+                        C3
+                    </button>
+                </div>
+                <div class="cadeiraContainer">
+                    <button class="cadeiraAtivaContent" onclick="selecionaCadeira(this)" onkeypress="selecionaCadeira(this)">
+                        C4
+                    </button>
+                </div>
+                <div class="cadeiraContainer">
+                    <button class="cadeiraAtivaContent" onclick="selecionaCadeira(this)" onkeypress="selecionaCadeira(this)">
+                        C5
+                    </button>
+                </div>
+                <div class="cadeiraContainer">
+                    <button class="cadeiraAtivaContent" onclick="selecionaCadeira(this)" onkeypress="selecionaCadeira(this)">
+                        C6
+                    </button>
+                </div>
+                <div class="cadeiraContainer">
+                    <button class="cadeiraAtivaContent" onclick="selecionaCadeira(this)" onkeypress="selecionaCadeira(this)">
+                        C7
+                    </button>
+                </div>
+                <div class="cadeiraContainer">
+                    <button class="cadeiraAtivaContent" onclick="selecionaCadeira(this)" onkeypress="selecionaCadeira(this)">
+                        C8
+                    </button>
+                </div>
+            </div>
+
+            <div class="AreaCadeiras">
+                <div class="cadeiraContainer cadeiraObeso">
+                    <button class="cadeiraInativaContent">
+                        D1
+                    </button>
+                </div>
+                <div class="cadeiraContainer">
+                    <button class="cadeiraAtivaContent" onclick="selecionaCadeira(this)" onkeypress="selecionaCadeira(this)">
+                        D2
+                    </button>
+                </div>
+                <div class="cadeiraContainer">
+                    <button class="cadeiraAtivaContent" onclick="selecionaCadeira(this)" onkeypress="selecionaCadeira(this)">
+                        D3
+                    </button>
+                </div>
+                <div class="cadeiraContainer">
+                    <button class="cadeiraAtivaContent" onclick="selecionaCadeira(this)" onkeypress="selecionaCadeira(this)">
+                        D4
+                    </button>
+                </div>
+                <div class="cadeiraContainer">
+                    <button class="cadeiraAtivaContent" onclick="selecionaCadeira(this)" onkeypress="selecionaCadeira(this)">
+                        D5
+                    </button>
+                </div>
+                <div class="cadeiraContainer">
+                    <button class="cadeiraAtivaContent" onclick="selecionaCadeira(this)" onkeypress="selecionaCadeira(this)">
+                        D6
+                    </button>
+                </div>
+                <div class="cadeiraContainer">
+                    <button class="cadeiraAtivaContent" onclick="selecionaCadeira(this)" onkeypress="selecionaCadeira(this)">
+                        D7
+                    </button>
+                </div>
+                <div class="cadeiraContainer">
+                    <button class="cadeiraAtivaContent" onclick="selecionaCadeira(this)" onkeypress="selecionaCadeira(this)">
+                        D8
+                    </button>
+                </div>
+            </div>
+            
+            <div class="AreaCadeiras">
+                <div class="cadeiraContainer">
+                    <button class="cadeiraAtivaContent" onclick="selecionaCadeira(this)" onkeypress="selecionaCadeira(this)">
+                        E1
+                    </button>
+                </div>
+                <div class="cadeiraContainer">
+                    <button class="cadeiraAtivaContent" onclick="selecionaCadeira(this)" onkeypress="selecionaCadeira(this)">
+                        E2
+                    </button>
+                </div>
+                <div class="cadeiraContainer">
+                    <button class="cadeiraAtivaContent" onclick="selecionaCadeira(this)" onkeypress="selecionaCadeira(this)">
+                        E3
+                    </button>
+                </div>
+                <div class="cadeiraContainer">
+                    <button class="cadeiraAtivaContent" onclick="selecionaCadeira(this)" onkeypress="selecionaCadeira(this)">
+                        E4
+                    </button>
+                </div>
+                <div class="cadeiraContainer">
+                    <button class="cadeiraAtivaContent" onclick="selecionaCadeira(this)" onkeypress="selecionaCadeira(this)">
+                        E5
+                    </button>
+                </div>
+                <div class="cadeiraContainer">
+                    <button class="cadeiraAtivaContent" onclick="selecionaCadeira(this)" onkeypress="selecionaCadeira(this)">
+                        E6
+                    </button>
+                </div>
+                <div class="cadeiraContainer">
+                    <button class="cadeiraAtivaContent" onclick="selecionaCadeira(this)" onkeypress="selecionaCadeira(this)">
+                        E7
+                    </button>
+                </div>
+                <div class="cadeiraContainer">
+                    <button class="cadeiraAtivaContent" onclick="selecionaCadeira(this)" onkeypress="selecionaCadeira(this)">
+                        E8
+                    </button>
+                </div>
+            </div>
+
+            <div class="AreaCadeiras">
+                <div class="cadeiraContainer">
+                    <button class="cadeiraAtivaContent" onclick="selecionaCadeira(this)" onkeypress="selecionaCadeira(this)">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-person-wheelchair" viewBox="0 0 16 16">
+                            <path d="M12 3a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3m-.663 2.146a1.5 1.5 0 0 0-.47-2.115l-2.5-1.508a1.5 1.5 0 0 0-1.676.086l-2.329 1.75a.866.866 0 0 0 1.051 1.375L7.361 3.37l.922.71-2.038 2.445A4.73 4.73 0 0 0 2.628 7.67l1.064 1.065a3.25 3.25 0 0 1 4.574 4.574l1.064 1.063a4.73 4.73 0 0 0 1.09-3.998l1.043-.292-.187 2.991a.872.872 0 1 0 1.741.098l.206-4.121A1 1 0 0 0 12.224 8h-2.79zM3.023 9.48a3.25 3.25 0 0 0 4.496 4.496l1.077 1.077a4.75 4.75 0 0 1-6.65-6.65z"/>
+                        </svg>F1
+                    </button>
+                </div>
+                <div class="cadeiraContainer">
+                    <button class="cadeiraAtivaContent" onclick="selecionaCadeira(this)" onkeypress="selecionaCadeira(this)">
+                        F2
+                    </button>
+                </div>
+                <div class="cadeiraContainer">
+                        
+                </div>
+                <div class="cadeiraContainer">
+                        
+                </div>
+                <div class="cadeiraContainer">
+                        
+                </div>
+                <div class="cadeiraContainer">
+                        
+                </div>
+                <div class="cadeiraContainer">
+                    <button class="cadeiraAtivaContent" onclick="selecionaCadeira(this)" onkeypress="selecionaCadeira(this)">
+                        F7
+                    </button>
+                </div>
+                <div class="cadeiraContainer">
+                    <button class="cadeiraAtivaContent" onclick="selecionaCadeira(this)" onkeypress="selecionaCadeira(this)">
+                        F8
+                    </button>
+                </div>
+                <div class="cadeiraContainer">
+                        
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <form class="formInfo">
+        <p>Assento Selecionado: <span id="AssentoEscolhido"></span></p>
+        <p style="margin-top:1.5rem ;">Valor: R$10,00</p>
+        <input type="submit" value="Prosseguir" id="BotaoProsseguir" class="button-Inativo" role="button" disabled
+            aria-describedby="Selecione uma cadeira para prosseguir">
+    </form>
+
+
+</div>

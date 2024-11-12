@@ -1,0 +1,207 @@
+﻿@inject Microsoft.Extensions.Configuration.IConfiguration Configuration
+@model SiteSesc.Models.ViewModel.UsuarioCreate
+@{
+    ViewData["Title"] = "Login";
+    Layout = "~/Views/Shared/_Login.cshtml";
+}
+<style>
+    html, body { 
+        margin:0; 
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-image: url("images/static/bg_pessoas.webp");
+        background-size:cover;
+        
+    }
+
+    .pb-3{
+        padding: 0px !important;
+        width: 100%;
+        height: 100%;
+    }
+
+    .imglogodiv{
+        position: relative;
+        margin: 20px;
+        width: 100%;
+        height: 100px;
+        overflow: hidden;
+        display: flex;
+        justify-content: center;
+    }
+
+    #cemporcento{
+        min-height: 100% !important;
+        height: auto;
+        padding: 0;
+    }
+
+    .imglogo{
+        position: absolute;
+        width: 100%;
+        top: -40px;
+        max-width: 300px;
+        margin: auto;
+    }
+
+    .contents{
+        margin: auto;
+        width: 50% !important;
+        max-width: 700px;
+        background: rgba(255, 255, 255, 0.90);
+        backdrop-filter: blur(8px);
+        padding-inline: 1rem;
+        min-height: 100% !important;
+        height: auto;
+    }
+
+
+    .contents .form-group {
+        background: white;
+    }
+
+    .half, .half .container > .row {
+        height: auto !important
+    }
+
+    .col-md-12{
+        max-width: 450px;
+    }
+    
+    .col-md-12 form {
+        display: block;
+        margin-top: 0em;
+        unicode-bidi: isolate;
+    }
+
+    .textoImportante{
+        color: gray;
+        font-size: 12px;
+    }
+
+    #bg-carroussel {
+        overflow: hidden;
+        position: relative;
+    }
+
+        #bg-carroussel img {
+            height: 100%;
+            object-fit: cover;
+            position: absolute;
+            opacity: 0;
+            transition: opacity 2s ease;
+        }
+
+            #bg-carroussel img.active {
+                opacity: 1;
+            }
+
+    .areaBotaoConfirmar{
+        display: flex;
+        flex-direction: row;
+        justify-content: space-evenly;
+        margin-bottom: 10px;
+    }
+
+    .half, .half .container > .row {
+        height: 100% !important;
+    }
+
+    @@media screen and (max-width: 767px) {
+        #bg-carroussel {
+            display: none;
+        }
+        
+        .contents{
+            width: 100% !important;
+            max-width: 767px;
+            background: white;
+            padding-inline: auto;
+        }
+        
+    }
+</style>
+<div class="half" id="cemporcento">
+    <div class="contents order-2 order-md-1">
+        <div class="container">
+            <div class="row align-items-center justify-content-center">
+                <div class="col-md-12">
+                    <div class="imglogodiv">
+                        <img src="~/images/static/LogoConjuntaHorizontal.webp" class="imglogo">
+                    </div>
+                    <p class="textoImportante"><strong>Importante:</strong> para cadastrar dependentes, o comerciário titular deve estar cadastrado, devendo acessar a área do cliente e ir até a sessão de 
+                        dependentes para efetuar o cadastro, para acessar a área do cliente <a href="https://sesc-pa.com.br/cliente">clique aqui</a>.</p>
+                    <h3>Novo cliente <strong>Sesc @Configuration["Ambiente:UF"]</strong></h3>
+                    <span class="text-danger">@ViewBag.Validation</span>
+
+                    <form asp-action="Create" asp-controller="Usuario" method="post">
+                        <div class="form-group first">
+                            <label for="Nome">Nome completo</label>
+                            <input asp-for="Nome" name="Nome" type="text" class="form-control" placeholder="Digite seu nome">
+                            <span asp-validation-for="Nome" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label for="Cpf">CPF</label>
+                            <input asp-for="Cpf" name="Cpf" type="text" class="form-control" placeholder="Digite seu CPF">
+                            <span asp-validation-for="Cpf" class="text-danger"></span>
+
+                        </div>
+                       @*  <div class="form-group">
+                            <label for="Username">Usuário para login</label>
+                            <input asp-for="Username" name="Username" class="form-control" placeholder="Digite um nome de usuário para login"
+                                   maxlength="20" pattern="^[^\s]+$" title="O nome de usuário não pode conter espaços e deve ter no máximo 20 caracteres">
+                            <span asp-validation-for="Username" class="text-danger"></span>
+                        </div> *@
+
+                        <div class="form-group">
+                            <label for="Senha">Senha</label>
+                            <input asp-for="Senha" name="Senha" type="password" class="form-control" placeholder="Digite sua senha" id="senha">
+                            <span asp-validation-for="Senha" class="text-danger"></span>
+
+                        </div>
+                        <div class="form-group">
+                            <label for="ConfirmarSenha">Confirme a senha</label>
+                            <input asp-for="ConfirmarSenha" name="ConfirmarSenha" type="password" class="form-control" placeholder="Confirme a senha">
+                            <span asp-validation-for="ConfirmarSenha" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label for="Email">E-mail</label>
+                            <input asp-for="Email" name="Email" type="email" class="form-control" placeholder="Digite um e-mail válido">
+                            <span asp-validation-for="Email" class="text-danger"></span>
+
+                        </div>
+                        <div class="form-group last mb-3">
+                            <label for="ConfirmaEmail">Confirme seu e-mail</label>
+                            <input asp-for="ConfirmaEmail" name="ConfirmaEmail" type="email" class="form-control" placeholder="Confirme seu e-mail">
+                            <span asp-validation-for="ConfirmaEmail" class="text-danger"></span>
+                        </div>
+                        <div class="areaBotaoConfirmar">
+                            <span></span>
+                            <input type="submit" value="Confirmar" class="theme-btn theme-btn-big">
+                            <a href="@Url.Action("Login","Usuario")" style="margin-left: 20px">Cancelar</a>
+                        </div>
+                        <input asp-for="Username" name="Username" type="hidden"value="username" class="form-control" placeholder="Digite seu CPF">
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        const carroussel = document.getElementById('bg-carroussel');
+        const imagens = carroussel.getElementsByTagName('img');
+        let index = 0;
+
+        function trocarImagem() {
+            imagens[index].classList.remove('active');
+            index = (index + 1) % imagens.length;
+            imagens[index].classList.add('active');
+        }
+
+        setInterval(trocarImagem, 3000);
+    </script>
+}

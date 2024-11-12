@@ -1,0 +1,604 @@
+﻿@model SiteSesc.Models.EventoExterno.EventoAvulso
+@{
+    Layout = "../Shared/_Event.cshtml";
+    ViewBag.Title = Model.NomeEvento;
+    ViewBag.Cidades = Model.Unidade;
+    var msg = ViewBag.Validadcao != null ? ViewBag.Validadcao : "";
+
+}
+<link href="~/css/atividade/finalizacompra.css" rel="stylesheet" />
+<style>
+
+    .copyright-text {
+        position: fixed; /* Fixa o texto na tela */
+        bottom: 0; /* Alinha o texto na parte inferior */
+        left: 50%; /* Move para o centro da tela */
+        transform: translateX(-50%); /* Centraliza o texto horizontalmente */
+        text-align: center; /* Alinha o texto centralizado */
+        color: white; /* Define a cor do texto como branco */
+        z-index: 1000; /* Garante que o texto esteja acima de outros elementos */
+        padding: 10px; /* Adiciona um pouco de espaçamento ao redor do texto */
+        background-color: rgba(0, 0, 0, 0.1); /* Adiciona um fundo transparente escuro (opcional) */
+        width: 100%; /* Faz com que o texto ocupe toda a largura da tela */
+        border-top-left-radius: 10px; /* Arredonda o canto inferior esquerdo */
+        border-top-right-radius: 10px; /* Arredonda o canto inferior direito */
+    }
+
+    .loading-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: white;
+        z-index: 9999;
+    }
+
+    #conteudo {
+        top: 250px
+    }
+
+    #btn-confirmar {
+        max-width: 300px;
+        height: 50px;
+        text-transform: uppercase;
+    }
+
+    .input-large {
+        position: relative;
+        height: 70px;
+        width: 100%;
+        margin: 0px;
+        padding-left: 0px;
+        margin-bottom: 10px    }
+
+        .input-large > input, select {
+            height: 100%;
+            width: 100%;
+            border-radius: 10px;
+            padding-top: 25px;
+            padding-left: 10px;
+            padding-right: 25px;
+            text-align: left;
+            font-size: 20px;
+            border: none;
+        }
+
+        .input-large > label {
+            position: absolute;
+            top: 5px;
+            left: 10px;
+            font-size: 13px;
+            color: black
+        }
+
+    .btn-large {
+        width: 100%;
+        height: 70px;
+        font-size: 24px;
+        border-radius: 10px;
+    }
+
+    /* Estilos para posicionar o ícone no canto superior esquerdo */
+    .menu-icon {
+        position: fixed;
+        top: 10px;
+        left: 10px;
+        z-index: 1000; /* Garantir que o ícone esteja acima de outros elementos */
+    }
+
+
+    @@media (max-width:480px) {
+        .input-large > input, select, .btn-large {
+            width: 90%;
+        }
+    }
+
+</style>
+
+
+<div class="modal fade no-radius" id="modalloading" data-backdrop="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl modal-full" role="document">
+        <div class="modal-content bg-white">
+            <div class="loading-overlay">
+                <div class="row">
+                    <h5>Enviando, aguarde...</h5>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="conteudo" class="container mt-5">
+    <a href="@Url.Action("Index", "EventoAvulso")" class="menu-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="54" height="54" style="fill: #ffffff;" class="bi bi-arrow-bar-left" viewBox="0 0 16 16">
+            <path fill-rule="evenodd" d="M12.5 15a.5.5 0 0 1-.5-.5v-13a.5.5 0 0 1 1 0v13a.5.5 0 0 1-.5.5M10 8a.5.5 0 0 1-.5.5H3.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L3.707 7.5H9.5a.5.5 0 0 1 .5.5" />
+        </svg>
+    </a>
+    <h1 class="mb-0 text-white font-anton">@Model.NomeEvento</h1>
+    <h5>&nbsp</h5>
+    <input id="idevento" name="idevento" value="@Model.Id" type="hidden" />
+    <style>
+        /* Imagem que fica por baixo */
+        .background-image-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 400px; /* Ajuste a altura conforme necessário */
+            z-index: -1; /* Coloca a imagem atrás de tudo */
+            overflow: hidden;
+            border-bottom-left-radius: 10px; /* Arredonda o canto inferior esquerdo */
+            border-bottom-right-radius: 10px; /* Arredonda o canto inferior direito */
+        }
+
+            .background-image-container img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover; /* Garante que a imagem se encaixe corretamente */
+            }
+
+            .background-image-container::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.4); /* Ajuste o nível de escurecimento */
+                z-index: 1;
+                border-bottom-left-radius: 10px; /* Arredonda o canto inferior esquerdo */
+                border-bottom-right-radius: 10px; /* Arredonda o canto inferior direito */
+            }
+
+        /* Botões e container2 estão acima da imagem */
+        .container2, #toggleButton, #showFormButton {
+            position: relative; /* Garante que fiquem acima da imagem */
+            z-index: 2; /* Mantém acima da imagem de fundo */
+        }
+
+        .container2 {
+            background: white;
+            padding: 10px;
+            box-shadow: 0 -0.5rem 1rem rgba(0 0 0 / 0.15);
+            border-radius: 10px;
+            font-family: Arial, sans-serif;
+            margin-top: 20px; /* Espaço entre a imagem e o conteúdo */
+        }
+
+        .event-card {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-gap: 20px;
+        }
+
+            .event-card p {
+                margin: 5px 0;
+            }
+
+            .event-card strong {
+                font-weight: bold;
+            }
+
+        .full-width {
+            grid-column: span 2; /* Campo ocupa toda a largura */
+        }
+
+        #toggleButton, #showFormButton {
+            background: white;
+            padding: 1.5rem;
+            box-shadow: 0 -0.5rem 1rem rgba(0 0 0 / 0.15);
+            border-radius: 10px;
+            border: none;
+            padding: 10px 20px;
+            margin-right: 10px;
+            margin-bottom: 10px;
+            z-index: 2; /* Garante que os botões fiquem acima da imagem */
+        }
+
+            #toggleButton:hover, #showFormButton {
+                background-color: lightgrey;
+            }
+
+        #showFormButton {
+            background-color: forestgreen;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+
+            #showFormButton:hover {
+                background-color: green;
+            }
+
+        .form-container {
+            display: none;
+            margin-top: 10px;
+        }
+
+        .alert {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #ffc107;
+            color: #856404;
+            border: 1px solid #ffeeba;
+            border-radius: 10px;
+        }
+    </style>
+
+
+    <!-- Container da imagem de fundo -->
+    @if (ViewBag.CaminhoImagem != null)
+    {
+        <div class="background-image-container">
+            <img src="@ViewBag.CaminhoImagem" alt="Imagem de fundo do evento" />
+        </div>
+    }
+
+    <!-- Botões -->
+    <button id="toggleButton">Informações do Evento</button>
+
+    @if (ViewBag.Notification != null)
+    {
+        <h1></h1>
+    }
+    else
+    {
+        <button id="showFormButton">Inscreva-se</button>
+    }
+
+    <!-- Container do evento (acima da imagem) -->
+    <div class="container2" id="eventInfo">
+        <div class="event-card">
+            <p><strong>Data do Evento:</strong> @Model.DataEvento.ToString("dd/MM/yyyy")</p>
+            <p><strong>Início das Inscrições:</strong> @Model.DataInicio.ToString("dd/MM/yyyy")</p>
+            <p><strong>Término das Inscrições:</strong> @Model.DataFim.ToString("dd/MM/yyyy")</p>
+            <p><strong>Unidade:</strong> @Model.LocalEvento</p>
+            <p><strong>Local:</strong> @ViewBag.CidadeNome</p>
+            <p><strong>Valor:</strong> @(Model.IsGratuito ? "Gratuito" : "R$ " + Model.Valor.ToString("F2"))</p>
+            <p><strong>Quantidade de Vagas:</strong> @(Model.QtdVagas.HasValue ? Model.QtdVagas.Value.ToString() : "Ilimitadas")</p>
+            <p><strong>Idade Mínima:</strong> @(Model.IdadeMin.HasValue ? Model.IdadeMin.Value.ToString() : "Nenhuma")</p>
+            <p><strong>Idade Máxima:</strong> @(Model.IdadeMax.HasValue ? Model.IdadeMax.Value.ToString() : "Nenhuma")</p>
+            <p class="full-width"><strong>Instruções Adicionais:</strong> @(!string.IsNullOrEmpty(Model.InstrucaoAdicional) ? Model.InstrucaoAdicional : "Nenhuma")</p>
+        </div>
+
+        @if (ViewBag.Notification != null)
+        {
+            <div class="alert alert-warning text-center mt-5">
+                <h1>@ViewBag.Notification</h1>
+            </div>
+        }
+    </div>
+    
+
+
+
+    <div class="form-container" id="formContainer">
+        @if (ViewBag.Notification != null)
+        {
+            <div class="alert alert-warning text-center mt-5">
+                <h1></h1>
+            </div>
+        }
+        else
+        {
+            <form method="post" asp-action="Inscrever" asp-controller="EventoAvulso" data-ajax="true" data-ajax-method="post" data-ajax-failure="Falha ao gerar PIX" data-ajax-complete="exibeQrCode" data-ajax-loading="#spinner">
+                <input id="idevento" name="idevento" value="@Model.Id" hidden />
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <div class="input-large">
+                                <label for="nome">PRIMEIRO NOME</label>
+                                <input id="nome" name="nome" type="text" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <div class="input-large">
+                                <label for="sobrenome">SOBRENOME</label>
+                                <input id="sobrenome" name="sobrenome" type="text" required>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <div class="input-large">
+                                <label for="sexo">SEXO</label>
+                                <select name="sexo" id="sexo" required>
+                                    <option class="opt-large" selected>Selecione um sexo</option>
+                                    <option class="opt-large" value="M">Masculino</option>
+                                    <option class="opt-large" value="F">Feminino</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <div class="input-large">
+                                <label for="telefone">TELEFONE</label>
+                                <input id="telefone" name="telefone" type="text" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-5">
+                        <div class="form-group">
+                            <div class="input-large">
+                                <label for="cpf">CPF <span id="validaCpf" style="color: red; margin-left: 15px"></span></label>
+                                <input id="cpf" name="cpf" type="text" required>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <div class="input-large">
+                                <label for="dtnascimento">DATA DE NASCIMENTO</label>
+                                <input onchange="calcularIdade()" id="dtnascimento" name="dtnascimento" type="date" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <div class="input-large">
+                                <label for="email">EMAIL</label>
+                                <input id="email" name="email" type="email" required>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-center">
+                    <button type="button" class="btn btn-success btn-large" onclick="abriModalEvento()">Confirmar Inscrição</button>
+                </div>
+
+                <!---- MODAL TERMO---->
+                <div class="modal fade no-radius" id="modalTermo" data-backdrop="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered modal-xl modal-full" role="document">
+                        <div class="modal-content bg-white">
+                            <div class="modal-header">
+                                <button type="button" class="close btn-close" data-bs-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                @Html.Raw(Model.TermoAdesao)
+                            </div>
+                            <div class="modal-footer bg-white mt-5 ">
+                                @if (!Model.IsGratuito)
+                                {
+                                    <div class="row">
+                                        <div class="col-md">
+                                            <p class="font-montserrat" style="color: red; font-weight: bold; font-size: 18px">Sua inscrição será confirmada após o pagamento do PIX. Acompanhe a situação clicando no link enviado no seu email.</p>
+                                        </div>
+                                    </div>
+                                }
+                                <div class="row align-items-center">
+                                    <!-- Checkbox e Label -->
+                                    <div class="col-md-6 d-flex align-items-center">
+                                        <input type="checkbox" class="form-check-input me-2" id="aceita-termo">
+                                        <label class="form-check-label font-anton font-size-18 me-auto" for="aceita-termo">Li e aceito os termos descritos acima</label>
+                                    </div>
+                                    <!-- Botões "Li e Aceito" e "Cancelar" lado a lado -->
+                                    <div class="col-md-6 d-flex">
+                                        <button id="btn-confirmar" class="btn btn-danger text-white w-50 me-2" type="submit" disabled>CONFIRMAR</button>
+                                        <button type="button" data-bs-dismiss="modal" aria-label="Close" class="btn btn-light text-dark w-50">CANCELAR</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <h2>&nbsp;</h2>
+                <h2>&nbsp;</h2>
+            </form>
+        }
+    </div>
+</div>
+<div class="copyright-text">
+    <p>Copyright © 2024 Serviço Social do Comércio AR/Pará</p>
+</div>
+
+@section Scripts{
+    <script src="~/js/CustomValidation.js"></script>
+    <script src="~/js/Cobranca/pix.js"></script>
+    <script src="~/js/app/validacpf.js"></script>
+    <script>
+
+        window.onload = function () {
+            validaIns();
+        };
+
+        document.getElementById('dtnascimento').addEventListener('input', function () {
+            // Verifica se o valor é uma data válida
+            const inputDate = this.value;
+            const dateParts = inputDate.split('-');
+
+            // Se o ano tiver 5 dígitos, corrige para 4
+            if (dateParts.length === 3 && dateParts[0].length > 4) {
+                this.value = inputDate.slice(0, 5); // Mantém apenas os primeiros 4 dígitos
+                swal({
+                    text: 'Ano só contem 4 digitos.',
+                    icon: 'warning',
+                    buttons: true,
+                    dangerMode: true, // Define o botão de perigo se for um aviso
+                });
+            }
+        });
+
+        function verificaIdade() {
+            calcularIdade();
+        }
+
+        $(document).ready(function () {
+            $('form').submit(function () {
+
+                var idade = calcularIdade();
+                if (idade >= @Model.IdadeMin && idade <= @Model.IdadeMax) {
+                    $('#modalloading').modal('show'); // Exibe o GIF de loading
+                    return true; // Permite que o formulário seja enviado normalmente
+                }
+                else {
+                    
+                    swal({
+                        text: 'Idade não permitida para esse evento.',
+                        icon: 'warning',
+                        buttons: true,
+                        dangerMode: true, // Define o botão de perigo se for um aviso
+                    });
+                }
+            });
+        });
+
+
+        $('#cpf').mask('999.999.999-99');
+        var inputCPF = document.getElementById("cpf");
+
+        var behavior = function (val) {
+            return val.replace(/\D/g, '').length === 11 ? '(00) 00000-0000' : '(00) 0000-00009';
+        },
+            options = {
+                onKeyPress: function (val, e, field, options) {
+                    field.mask(behavior.apply({}, arguments), options);
+                }
+            };
+        $('#telefone').mask(behavior, options);
+
+        $('input[type="checkbox"]').click(function () {
+            if ($(this).prop("checked") === true) {
+                $("#btn-confirmar").attr("disabled", false);
+            }
+            else if ($(this).prop("checked") === false) {
+                $("#btn-confirmar").attr("disabled", true);
+            }
+        });
+
+        // function abriModalEvento() {
+        //     var inputNome = $('#nome').val();
+        //     var inputSobreNome = $('#sobrenome').val();
+        //     var inputTelefone = $('#telefone').val();
+        //     var inputCpf = $('#cpf').val();
+        //     var inputDtnasc = $('#dtnascimento').val();
+        //     var inputEmail = $('#email').val();
+        //     var idade = calcularIdade();
+
+        //     // Verifica se todos os campos estão preenchidos
+        //     if (inputNome !== '' && inputSobreNome !== '' && inputTelefone !== '' && inputCpf !== '' && inputDtnasc !== '' && inputEmail !== '') {
+        //         // Verifica a idade
+        //         if (idade >= @Model.IdadeMin && idade <= @Model.IdadeMax) {
+        //             $('#modalTermo').modal('show');
+        //         } else {
+        //             swal({
+        //                 text: 'Idade não permitida para esse evento.',
+        //                 icon: 'warning',
+        //                 buttons: true,
+        //                 dangerMode: true, // Define o botão de perigo se for um aviso
+        //             });
+        //         }
+        //     } else {
+        //         swal({
+        //             text: 'Preencha todos os campos',
+        //             icon: 'warning',
+        //             buttons: true,
+        //             dangerMode: true, // Define o botão de perigo se for um aviso
+        //         });
+        //     }
+        // }
+
+
+        function abriModalEvento() {
+            var inputNome = $('#nome').val();
+            var inputSobreNome = $('#sobrenome').val();
+            var inputTelefone = $('#telefone').val();
+            var inputCpf = $('#cpf').val();
+            var inputDtnasc = $('#dtnascimento').val();
+            var inputEmail = $('#email').val();
+            var idade = calcularIdade();
+
+            // Verifica se todos os campos estão preenchidos
+            if (inputNome !== '' && inputSobreNome !== '' && inputTelefone !== '' && inputCpf !== '' && inputDtnasc !== '' && inputEmail !== '') {
+                // Valida o CPF usando a função do arquivo validacpf.js
+                if (validarCPF(inputCpf)) {
+                    // Verifica a idade
+                    if (idade >= @Model.IdadeMin && idade <= @Model.IdadeMax) {
+                        $('#modalTermo').modal('show');
+                    } else {
+                        swal({
+                            text: 'Idade não permitida para esse evento.',
+                            icon: 'warning',
+                            buttons: true,
+                            dangerMode: true,
+                        });
+                    }
+                } else {
+                    swal({
+                        text: 'CPF inválido',
+                        icon: 'warning',
+                        buttons: true,
+                        dangerMode: true,
+                    });
+                }
+            } else {
+                swal({
+                    text: 'Preencha todos os campos',
+                    icon: 'warning',
+                    buttons: true,
+                    dangerMode: true,
+                });
+            }
+        }
+     
+
+        inputCPF.addEventListener("input", function () {
+            if (inputCPF.value.length == 14) {
+                if (validarCPF(inputCPF.value)) {
+                    $("#validaCpf").text('');
+                } else {
+                    $("#validaCpf").text('CPF inválido');
+                }
+            }
+        });
+
+        inputCPF.addEventListener("blur", function () {
+            if (validarCPF(inputCPF.value)) {
+                $("#validaCpf").text('');
+            } else {
+                $("#validaCpf").text('CPF inválido');
+            }
+        });
+
+        function calcularIdade() {
+            var dataNascimento = document.getElementById('dtnascimento').value;
+            var dataNascimentoObj = new Date(dataNascimento);
+            var dataAtual = new Date();
+            var diferenca = dataAtual.getTime() - dataNascimentoObj.getTime();
+            var idade = Math.floor(diferenca / (1000 * 60 * 60 * 24 * 365.25));
+            //console.log('Idade:', idade);
+            return idade;
+        }
+
+        $('#btn-confirmar').click(function () {
+            $('#modalTermo').modal('hide'); // Fechar o modal
+        });
+
+        document.getElementById("toggleButton").addEventListener("click", function () {
+            document.getElementById("eventInfo").style.display = "block"; // Exibir a div
+            document.getElementById("formContainer").style.display = "none"; // Ocultar o formulário
+        });
+
+        document.getElementById("showFormButton").addEventListener("click", function () {
+            document.getElementById("eventInfo").style.display = "none"; // Ocultar a div
+            document.getElementById("formContainer").style.display = "block"; // Exibir o formulário
+        });
+    </script>
+}

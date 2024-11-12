@@ -1,0 +1,410 @@
+﻿@* @model SiteSesc.Models.ApiPagamento.DadosCobranca
+@{
+    int anoExpiracao = DateTime.Now.Year;
+}
+
+<form id="form-recarga-credito">
+    <div class="card" style="border-radius: 40px; background-color: #e3e3e3">
+        <div class="card-body">
+            <input hidden name="dados.IDCLASSE" value="@Model.IDCLASSE" />
+            <input hidden name="dados.CDUOP" value="@Model.CDUOP" />
+            <input hidden name="dados.SQMATRIC" value="@Model.SQMATRIC" />
+            <input hidden name="dados.CPF" value="@Model.CPF" />
+            <input hidden name="dados.CDELEMENT" value="@Model.CDELEMENT" />
+            <input hidden name="dados.SQCOBRANCA" value="@Model.SQCOBRANCA" />
+
+            <div class="text-center mt-3">
+                <div class="mx-0 inline">
+                    <span class="font-size-24">R$*</span><input type="text" class="form-control font-size-24 moneyInput notNull" id="moneyInput" name="payment.Amount" placeholder="Digite um valor" />
+                </div>
+            </div>
+            
+            <div class="text-left">
+                <div class="mt-5">
+                    <div class="form-group">
+                        <span class="text-change-whith-theme font-size-12">Titular do Cartão*</span>
+                        <input id="titular" name="payment.Name" class="form-control notNull" />
+                    </div>
+                </div>
+                <div class="mt-3">
+                    <div class="form-group">
+                        <label class="text-change-whith-theme font-size-12">CPF do titular do cartão*</label>
+                        <input id="cpf-cartao" name="payment.Identity" class="form-control notNull" />
+                    </div>
+                </div>
+            </div>
+            <div class="row text-left">
+                <div class="col-md-6 mt-3">
+                    <div class="form-group">
+                        <label class="text-change-whith-theme font-size-12">Numero do Cartão*</label> <img id="img-brand" />
+                        <input id="numero-cartao" type="number" name="payment.CardNumber" class="form-control notNull" /><div id="brand-img-1"></div>
+                    </div>
+                </div>
+
+                <div class="col-md-6 ">
+                    <div class="row">
+                        <div class="col-md-4 mt-3">
+                            <div class="form-group">
+                                <label class="text-change-whith-theme font-size-12">Cód. Segurança*</label>
+                                <input id="security-code" type="number" maxlength="4" name="payment.SecurityCode" class="form-control notNull" />
+                            </div>
+                        </div>
+                        <div class="col-md mt-3">
+                            <label class="text-change-whith-theme font-size-12">Vencimento*</label>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <select class="form-control notNull" name="payment.MonthExpiration">
+                                            <option selected value="">Mês</option>
+                                            <option value="01">Janeiro</option>
+                                            <option value="02">Fevereiro</option>
+                                            <option value="03">Março</option>
+                                            <option value="04">Abril</option>
+                                            <option value="05">Maio</option>
+                                            <option value="06">Junho</option>
+                                            <option value="07">Julho</option>
+                                            <option value="08">Agosto</option>
+                                            <option value="09">Setembro</option>
+                                            <option value="10">Outubro</option>
+                                            <option value="11">Novembro</option>
+                                            <option value="12">Dezembro</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-1 p-0 text-center">/</div>
+                                
+                                <div class="col-md-5">
+                                    <div class="form-group">
+                                        <select class="form-control notNull" name="payment.YearExpiration">
+                                            <option selected value="">Ano</option>
+                                            @for (var i = 0; i < 10; i++)
+                                            {
+                                                <option value="@anoExpiracao">@anoExpiracao</option>
+                                                {
+                                                    anoExpiracao++;
+                                                }
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="mt-5">
+        <a class="btn-rounded bg-transaparent mt-3" onclick="onModalClose()">Cancelar</a>
+        <button class="btn-rounded bg-blue mt-3">Confirmar</button>
+    </div>
+</form>
+
+
+
+<script>
+    document.getElementById("form-recarga-credito").addEventListener("submit", function (event) {
+        event.preventDefault();
+
+        if (validarFormulario()) {
+            var loadingImg = document.createElement('img');
+            loadingImg.src = '/images/loading.gif';
+            loadingImg.alt = 'Carregando...';
+            loadingImg.id = 'loadingImg';
+
+            var loadingDiv = document.createElement('div');
+            loadingDiv.id = 'loading';
+            loadingDiv.style.display = 'flex'; // Inicialmente oculto
+
+            loadingDiv.appendChild(loadingImg);
+            document.body.appendChild(loadingDiv);
+
+
+            let formData = new FormData(this);
+            console.log(formData);
+            fetch("/cobrancas/pagamento-credito", {
+                method: "POST",
+                body: formData
+            })
+                .then(response => response.text())
+                .then(data => {
+                    var retorno = JSON.parse(data);
+                    if (retorno.code == 1) {
+                        document.getElementById('loading').style.display = 'none';
+
+                        swal({
+                            title: 'Eba!',
+                            text: retorno.msg,
+                            icon: 'success',
+                            timer: 3000
+                        });
+                        setTimeout(function () {
+                            location.reload();
+                        }, 2000);
+                    }
+                    else {
+                        document.getElementById('loading').style.display = 'none';
+
+                        swal({
+                            title: 'Ops!',
+                            text: retorno.msg,
+                            icon: 'error',
+                            timer: 3000
+                        });
+                    }
+                })
+                .catch(error => {
+                    document.getElementById('loading').style.display = 'none';
+
+                    swal({
+                        title: 'Ops!',
+                        text: '',
+                        icon: 'error',
+                        timer: 3000
+                    });
+                });
+        }
+
+
+    });
+
+    function validarFormulario() {
+        var camposNotNull = document.querySelectorAll('.notNull');
+
+        for (var i = 0; i < camposNotNull.length; i++) {
+            if (camposNotNull[i].value.trim() === '') {
+                alert('Por favor, preencha todos os campos obrigatórios.');
+                return false; 
+            }
+        }
+        return true;
+    }
+
+    function exibirModal(conteudo) {
+
+
+        // Exibe o conteúdo retornado em um modal
+        // Código para exibir modal aqui
+    }
+</script> *@
+
+
+
+@model SiteSesc.Models.ApiPagamento.DadosCobranca
+@{
+    int anoExpiracao = DateTime.Now.Year;
+}
+
+<style>
+    @@media (min-width: 576px) {
+        .modal-dialog {
+            max-width: 900px;
+            margin: 1.75rem auto;
+        }
+    }
+</style>
+<form id="form-recarga-credito">
+    <div class="card" style="border-radius: 40px; background-color: #e3e3e3; width: 100%">
+        <div class="card-body">
+
+            <input hidden name="dados.IDCLASSE" value="@Model.IDCLASSE" />
+            <input hidden name="dados.CDUOP" value="@Model.CDUOP" />
+            <input hidden name="dados.SQMATRIC" value="@Model.SQMATRIC" />
+            <input hidden name="dados.CPF" value="@Model.CPF" />
+            <input hidden name="dados.CDELEMENT" value="@Model.CDELEMENT" />
+            <input hidden name="dados.SQCOBRANCA" value="@Model.SQCOBRANCA" />
+
+            <div class="text-center mt-3">
+                <div class="mx-0 inline">
+                    @if (!string.IsNullOrEmpty(Model.VALOR))
+                    {
+                        <span class="font-size-24">@Model.DESCRICAO</span>
+                    }
+                </div>
+                <div class="mx-0 inline text-center">
+                    @if (!string.IsNullOrEmpty(Model.VALOR))
+                    {
+                        <span class="font-size-24"><b>@Model.VALOR</b></span>
+                    }
+                    else
+                    {
+                        <span class="font-size-24">R$ </span>
+                        <input type="text" class="form-control font-size-24 moneyInput notNull" id="moneyInput" name="payment.Amount" placeholder="Digite um valor" />
+                    }
+                </div>
+            </div>
+            <div class="text-left">
+                <div class="mt-5">
+                    <div class="form-group">
+                        <span class="text-change-whith-theme font-size-12">Titular do Cartão*</span>
+                        <input id="titular" name="payment.Name" class="form-control notNull" />
+                    </div>
+                </div>
+                <div class="mt-3">
+                    <div class="form-group">
+                        <label class="text-change-whith-theme font-size-12">CPF do titular do cartão*</label>
+                        <input id="cpf-cartao" name="payment.Identity" class="form-control notNull" />
+                    </div>
+                </div>
+            </div>
+            <div class="row text-left">
+                <div class="col-md-6 mt-3">
+                    <div class="form-group">
+                        <label class="text-change-whith-theme font-size-12">Numero do Cartão*</label> <img id="img-brand" />
+                        <input id="numero-cartao" type="number" name="payment.CardNumber" class="form-control" /><div id="brand-img-1"></div>
+                    </div>
+                </div>
+
+                <div class="col-md-6 ">
+                    <div class="row">
+                        <div class="col-md-4 mt-3">
+                            <div class="form-group">
+                                <label class="text-change-whith-theme font-size-12">Cód. Segurança*</label>
+                                <input id="security-code" type="number" maxlength="4" name="payment.SecurityCode" class="form-control notNull" />
+                            </div>
+                        </div>
+                        <div class="col-md mt-3">
+                            <label class="text-change-whith-theme font-size-12">Vencimento*</label>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <select class="form-control notNull" name="payment.MonthExpiration">
+                                            <option selected value="">Mês</option>
+                                            <option value="01">Janeiro</option>
+                                            <option value="02">Fevereiro</option>
+                                            <option value="03">Março</option>
+                                            <option value="04">Abril</option>
+                                            <option value="05">Maio</option>
+                                            <option value="06">Junho</option>
+                                            <option value="07">Julho</option>
+                                            <option value="08">Agosto</option>
+                                            <option value="09">Setembro</option>
+                                            <option value="10">Outubro</option>
+                                            <option value="11">Novembro</option>
+                                            <option value="12">Dezembro</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-1 p-0 text-center">/</div>
+
+                                <div class="col-md-5">
+                                    <div class="form-group">
+                                        <select class="form-control notNull" name="payment.YearExpiration">
+                                            <option selected value="">Ano</option>
+                                            @for (var i = 0; i < 10; i++)
+                                            {
+                                                <option value="@anoExpiracao">@anoExpiracao</option>
+                                                {
+                                                    anoExpiracao++;
+                                                }
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="mt-5">
+        <a class="btn-rounded bg-transaparent mt-3" onclick="onModalClose()">Cancelar</a>
+        <button class="btn-rounded bg-blue mt-3">Confirmar</button>
+    </div>
+</form>
+
+
+
+<script>
+    document.getElementById("form-recarga-credito").addEventListener("submit", function (event) {
+        event.preventDefault();
+
+        if (validarFormulario()) {
+            var loadingImg = document.createElement('img');
+            loadingImg.src = '/images/loading.gif';
+            loadingImg.alt = 'Carregando...';
+            loadingImg.id = 'loadingImg';
+
+            var loadingDiv = document.createElement('div');
+            loadingDiv.id = 'loading';
+            loadingDiv.style.display = 'flex'; // Inicialmente oculto
+
+            loadingDiv.appendChild(loadingImg);
+            document.body.appendChild(loadingDiv);
+
+
+            let formData = new FormData(this);
+
+            fetch("/cliente/cobrancas/pagamento-credito", {
+                method: "POST",
+                body: formData
+            })
+                .then(response => response.text())
+                .then(data => {
+                    console.log(data);
+                    var retorno = JSON.parse(data);
+                    if (retorno.code == 1) {
+                        document.getElementById('loading').style.display = 'none';
+
+                        swal({
+                            title: 'Eba!',
+                            text: retorno.msg,
+                            icon: 'success',
+                            timer: 3000
+                        });
+                        setTimeout(function () {
+                            location.reload();
+                        }, 2000);
+                    }
+                    else {
+                        document.getElementById('loading').style.display = 'none';
+
+                        swal({
+                            title: 'Ops!',
+                            text: retorno.msg,
+                            icon: 'error',
+                            timer: 3000
+                        });
+                    }
+                })
+                .catch(error => {
+                    document.getElementById('loading').style.display = 'none';
+
+                    swal({
+                        title: 'Ops!',
+                        text: '',
+                        icon: 'error',
+                        timer: 3000
+                    });
+                });
+        }
+
+
+    });
+
+    function validarFormulario() {
+        var camposNotNull = document.querySelectorAll('.notNull');
+
+        for (var i = 0; i < camposNotNull.length; i++) {
+            if (camposNotNull[i].value.trim() === '') {
+                alert('Por favor, preencha todos os campos obrigatórios.');
+                return false;
+            }
+        }
+        return true;
+    }
+
+    function exibirModal(conteudo) {
+
+
+        // Exibe o conteúdo retornado em um modal
+        // Código para exibir modal aqui
+    }
+</script>

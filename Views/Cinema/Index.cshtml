@@ -1,0 +1,169 @@
+@inject Microsoft.Extensions.Configuration.IConfiguration Configuration
+@using System.Web
+@using SiteSesc.Repositories;
+@{
+    Layout = "../Shared/_LayoutCinema.cshtml";
+    ViewBag.Title = "Cinema"; 
+}
+
+<div class="filmecontainer">
+    <img src="~/images/cartazCinema.webp">
+    <div class="FilmeInfo">
+        <div class="filmeTitlulo">
+            <h2>O Menino e o Mundo</h2>
+        </div>
+        <div class="filmeMenu">
+            <a href="#" class="itemMenu ID1 menuAtivo">Sinopse</a> | 
+            <a href="#" class="itemMenu ID1">Ficha Técnica</a> | 
+            <a href="#" class="itemMenu ID1">Trailer</a> | 
+            <a href="#" class="itemMenu ID1">Ingresso</a>
+        </div>
+        <hr>
+        <div class="SubID1 sinopse itemInfo itemAtivo" >
+            Um menino mora com os pais em uma pequena cidade do campo. Diante da falta de trabalho, um dia, ele vê o pai partindo para a cidade grande. Os dias que se seguem são tristes e de memórias confusas para o garoto. Até que então ele faz as malas, pega o trem e vai descobrir o novo mundo em que seu pai mora. Para a sua surpresa, a criança encontra uma sociedade marcada pela pobreza, exploração de trabalhadores e falta de perspectivas.
+        </div>
+        <div class="SubID1 fichaTecnica itemInfo" >
+            <p><strong>Lançamento:</strong> 2013</p>
+            <p><strong>Diretor:</strong>  Alê Abreu</p>
+            <p><strong>Duração:</strong>  79 minutos</p>
+            <p><strong>Classificação:</strong>  L - Livre para todos os públicos</p>
+            <p><strong>Gêneros:</strong>  Animação Aventura Família Nacional</p>
+            <p><strong>Idioma:</strong>  Protuguês</p>
+        </div>
+        <div class="SubID1 trailer itemInfo" >
+            <iframe
+            src="https://www.youtube.com/embed/l7x8oi_1GBo?si=Gq38f-Qz4hyfx_01" 
+            title="YouTube video player" 
+            frameborder="0" 
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+            referrerpolicy="strict-origin-when-cross-origin" 
+            allowfullscreen></iframe>
+        </div>
+        <div class="SubID1 ingresso itemInfo">
+            
+            <div class="ingressosContainer">
+                <div class="sessaoData">
+                    <h3>21 de outubro</h3>
+                </div>
+                
+                <div class="sessaoHorario">
+                    <div class="ticketContainer">
+                        <a href="cinema/escolherassento" class="ticketLink">
+                            <img src="~/images/static/ticket.webp" class="ticketimg">
+                            <span class="ticketHorario">16:00</span>
+                        </a>
+                    </div>
+                    <div class="ticketContainer">
+                        <a href="cinema/escolherassento" class="ticketLink">
+                            <img src="~/images/static/ticket.webp" class="ticketimg">
+                            <span class="ticketHorario">18:00</span>
+                        </a>
+                    </div>
+                    <div class="ticketContainer">
+                        <a href="cinema/escolherassento" class="ticketLink">
+                            <img src="~/images/static/ticket.webp" class="ticketimg">
+                            <span class="ticketHorario">20:00</span>
+                        </a>
+                    </div>
+                </div>
+
+
+                <div class="sessaoData">
+                    <h3>25 de outubro</h3>
+                </div>
+                <div class="sessaoHorario">
+                    <div class="ticketContainer">
+                        <a href="cinema/escolherassento" class="ticketLink">
+                            <img src="~/images/static/ticket.webp" class="ticketimg">
+                            <span class="ticketHorario">16:00</span>
+                        </a>
+                    </div>
+                    <div class="ticketContainer">
+                        <a href="cinema/escolherassento" class="ticketLink">
+                            <img src="~/images/static/ticket.webp" class="ticketimg">
+                            <span class="ticketHorario">18:00</span>
+                        </a>
+                    </div>
+                </div>
+
+
+                <div class="sessaoData">
+                    <h3>27 de outubro</h3>
+                </div>
+                <div class="sessaoHorario">
+                    <div class="ticketContainer">
+                        <a href="cinema/escolherassento" class="ticketLink">
+                            <img src="~/images/static/ticket.webp" class="ticketimg">
+                            <span class="ticketHorario">16:00</span>
+                        </a>
+                    </div>
+                    <div class="ticketContainer">
+                        <a href="cinema/escolherassento" class="ticketLink">
+                            <img src="~/images/static/ticket.webp" class="ticketimg">
+                            <span class="ticketHorario">18:00</span>
+                        </a>
+                    </div>
+                </div>
+
+
+            </div>  
+
+        </div>                        
+    </div>          
+</div>
+
+<div class="filmecontainer">
+    <img src="~/images/cartazCinema.webp">
+    <div class="FilmeInfo">
+        <div class="filmeTitlulo">
+            <h2>O Menino e o Mundo</h2>
+        </div>
+        <div class="filmeMenu">
+            <a href="#" class="itemMenu ID2 menuAtivo">Sinopse</a> | 
+            <a href="#" class="itemMenu ID2">Ficha Técnica</a> | 
+            <a href="#" class="itemMenu ID2">Trailer</a> | 
+            <a href="#" class="itemMenu ID2">Ingresso</a>
+        </div>
+
+        <hr>
+        <div class="SubID2 sinopse itemInfo itemAtivo" >
+            Um menino mora com os pais em uma pequena cidade do campo. Diante da falta de trabalho, um dia, ele vê o pai partindo para a cidade grande. Os dias que se seguem são tristes e de memórias confusas para o garoto. Até que então ele faz as malas, pega o trem e vai descobrir o novo mundo em que seu pai mora. Para a sua surpresa, a criança encontra uma sociedade marcada pela pobreza, exploração de trabalhadores e falta de perspectivas.
+        </div>
+        <div class="SubID2 fichaTecnica itemInfo" >
+            <p><strong>Lançamento:</strong> 2013</p>
+            <p><strong>Diretor:</strong>  Alê Abreu</p>
+            <p><strong>Duração:</strong>  79 minutos</p>
+            <p><strong>Classificação:</strong>  L - Livre para todos os públicos</p>
+            <p><strong>Gêneros:</strong>  Animação Aventura Família Nacional</p>
+            <p><strong>Idioma:</strong>  Protuguês</p>
+        </div>
+        <div class="SubID2 trailer itemInfo" >
+            <iframe
+            src="https://www.youtube.com/embed/l7x8oi_1GBo?si=Gq38f-Qz4hyfx_01" 
+            title="YouTube video player" 
+            frameborder="0" 
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+            referrerpolicy="strict-origin-when-cross-origin" 
+            allowfullscreen></iframe>
+        </div>
+        <div class="SubID2 ingresso itemInfo">
+            <div class="sessaoData">
+                <h3>27 de outubro</h3>
+            </div>
+            <div class="sessaoHorario">
+                <div class="ticketContainer">
+                    <a href="cinema/escolherassento" class="ticketLink">
+                        <img src="~/images/static/ticket.webp" class="ticketimg">
+                        <span class="ticketHorario">16:00</span>
+                    </a>
+                </div>
+                <div class="ticketContainer">
+                    <a href="cinema/escolherassento" class="ticketLink">
+                        <img src="~/images/static/ticket.webp" class="ticketimg">
+                        <span class="ticketHorario">18:00</span>
+                    </a>
+                </div>
+            </div>
+        </div>                        
+    </div>          
+</div>

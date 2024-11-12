@@ -1,0 +1,19 @@
+﻿@model SiteSesc.Models.ModelPartialView.CategoriaCard
+@using SiteSesc.Services
+<style>
+</style>
+
+<div class="swiper-slide swiper-slide-cat">
+    <div class="category-item">
+        
+        <a href="@Url.Action("Index", "Area", new { nome3 = Util.NormalizeString(Model.CategoryName)})" class="cardHover" role="button" aria-pressed="false">
+            <div class="category-img">
+                <img src="@Model.CategoryImage" alt="imagem ilustrativa: @Model.CategoryName">
+            </div>
+            <div class="category-content">
+                <h5>@Model.CategoryName</h5>
+            </div>
+        </a>
+
+    </div>
+</div>

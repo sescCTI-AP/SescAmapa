@@ -1,0 +1,64 @@
+﻿@model SiteSesc.Models.ApiPagamento.Pix.PixViewModel
+@{
+    Layout = "../Shared/_EventPix.cshtml";
+    ViewBag.Title = "Pagamento PIX";
+}
+
+<style>
+    body{
+        background-color: white !important;
+        background-image: none
+    }
+    .qrcodepix {
+        width: 300px !important;
+        height: 300px !important;
+    }
+
+    .btn-sair {
+        position: fixed;
+        top: 20px; /* Distância do topo */
+        right: 20px; /* Distância da esquerda */
+        z-index: 1000; /* Certifica-se de que fica acima de outros elementos */
+    }
+</style>
+<div class="btn-sair">
+    <a href="@Url.Action("Index","Home")" class="btn btn-danger">Sair</a>
+</div>
+<div class="container mt-5">
+    <h2>Inscrição realizada!</h2>
+    <h3>Para confirma-la efetue o pagamento.</h3>
+    <div class="text-center">
+        <div class="alert alert-warning"><b>Atenção!</b> O pagamento pode demorar até 5 minutos para ser processado.</div>
+
+        <div id="dadoscobranca">
+            <hr />      
+            <h3 id="nomeAtividade" class="font-weight-bold">@Model.Atividade</h3>
+            <h5 id="referencia">@Model.Referencia</h5>
+            <h5 id="valorCobranca">Valor:  @Model.Valor</h5>
+            <hr />
+        </div>
+
+        <div id="divQrCodePix">
+            <img src="@Model.TextoImagem" class="qrcodepix" width: "200"/>
+        </div>
+
+        <input id="codigoPix" style="position:fixed; top: -50px" value="@Model.Codigo" />
+        <button onclick="copiarTexto();" class="btn btn-success mt-3">Copiar código PIX</button>
+    </div>
+</div>
+
+
+
+@section Scripts{
+    <script>
+        function copiarTexto() {
+            var ele = $("#codigoPix").select();
+            document.execCommand('copy');
+            swal({
+                text: 'Código copiado',
+                icon: 'success',
+                timer: 2000
+            });
+        }
+    </script>
+}

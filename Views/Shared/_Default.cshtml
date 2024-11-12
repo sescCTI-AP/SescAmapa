@@ -1,0 +1,115 @@
+﻿@inject Microsoft.Extensions.Configuration.IConfiguration Configuration
+
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+    <title>@ViewBag.Title - Sesc @Configuration["Ambiente:UF"]</title>
+
+    <!--===============================================================================================-->
+    @*<link rel="icon" type="image/png" href="images/icons/favicon.ico"/>*@
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="~/lib/Cadastro/bootstrap/css/bootstrap.min.css">
+    <!--===============================================================================================-->
+    @* <link rel="stylesheet" href="~/lib/fontawesome-free-5.15.1-web/css/all.css" /> *@
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="~/fonts/iconic/css/material-design-iconic-font.min.css">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="~/lib/Cadastro/animate/animate.css">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="~/lib/Cadastro/css-hamburgers/hamburgers.min.css">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="~/lib/Cadastro/animsition/css/animsition.min.css">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="~/lib/Cadastro/select2/select2.min.css">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="~/lib/Cadastro/daterangepicker/daterangepicker.css">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="~/lib/Cadastro/noui/nouislider.min.css">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="~/css/Cadastro/util.css">
+    <link rel="stylesheet" type="text/css" href="~/css/Cadastro/main.css">
+    <link href="~/css/3th/tempusdominus-bootstrap-4.min.css" rel="stylesheet" />
+    <link href="~/lib/Cadastro/navbar.css" rel="stylesheet" />
+    @*<link href="~/css/3th/app.css" rel="stylesheet" />*@
+    <!--===============================================================================================-->
+    @RenderSection("Styles", false)
+    <style>
+        @@media(min-width: 992px) {
+            .modal-lg {
+                max-width: 1300px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div style="padding: 10px !important">
+        <nav class="navbar navbar-expand-md navbar-dark" style="border-radius: 50px; width: 100%; position: relative">
+            <div class="container">
+                <a href="@Url.Action("Index","Home", new { area = ""})" class="navbar-brand">
+                    <img src="~/images/static/logo-sesc-branco-x.webp" width="200" class="m-t-15 m-b-15" />
+                </a>
+                <div id="main-nav text-center text-white" style="color: white !important">
+                    @ViewBag.TipoCadastro
+                </div>
+            </div>
+        </nav>
+
+        <!-- Content Wrapper START -->
+        <div class="main-content" style="padding-left: 0px; padding-right: 0px; padding-bottom: 0px">
+            <div class="container">
+                <div class="container-fluid" style="padding: 20px 0px 0px 0px">
+                    @RenderBody()
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/js/3th/jquery.mask.min.js"></script>
+    <script src="~/js/3th/jquery.maskMoney.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/3th/jquery.noty.packaged.min.js"></script>
+    <script src="~/js/3th/popper.min.js"></script>
+    <script src="~/js/3th/moment.js"></script>
+    <script src="~/js/3th/moment-pt-br.js"></script>
+    <script src="~/js/3th/tempusdominus-bootstrap-4.min.js"></script>
+    <script src="~/js/3th/loadingoverlay.min.js"></script>
+    <script src="~/js/3th/sweetalert.min.js"></script>
+    <script src="~/lib/Cadastro/animsition/js/animsition.min.js"></script>
+    <script src="~/lib/Cadastro/bootstrap/js/popper.js"></script>
+    <script src="~/lib/Cadastro/bootstrap/js/bootstrap.min.js"></script>
+    <script src="~/lib/Cadastro/select2/select2.min.js"></script>
+    <script src="~/js/Default/navbar.js"></script>
+    <script src="~/js/3th/jquery.unobtrusive-ajax.js"></script>
+    <script>
+        $(".js-select2").each(function () {
+            $(this).select2({
+                minimumResultsForSearch: 20,
+                dropdownParent: $(this).next('.dropDownSelect2')
+            });
+
+            $(".js-select2").each(function () {
+                $(this).on('select2:close', function (e) {
+                    if ($(this).val() == "Please chooses") {
+                        $('.js-show-service').slideUp();
+                    }
+                    else {
+                        $('.js-show-service').slideUp();
+                        $('.js-show-service').slideDown();
+                    }
+                });
+            });
+        })
+    </script>
+
+    @RenderSection("Scripts", false)
+    <script src="~/js/Default/main.js"></script>
+</body>
+
+</html>

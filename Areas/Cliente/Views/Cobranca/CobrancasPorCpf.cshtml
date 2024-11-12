@@ -1,0 +1,157 @@
+﻿@model List<SiteSesc.Models.DB2.COBRANCA>
+@using SiteSesc.Models.ApiPagamento
+@{
+    var cliente = ViewBag.Cliente as ClienteCentral;
+}
+<link href="~/css/espacocliente/cardpagamento.css" rel="stylesheet" />
+
+@await Component.InvokeAsync("SideMenu", new { area = "cliente" })
+
+
+<section id="hero" class="d-flex flex-column justify-content-center">
+    <div class="container" data-aos="zoom-in" data-aos-delay="100">
+        @if (Model?.Any() == true)
+        {
+            <div class="container mt-5">
+                <ul class="nav nav-pills">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="#abertas" data-bs-toggle="pill">Abertas</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#pagas" data-bs-toggle="pill">Pagas</a>
+                    </li>
+                </ul>
+
+                <div class="tab-content mt-3" style="height: 80vh; overflow: scroll">
+                    <div class="tab-pane fade show active" id="abertas">
+                        @if (Model.Any(a => a.STRECEBIDO == 0))
+                        {
+                            //   foreach (var item in Model.Where(a => a.STRECEBIDO == 0))
+                            //  {
+                            var item = Model.Where(a => a.STRECEBIDO == 0).Where(d => d.DTVENCTO > DateTime.Now.Date).FirstOrDefault();  
+                            <div class="card border-radius-30 mb-2">
+                                    <div class="card-block p-3">
+                                        <h5>@item.DSCOBRANCA</h5>
+                                        <span>Vencimento: @item.DTVENCTO.ToShortDateString()</span><br />
+                                        <hr />
+                                        <span>Escolha um método de pagamento:</span><br />
+                                        <div class="pai">
+                                            <div class="elemento">
+                                                <div class="form-pix" id="form-pix-@item.CDELEMENT.Trim()-@item.SQCOBRANCA">
+                                                    <input hidden name="dados.IDCLASSE" value="OCRID" />
+                                                    <input hidden name="dados.CDUOP" value="@item.CDUOP" />
+                                                    <input hidden name="dados.SQMATRIC" value="@item.SQMATRIC" />
+                                                    <input hidden name="dados.CPF" value="@cliente.Nucpf" />
+                                                    <input hidden name="dados.CDELEMENT" value="@item.CDELEMENT" />
+                                                    <input hidden name="dados.SQCOBRANCA" value="@item.SQCOBRANCA" />
+                                                    <a class="btn-transparent" onclick="geraPix('form-pix-@item.CDELEMENT.Trim()-@item.SQCOBRANCA')">
+                                                        <div class="card border-radius-30 btn-pgto text-center bg-hover-green">
+                                                            <div class="card-body">
+                                                                <i class="fa-brands fa-pix font-size-48"></i><br />
+                                                                <span>Pix</span>
+                                                            </div>
+                                                        </div>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                            <div class="elemento">
+                                                <a onclick="exibeFormCredito('@item.IDCLASSE', '@item.CDELEMENT', '@item.SQCOBRANCA')">
+                                                    <div class="card border-radius-30 btn-pgto text-center bg-hover-blue">
+                                                        <div class="card-body ">
+                                                            <i class="bx bxs-credit-card-alt font-size-48"></i><br />
+                                                            <span>Cartão de Crédito</span>
+                                                        </div>
+                                                    </div>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                          //  }
+                        }
+
+                    </div>
+                    <div class="tab-pane fade" id="pagas">
+                        @if (Model.Any(a => a.STRECEBIDO == 1))
+                        {
+                            foreach (var item in Model.Where(a => a.STRECEBIDO == 1))
+                            {
+                                <div class="card border-radius-30 mb-2">
+                                    <div class="card-block p-3">
+                                        <span class="label-success">Paga</span>
+                                        <h5>@item.DSCOBRANCA</h5>
+                                        <span>Vencimento: @item.DTVENCTO.ToShortDateString()</span><br />
+                                        <span>Pagamento: @item.DTATU.ToShortDateString()</span><br />
+                                    </div>
+                                </div>
+                            }
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+        else
+        {
+            <p>Não há cobranças no momento.</p>
+        }
+        </<div>
+</section>
+
+<div id="modalContainer"></div>
+
+<div class="modal fade" id="modal-credito" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class=" modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Pagamento com cartão de crédito</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div id="partialViewContainer"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/js/pagamento/cardpix.js"></script>
+
+<script>
+    function showLoading(){
+        var loadingImg = document.createElement('img');
+        loadingImg.src = '/images/loading.gif';
+        loadingImg.alt = 'Carregando...';
+        loadingImg.id = 'loadingImg';
+
+        var loadingDiv = document.createElement('div');
+        loadingDiv.id = 'loading';
+        loadingDiv.style.display = 'flex'; // Inicialmente oculto
+
+        loadingDiv.appendChild(loadingImg);
+        document.body.appendChild(loadingDiv);
+    }
+
+    function removeLoading(){
+        var loadingImg = document.getElementById('loading');
+        if (loadingImg) {
+            loadingImg.remove();
+        }
+    }
+
+    function exibeFormCredito(idclasse, cdelement, sqcobranca) {
+        showLoading();
+        $.ajax({
+            url: '/cliente/cobrancas/partialview-credito/' + @cliente?.Nucpf +  '/' + @cliente?.Cduop + '/' + @cliente?.Sqmatric + '/' + idclasse + '/' + cdelement + '/' + sqcobranca,
+            type: 'GET',
+            success: function (partialHtml) {
+                $('#partialViewContainer').html(partialHtml);
+                $('#modal-credito').modal('show');
+                removeLoading();
+            },
+            error: function () {
+                console.error('Erro ao carregar a Partial View');
+                removeLoading();
+            }
+        });
+        
+    }
+</script>

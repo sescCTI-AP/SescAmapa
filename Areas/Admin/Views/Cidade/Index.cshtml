@@ -1,0 +1,92 @@
+﻿@model IEnumerable<SiteSesc.Models.Cidade>
+
+@{
+}
+
+<h2>Cidades</h2>
+<p>
+    <a asp-action="Create">+ Adicionar cidade</a>
+</p>
+<table class="table" id="table-reg">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Nome)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IsAtivo)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Nome)
+                </td>
+                <td>
+                    <div class="toggle-checkbox checkbox-inline toggle-success toggle-sm" title="Ativar/Desativar exibição do banner">
+                        <input type="checkbox" id="btnAtivarDesativa-@item.Id" @(item.IsAtivo ? "checked" : "") onchange="alterarStatus('@item.Id');">
+                        <label for="btnAtivarDesativa-@item.Id" style="margin: 0"></label>
+                    </div>
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id">Editar</a> |
+                    <a asp-action="Delete" asp-route-id="@item.Id">Excluir</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@section Scripts {
+    <script>
+        function alterarStatus(id) {
+            $.ajax({
+                url: '@Url.Action("AlterarStatusExibicao")',
+                type: 'POST',
+                data: JSON.stringify(id),
+                dataType: "json",
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+                    console.log(data);
+                    if (data.code == 1) {
+                        $('#table-reg').load(location.href + ' #table-reg>*',
+                            function () {
+                                $('[data-toggle="tooltip"]').tooltip();
+                            });
+
+                        console.log("Mensagem: " + data.message);
+                        iziToast.success({
+                            title: 'Sucesso',
+                            message: data.message,
+                            theme: 'light',
+                            position: 'topRight',
+                        });
+                    } else {
+                        console.log(data.message);
+
+                        iziToast.error({
+                            title: 'Ops!',
+                            message: data.message,
+                            theme: 'light',
+                            position: 'topRight',
+                        });
+                    }
+                },
+                error: function (err) {
+                    console.log(err);
+
+                    iziToast.error({
+                        title: 'Ops!',
+                        message: err,
+                        theme: 'light',
+                        position: 'topRight',
+                    });
+                }
+            });
+        }
+    </script>
+}

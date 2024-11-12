@@ -1,0 +1,49 @@
+﻿<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sesc @ViewData["Title"]</title>
+    <!-- Favicons -->
+    <link href="~/images/static/logo-mini.png" rel="icon">
+    <link href="~/images/static/logo-mini.png" rel="apple-touch-icon">
+
+
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/Public/animate.min.css">
+    <link rel="stylesheet" href="~/css/Public/magnific-popup.css">
+    <link rel="stylesheet" href="~/css/Public/odometer.min.css">
+    <link rel="stylesheet" href="~/css/Public/nice-select.css">
+    <link rel="stylesheet" href="~/css/Public/meanmenu.css">
+    <link rel="stylesheet" href="~/css/Public/swiper-bundle.min.css">
+    <link rel="stylesheet" href="~/css/Public/mainpublic.css">
+    <script src="~/js/FontAwesome6.js"></script>
+
+    <!--google fonts-->
+    <link href='https://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Raleway' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Montez' rel='stylesheet' type='text/css'>
+</head>
+<body>
+    <main>
+        @RenderBody()
+    </main>
+
+    @await RenderSectionAsync("Scripts", required: false)
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/swiper-bundle.min.js"></script>
+    <script src="~/js/jquery.meanmenu.min.js"></script>
+    <script src="~/js/wow.min.js"></script>
+    <script src="~/js/jquery.nice-select.min.js"></script>
+    <script src="~/js/jquery.scrollUp.min.js"></script>
+    <script src="~/js/jquery.magnific-popup.min.js"></script>
+    <script src="~/js/odometer.min.js"></script>
+    <script src="~/js/appear.min.js"></script>
+    <script src="~/js/main.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+
+</body>
+</html>

@@ -1,0 +1,98 @@
+﻿@using System.Security.Claims;
+@inject Microsoft.AspNetCore.Mvc.ViewComponents.IViewComponentSelector selector
+@{
+    var usuarioLogado = User.Identity.Name;
+    var perfil = "";
+    var tema = "";
+    var areaName = ViewContext.RouteData.Values["area"].ToString();
+
+    if (((ClaimsIdentity)User.Identity).HasClaim(c => c.Type == "Perfil"))
+    {
+        perfil = ((ClaimsIdentity)User.Identity).FindFirst("Perfil").Value;
+    }
+
+    if (((ClaimsIdentity)User.Identity).HasClaim(c => c.Type == "TemaEscuro"))
+    {
+        tema = ((ClaimsIdentity)User.Identity).FindFirst("TemaEscuro").Value;
+    }
+
+    var classesAdministrativas = "";
+    if (areaName == "Admin") { classesAdministrativas = "p-3 shadow-sm rounded border"; }
+}
+
+
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Sesc TO</title>
+    <!-- Favicons -->
+    <link href="~/images/static/logo-mini.png" rel="icon">
+    <link href="~/images/static/logo-mini.png" rel="apple-touch-icon">
+
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/SiteSesc.styles.css" asp-append-version="true" />
+    <link href="~/css/espacocliente/aos/aos.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link href="~/css/espacocliente/boxicons/css/boxicons.min.css" rel="stylesheet" />
+    <link href="~/css/espacocliente/glightbox/css/glightbox.min.css" rel="stylesheet" />
+    <link href="~/css/espacocliente/swiper/swiper-bundle.min.css" rel="stylesheet" />
+    <link href="~/css/espacocliente/style.css" rel="stylesheet" />
+    <link href="~/css/bootstrap-icons/bootstrap-icons.css" rel="stylesheet" />
+    <link href="~/css/swiper/swiper-bundle.min.css" rel="stylesheet" />
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Raleway:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+</head>
+
+<style>
+    #hero {
+        width: 100%;
+        height: 100vh;
+        background: url("../images/hero-bg.jpg") top right no-repeat;
+        background-size: cover;
+        position: relative;
+    }
+</style>
+
+<body>
+    <i class="bi bi-list mobile-nav-toggle d-lg-none"></i>
+    <header id="header" class="d-flex flex-column justify-content-center">
+        <a href="@Url.Action("Index", "Home")"><img src="~/images/static/logo-mini.png" width="50" class="img-fluid" alt="" style="margin-bottom: 20px;"></a>
+        <nav id="navbar" class="navbar nav-menu">
+            <ul>
+                <li><a href="#hero" class="nav-link scrollto active"><i class="bx bx-home"></i> <span>Início</span></a></li>
+                <li><a href="#about" class="nav-link scrollto"><i class="bx bx-user"></i> <span>Meu dados</span></a></li>
+                <li><a href="#resume" class="nav-link scrollto"><i class="bx bx-file-blank"></i> <span>Matrículas</span></a></li>
+                <li><a href="#portfolio" class="nav-link scrollto"><i class="bx bxs-user-account"></i> <span>Dependentes</span></a></li>
+                <li><a href="#services" class="nav-link scrollto"><i class="bx bx-dollar-circle"></i> <span>Cobranças</span></a></li>
+                @if (perfil == "1")
+                {
+                    <li><a href="@Url.Action("Dashboard","Home", new{area = "Admin"})" class="nav-link scrollto"><i class="fa-solid fa-gear"></i> <span>Admin</span></a></li>
+                }
+                <li><a href="@Url.Action("Logout", "Usuario")" class="nav-link scrollto"><i class="bx bx-log-out-circle"></i> <span>Sair</span></a></li>
+            </ul>
+        </nav>
+    </header>
+
+    @RenderBody()
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/js/Home/Index.js" type="text/javascript"></script>
+
+    <script src="~/css/espacocliente/purecounter/purecounter_vanilla.js"></script>
+    <script src="~/css/espacocliente/aos/aos.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/css/espacocliente/glightbox/js/glightbox.min.js"></script>
+    <script src="~/css/espacocliente/isotope-layout/isotope.pkgd.min.js"></script>
+    <script src="~/css/espacocliente/swiper/swiper-bundle.min.js"></script>
+    <script src="~/css/espacocliente/typed.js/typed.umd.js"></script>
+    <script src="~/css/espacocliente/waypoints/noframework.waypoints.js"></script>
+    <script src="~/js/espacocliente/main.js"></script>
+    <script src="~/js/fontawesome6.js"></script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

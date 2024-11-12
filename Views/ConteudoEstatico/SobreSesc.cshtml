@@ -1,0 +1,105 @@
+﻿﻿@using SiteSesc.Models.ModelPartialView;
+
+@{
+    var listaCategorias = ViewBag.ListCategorias as List<CategoriaCard>;
+}
+<link href="~/css/public/credencial.css" rel="stylesheet" />
+
+<style>
+    .fixo-banner-container{
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .fixo-banner-content{
+        width: 100%;
+        max-width: 1600px;
+        height: auto;
+        margin: auto;
+    }
+    
+    .fixo-banner-content img{
+        width: calc(100% - 2rem);
+        margin: 1rem;
+        max-width: 1600px;
+        border-radius: 1rem;
+    }
+
+</style>
+
+
+<div class="fixo-banner-container">
+    <div class="fixo-banner-content">
+        <img src="~/images/static/bg_sobre.webp" />
+    </div>
+</div>
+
+<section>
+    <div class="container">
+        <p><strong>O Sesc </strong></p>
+
+        <p>Mantido pelos empres&aacute;rios do com&eacute;rcio de bens, servi&ccedil;os e turismo, o Servi&ccedil;o Social do Com&eacute;rcio (Sesc) &eacute; uma entidade privada que objetiva proporcionar o bem-estar e qualidade de vida do comerci&aacute;rio, sua fam&iacute;lia e da sociedade.</p>
+
+        <p>Localizado em todos os estados brasileiros, o Sesc incentiva a educa&ccedil;&atilde;o de qualidade como diretriz primordial no desenvolvimento do cidad&atilde;o. Valoriza a diversidade cultural local e promove atividades em prol da melhoria das condi&ccedil;&otilde;es de vida no dia a dia dos trabalhadores do com&eacute;rcio de bens, servi&ccedil;os e turismo.</p>
+
+        <p>Educa&ccedil;&atilde;o, Sa&uacute;de, Cultura, Assist&ecirc;ncia e Lazer s&atilde;o as &aacute;reas de atua&ccedil;&atilde;o do Sesc que chamamos de Programas. Dentro desses Programas existem diversos projetos e a&ccedil;&otilde;es, desenvolvidos pelo Departamento Nacional, executados pelos Departamentos Regionais e suas unidades, de acordo com a realidade local de cada um.</p>
+
+        <p>Com a&ccedil;&otilde;es abrangentes a todas as faixas et&aacute;rias e infraestrutura que contempla suas &aacute;reas de atua&ccedil;&atilde;o, o Sesc tem como principal marca a responsabilidade social. Oferece programas de sa&uacute;de e educa&ccedil;&atilde;o ambiental, turismo social, programas especiais para crian&ccedil;as e terceira idade, projetos de combate &agrave; fome e ao desperd&iacute;cio de alimentos, de inclus&atilde;o digital e muitos outros.</p>
+
+        <p>As a&ccedil;&otilde;es do Sesc propagam princ&iacute;pios, human&iacute;sticos e universais, promovendo melhor condi&ccedil;&atilde;o de vida para os comerci&aacute;rios e seus familiares em todo o Brasil, e oferece servi&ccedil;os que fortalecem o exerc&iacute;cio da cidadania e contribuem com o desenvolvimento socioecon&ocirc;mico e cultural.</p>
+
+        <p>As atividades do Sesc seguem modelos de a&ccedil;&atilde;o constru&iacute;dos por especialistas em diversas &aacute;reas do conhecimento, garantindo que a atua&ccedil;&atilde;o seja adequada as necessidades da sociedade. S&atilde;o mais de 19 mil funcion&aacute;rios, em todas as regi&otilde;es brasileiras, produzindo e recebendo informa&ccedil;&atilde;o para a melhoria dos servi&ccedil;os.</p>
+
+        <p>&nbsp;</p>
+
+        <p><strong>Abrang&ecirc;ncia</strong></p>
+
+        <p>Para alcan&ccedil;ar cerca de 2,2 mil munic&iacute;pios em todas as regi&otilde;es, o Sesc possui unidades de atendimento fixas ou m&oacute;veis, nas capitais, periferias ou em cidades pequenas.</p>
+
+        <p>S&atilde;o centenas de centros de atividades, unidades m&oacute;veis, meios de hospedagem, sedes educacionais e consult&oacute;rios, com singularidades: o Sesc oferece, por exemplo, as maiores redes privadas de teatros e de bibliotecas do pa&iacute;s.</p>
+
+        <p>Complementares &agrave;s unidades fixas, as unidades m&oacute;veis s&atilde;o essenciais nos servi&ccedil;os prestados pelo Sesc. Sobre rodas, em caminh&otilde;es e carretas, a entidade leva atendimento social a lugares onde a a&ccedil;&atilde;o p&uacute;blica precisa de refor&ccedil;os.</p>
+
+
+    </div>
+</section>
+
+<section class="category-area pt-120 pb-60">
+    <div class="container">
+        <div class="row">
+            <div class="col-xl-3 col-lg-3">
+                <div class="category-left pb-60">
+                    <div class="section-area">
+                        <h2 class="section-title mb-20">Aproveite nossos serviços</h2>
+                    </div>
+                    <div class="category-rol">
+                        <div class="category-prev">
+                            <i class="fa-solid fa-arrow-left"></i>
+                        </div>
+                        <div class="category-next">
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-9 col-lg-9">
+                <div class="category-wrap">
+                    <div class="category-active swiper pb-60">
+                        <div class="swiper-wrapper">
+                            @if (listaCategorias != null)
+                            {
+                                foreach (var categoria in listaCategorias)
+                                {
+                                    @await Html.PartialAsync("PartialView/_PartialViewCategoriaDetails", categoria)
+                                }
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

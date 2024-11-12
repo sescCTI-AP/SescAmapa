@@ -1,0 +1,33 @@
+﻿@model SiteSesc.Models.Licitacao.lct_licitacao
+@{
+    ViewBag.Title = "Licitação";
+}
+
+
+<div class="container mt-5 mb-4">
+
+    <h4>Licitação Nº. @Model.NumeroEdital</h4>
+
+    <h6>@Model.Objeto</h6>
+
+    <p style="font-style: italic">@Model.Descricao</p>
+
+
+    <p class="mb-0 mt-5">
+        Data de reunião: <b>@Model.DataReuniao.ToShortDateString()</b>
+    </p>
+
+    <p class="mb-0">Situação: <b>@Model.lct_statusLicitacao.Descricao</b></p>
+    <div class="mt-3">
+        <span>Arquivos:</span>
+        @if (Model.lct_arquivosLicitacao?.Any() == true)
+        {
+            <ul>
+                @foreach (var arquivo in Model.lct_arquivosLicitacao)
+                {
+                    <li><a target="_blank" href="@arquivo.Arquivo.CaminhoVirtualFormatado()" style="color: dodgerblue"><b>- @arquivo.Arquivo.NomeArquivo</b></a></li>
+                }
+            </ul>
+        }
+    </div>
+</div>

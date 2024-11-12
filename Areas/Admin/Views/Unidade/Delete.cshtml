@@ -1,0 +1,32 @@
+﻿@model SiteSesc.Models.UnidadeOperacional
+
+@{
+}
+
+<h2>Unidade</h2>
+<h4>Excluir</h4>
+
+<h3 class="mt-5">Você está certo que deseja remover esse item?</h3>
+<div>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Nome)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Nome)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.NomeCurto)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.NomeCurto)
+        </dd>
+    </dl>
+    
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="Id" />
+        <a asp-action="Index" asp-controller="Unidade" class="btn btn-danger">Voltar</a>
+        <input type="submit" value="Confirmar" class="btn btn-primary" />
+    </form>
+</div>

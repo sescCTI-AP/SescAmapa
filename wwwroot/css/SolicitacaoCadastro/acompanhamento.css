@@ -1,0 +1,135 @@
+﻿#protocolo {
+    font-family: 'Roboto', sans-serif;
+}
+
+#dadosTitular p {
+    margin-bottom: 0px
+}
+
+.image-gallary {
+    cursor: pointer;
+}
+
+.img-avatar {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    border-radius: 25px;
+    background-color: white
+}
+
+.border-20 {
+    border-radius: 20px !important
+}
+
+.badge-light-green {
+    background-color: #8acf8b;
+    padding: 5px 15px;
+    border-radius: 1.5em;
+    font-weight: bold
+}
+
+.badge-light-orange {
+    background-color: #e5ba5c;
+    padding: 5px 15px;
+    border-radius: 1.5em;
+    font-weight: bold
+}
+
+.badge-green {
+    background-color: green;
+    color: white;
+    padding: 5px 15px;
+    border-radius: 1.5em;
+}
+
+.btn-action-formulario {
+    color: white;
+    padding: 5px 15px;
+    border-radius: 1.5em;
+    height: 20px
+}
+
+    .btn-action-formulario:hover {
+        background-color: gray;
+        color: white
+    }
+
+.bg-green {
+    background-color: green
+}
+
+.bg-rosa {
+    background-color: pink
+}
+
+.bg-black {
+    background-color: black
+}
+
+#fotoperfil {
+    width: 100% !important;
+    border-radius: 20px
+}
+
+.font-size-small{
+    font-size: 12px
+}
+.card-dados-cliente {
+    border-radius: 20px;
+    background-color: #e6e6e6;
+    padding-left: 10px;
+    padding-right: 10px
+}
+
+    .card-dados-cliente > .card-header {
+        background-color: transparent
+    }
+
+.card-timeline {
+    border-radius: 20px;
+    width: calc(100% - 25px);
+    margin-bottom: 0px;
+    padding-bottom: 0px;
+}
+
+.card-esq {
+    border-radius: 0px 20px 20px !important;
+    left: -3px;
+    border: none
+}
+
+.card-dir {
+    border-radius: 20px 0px 20px 20px !important;
+    right: -3px;
+    border: none
+}
+
+li {
+    list-style-type: none;
+}
+
+.triangulo-para-dir {
+    width: 0;
+    height: 0;
+    border-bottom: 25px solid transparent;
+    border-left: 25px solid white;
+    margin: 0px
+}
+
+.triangulo-para-baixo {
+    width: 0;
+    height: 0;
+    border-left: 25px solid transparent;
+    border-right: 25px solid transparent;
+    border-top: 25px solid #949396;
+}
+
+.triangulo-para-esq {
+    width: 0;
+    height: 0;
+    left: 3px;
+    border-bottom: 25px solid transparent;
+    border-right: 25px solid white;
+    margin: 0px
+}

@@ -1,0 +1,15 @@
+﻿@model SiteSesc.Models.Edital.edt_edital
+<div class="flex-item">
+    <a asp-action="Details" asp-controller="Edital" asp-route-num="@Model.NumeroEdital.Replace("/", "-")">
+        <div class="blog_details-widget mb-0">
+            <h4 class="blog_details-widget-title mb-0">Edital Nº @Model.NumeroEdital</h4>
+
+            <h6>@Model.Objeto</h6>
+            <p class="mb-0">
+                Data de Abertura: @Model.DataReuniao.ToShortDateString()
+            </p>
+            <p class="mb-0">Situação: <b>@Model.edt_statusEdital.Descricao</b></p>
+        </div>
+
+    </a>
+</div>

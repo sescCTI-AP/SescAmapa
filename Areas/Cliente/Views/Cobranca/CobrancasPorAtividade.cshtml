@@ -1,0 +1,127 @@
+﻿@model SiteSesc.Models.ApiPagamento.ClienteCentral
+@using SiteSesc.Models.ApiPagamento
+@{
+    var cobrancas = ViewBag.Cobrancas as List<CobrancaAtualizada>;
+}
+<link href="~/css/espacocliente/cardpagamento.css" rel="stylesheet" />
+
+@await Component.InvokeAsync("SideMenu", new { area = "cliente" })
+
+<section id="hero" class="d-flex flex-column justify-content-center">
+    <div class="container" data-aos="zoom-in" data-aos-delay="100">
+        <h2>Minhas mensalidades</h2>
+        @if (cobrancas != null)
+        {
+            foreach (var cobranca in cobrancas)
+            {
+                <div class="card border-radius-30">
+                    <div class="card-block p-3">
+                        <h5>@cobranca.atividade</h5>
+                        <span>Vencimento: @cobranca.vencimento.ToShortDateString()</span><br />
+                        <span>Status: @cobranca.Status</span>
+                        <hr />
+                        <span>Escolha um método de pagamento:</span><br />
+                        <div class="pai">
+                            <div class="elemento">
+                                <div class="form-pix" id="form-pix-@cobranca.cdelement.Trim()-@cobranca.sqcobranca">
+                                    <input hidden name="dados.IDCLASSE" value="OCRID" />
+                                    <input hidden name="dados.CDUOP" value="@Model.Cduop" />
+                                    <input hidden name="dados.SQMATRIC" value="@Model.Sqmatric" />
+                                    <input hidden name="dados.CPF" value="@Model.Nucpf" />
+                                    <input hidden name="dados.CDELEMENT" value="@cobranca.cdelement" />
+                                    <input hidden name="dados.SQCOBRANCA" value="@cobranca.sqcobranca" />
+                                    <a class="btn-transparent" onclick="geraPix('form-pix-@cobranca.cdelement.Trim()-@cobranca.sqcobranca')">
+                                        <div class="card border-radius-30 btn-pgto text-center bg-hover-green">
+                                            <div class="card-body pt-4">
+                                                <i class="fa-brands fa-pix font-size-48"></i><br />
+                                                <span>Pix</span>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="elemento">
+                                <div class="form-credito" id="form-credito-@cobranca.cdelement.Trim()-@cobranca.sqcobranca">
+                                    <input hidden name="dados.IDCLASSE" value="OCRID" />
+                                    <input hidden name="dados.CDUOP" value="@Model.Cduop" />
+                                    <input hidden name="dados.SQMATRIC" value="@Model.Sqmatric" />
+                                    <input hidden name="dados.CPF" value="@Model.Nucpf" />
+                                    <input hidden name="dados.CDELEMENT" value="@cobranca.cdelement" />
+                                    <input hidden name="dados.SQCOBRANCA" value="@cobranca.sqcobranca" />
+                                    <a class="btn-transparent2" onclick="exibeFormCredito('OCRID','@cobranca.cdelement','@cobranca.sqcobranca')">
+                                        <div class="card border-radius-30 btn-pgto text-center bg-hover-green">
+                                            <div class="card-body pt-4">
+                                                <i class="bx bxs-credit-card-alt font-size-48"></i><br />
+                                                <span>Cartão de crédito</span>
+                                            
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+</section>
+<div class="modal fade" id="modal-credito" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Pagamento com cartão de crédito</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div id="partialViewContainer"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="modalContainer"></div>
+
+<script src="~/js/pagamento/cardpix.js"></script>
+<script src="~/js/pagamento/cardCredito.js"></script>
+
+<script>
+    function exibeFormCredito(idclasse, cdelement, sqcobranca) {
+        showLoading();
+        $.ajax({
+            url: '/cliente/cobrancas/partialview-credito/' + @Model?.Nucpf + '/' + @Model?.Cduop + '/' + @Model?.Sqmatric + '/' + idclasse + '/' + cdelement + '/' + sqcobranca,
+            type: 'GET',
+            success: function (partialHtml) {
+                $('#partialViewContainer').html(partialHtml);
+                console.error('Erro ao carregar a Partial View');
+                $('#modal-credito').modal('show');
+                removeLoading();
+            },
+            error: function () {
+                console.error('Erro ao carregar a Partial View');
+                removeLoading();
+            }
+        });
+
+    }
+    function showLoading() {
+        var loadingImg = document.createElement('img');
+        loadingImg.src = '/images/loading.gif';
+        loadingImg.alt = 'Carregando...';
+        loadingImg.id = 'loadingImg';
+
+        var loadingDiv = document.createElement('div');
+        loadingDiv.id = 'loading';
+        loadingDiv.style.display = 'flex'; // Inicialmente oculto
+
+        loadingDiv.appendChild(loadingImg);
+        document.body.appendChild(loadingDiv);
+    }
+
+    function removeLoading() {
+        var loadingImg = document.getElementById('loading');
+        if (loadingImg) {
+            loadingImg.remove();
+        }
+    }
+
+</script>

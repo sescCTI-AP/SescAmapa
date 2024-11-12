@@ -1,0 +1,120 @@
+﻿@model SiteSesc.Models.Atividade.AtividadeOnLine
+@{
+    ViewBag.Title = "Atividades OnLine";
+}
+<input type="hidden" id="urlAtividades" value="@Url.Action("ValidarAtividade","AtividadeOnLine")" />
+
+@if (Model != null)
+{
+    <div>
+        <h2><b>@Model.NomeExibicao</b></h2>
+        <h4>Modalidade/Sub-Área: <b>@Model.SubArea.Nome</b></h4>
+        <div class="row mrg-left-10 mrg-btm-20 text-center">
+            @if (Model.IsGratuito == true)
+            {
+                <span class="badge badge-primary mrg-right-10 font-size-15">ATIVIDADE GRATUITA</span>
+            }
+            else
+            {
+                <span class="badge badge-warning mrg-right-10 font-size-15">ATIVIDADE NÃO GRATUITA</span>
+            }
+
+            @if (Model.IsOnline == true)
+            {
+                <span class="badge badge-info mrg-right-10 font-size-15">INSCRIÇÃO ONLINE</span>
+            }
+            else
+            {
+                <span class="badge badge-warning mrg-right-10 font-size-15">INSCRIÇÃO PRESENCIAL</span>
+            }
+        </div>
+    </div>
+
+    @if (Model.Arquivo != null)
+    {
+        <img class="card-img-top" src="@Model.Arquivo.CaminhoVirtualFormatado()" alt="Imagem da notícia" style="padding: 0 15px;">
+    }
+    else
+    {
+        <div class="alert alert-warning">
+            Não foi adicionada nenhuma imagem
+        </div>
+    }
+
+    <div class="p-5">
+        <h4>Descrição:</h4>
+        @Html.Raw(Model.Descricao)
+    </div>
+    <div class="div-fixed">
+        <div id="btn-cadastrar-submit">
+            <a href="@Url.Action("Edit","AtividadeOnLine", new{id = Model.Id})" type="button" class="btn-rounded bg-transparent border-white text-white text-center">
+                <span class="fa fa-edit"></span> Editar
+            </a>
+            <a href="@Url.Action("Validar","AtividadeOnLine", new{id = Model.Id})" type="button"  class="btn-rounded border-white bg-green text-white text-center">
+                <span class="fa fa-check"></span> Validar
+            </a>
+        </div>
+    </div>
+}
+else
+{
+    <div class="alert alert-warning">
+        Não foi localizada a atividade selecionada
+    </div>
+}
+
+
+@section Scripts {
+    <script>
+        function validar(id) {
+            swal({
+                title: "Validar atividade",
+                text: `Você realmente deseja liberar a atividade para o cliente?`,
+                icon: "warning",
+                dangerMode: true,
+                buttons: ["Não", "Sim"]
+            })
+                .then((value) => {
+                    if (value) {
+                        $.ajax({
+                            url: '@Url.Action("Validar")',
+                            type: 'POST',
+                            data: JSON.stringify(id),
+                            dataType: "json",
+                            contentType: 'application/json; charset=utf-8',
+                            success: function (data) {
+                                if (data.Code == 1) {
+                                    swal({
+                                        title: 'SUCCESSO',
+                                        text: data.Message,
+                                        icon: data.ClassAlert,
+                                        buttons: false,
+                                        closeOnClickOutside: false,
+                                        closeOnEsc: false
+                                    });
+                                    setTimeout(() => {
+                                        location.href = $('#urlAtividades').val();
+                                    }, 1500);
+                                } else {
+                                    swal({
+                                        text: data.Message,
+                                        type: data.ClassAlert,
+                                        timeout: 2500,
+                                        progressBar: true
+                                    });
+                                }
+                            },
+                            error: function (err) {
+                                swal({
+                                    text: 'Falha ao atualizar o status do Banner',
+                                    type: 'error',
+                                    timeout: 2500,
+                                    progressBar: true
+                                });
+                            }
+                        });
+                    }
+                });
+        }
+    </script>
+}

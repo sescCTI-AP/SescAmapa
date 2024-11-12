@@ -1,0 +1,272 @@
+﻿@model IEnumerable<SiteSesc.Models.Edital.ViewModel.DocumentosEditalViewModel>
+@using SiteSesc.Models.Enums
+@using SiteSesc.Models.Edital
+@{
+    ViewBag.Title = "Acompanhar";
+    var cargo = ViewBag.Cargo as edt_cargoEdital;
+    var IdEdital = ViewBag.IdEdital;
+    var listaStatus = ViewBag.statusCurriculoEdital as List<edt_statusCurriculoEdital>;
+    var listaParecer = ViewBag.parecerEdital as List<edt_parecerEdital>;
+    var statusDictionary = listaStatus.ToDictionary(s => s.Id, s => s.Descricao);
+    var edital = ViewBag.Edital as edt_edital;
+
+    var orderedModel = Model
+        .Select(item => new
+        {
+            item,
+            parecer = listaParecer
+                .Where(p => p.Cpf == item.documentos[0].Cpf && p.IdCargoEdital == item.documentos[0].IdCargoEdital)
+                .OrderByDescending(p => p.Data)
+                .FirstOrDefault()
+        })
+        .ToList();
+
+    // Filtragem para candidatos com status "Apto"
+    var aptos = orderedModel
+        .Where(x => x.parecer != null && statusDictionary.ContainsKey(x.parecer.Status) && statusDictionary[x.parecer.Status] == "Apto")
+        .OrderBy(x => x.item.documentos[0].DataCadastro)
+        .Select(x => x.item)
+        .ToList();
+
+    // Filtragem para candidatos com status "Inapto"
+    var inapto = orderedModel
+        .Where(x => x.parecer != null && statusDictionary.ContainsKey(x.parecer.Status) && statusDictionary[x.parecer.Status] == "Inapto")
+        .OrderBy(x => x.item.documentos[0].DataCadastro)
+        .Select(x => x.item)
+        .ToList();
+
+    // Filtragem para candidatos com status "Pendente"
+    var pendente = orderedModel
+        .Where(x => x.parecer == null || (statusDictionary.ContainsKey(x.parecer.Status) && statusDictionary[x.parecer.Status] == "Pendente"))
+        .OrderBy(x => x.item.documentos[0].DataCadastro)
+        .Select(x => x.item)
+        .ToList();
+}
+<style>
+    table {
+        width: 100%;
+        table-layout: fixed; /* Define que a largura da tabela é fixa e não adaptável ao conteúdo */
+    }
+
+    th, td {
+        width: 20%; /* Ajuste a porcentagem conforme necessário para os seus campos */
+        text-align: left;
+        padding: 8px;
+        box-sizing: border-box; /* Garante que padding e border sejam incluídos na largura total */
+    }
+
+    th {
+        background-color: #f2f2f2;
+    }
+
+    td {
+        border-bottom: 1px solid #ddd;
+    }
+
+    .flex-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: flex-start;
+    }
+
+    .flex-item {
+        width: 400px;
+        margin: 5px;
+        text-align: center;
+    }
+
+        .flex-item:hover {
+            border: 2px solid dodgerblue;
+            border-radius: 10px;
+        }
+</style>
+<div>
+    <div class="container pt-4 mb-5">
+        <h5>Cargo: @cargo.Nome</h5>
+        <h6>
+            Projeto: @cargo.Projeto<br>
+            Valor: @cargo.Valor<br>
+        Vagas: @cargo.VagasCurriculo</h6>
+        @if (Model != null && Model.Any())
+        {
+            <p>Quantidade de Inscrições: @Model.Count()</p>
+        }
+        else
+        {
+            <p>Nenhum currículo encontrado.</p>
+        }
+
+        <h4>Classificados</h4>
+        <table class="table">
+            <tr class="text-left">
+                <th>Classificação</th>
+                <th>Nome Candidato</th>
+                <th>Data Envio</th>
+                <th>Parecer</th>
+                <th>Detalhamento</th>
+            </tr>
+
+            @if (aptos.Any())
+            {
+                int index = 1;
+                foreach (var item in aptos)
+                {
+                    var parecer = listaParecer
+                    .Where(p => p.Cpf == item.documentos[0].Cpf && p.IdCargoEdital == item.documentos[0].IdCargoEdital)
+                    .OrderByDescending(p => p.Data)
+                    .FirstOrDefault();
+
+                    var statusDescricao = parecer != null && statusDictionary.ContainsKey(parecer.Status)
+                    ? statusDictionary[parecer.Status]
+                    : "Pendente";
+
+                    <tr class="text-left">
+                        <td>@($"#{index.ToString().PadLeft(3, '0')}")</td>
+
+                        <td>@Html.DisplayFor(modelItem => item.documentos[0].NomeCandidato)</td>
+                        <td>
+                            @item.documentos[0].DataCadastro
+                        </td>
+                        <td>@statusDescricao</td>
+                        
+                            @if (parecer != null)
+                            {
+                            <td>@parecer.Justificativa
+                            </td>
+                            }
+                            else
+                            {
+                            <td>
+                                Sem Informação
+                            </td>
+                            }
+                        
+                    </tr>
+                    index++;
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="5">Nenhum candidato classificado encontrado.</td>
+                </tr>
+            }
+        </table>
+
+        <h4>Desclassificados</h4>
+        <table class="table">
+            <tr class="text-left">
+                <th>Classificação</th>
+                <th>Nome Candidato</th>
+                <th>Data Envio</th>
+                <th>Parecer</th>
+                <th>Detalhamento</th>
+            </tr>
+
+            @if (inapto.Any())
+            {
+                int index = 1;
+                foreach (var item in inapto)
+                {
+                    var parecer = listaParecer
+                    .Where(p => p.Cpf == item.documentos[0].Cpf && p.IdCargoEdital == item.documentos[0].IdCargoEdital)
+                    .OrderByDescending(p => p.Data)
+                    .FirstOrDefault();
+
+                    var statusDescricao = parecer != null && statusDictionary.ContainsKey(parecer.Status)
+                    ? statusDictionary[parecer.Status]
+                    : "Pendente";
+
+                    <tr class="text-left">
+                        <td>@($"#{index.ToString().PadLeft(3, '0')}")</td>
+
+                        <td>@Html.DisplayFor(modelItem => item.documentos[0].NomeCandidato)</td>
+                        <td>
+                            @item.documentos[0].DataCadastro
+                        </td>
+                        <td>@statusDescricao</td>                      
+                            @if (parecer != null)
+                            {
+                            <td>
+                                    @parecer.Justificativa
+                            </td>
+                            }
+                            else
+                            {
+                                <td>Sem Informação
+                            </td>
+                            }
+                        
+                    </tr>
+                    index++;
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="5">Nenhum candidato desclassificado encontrado.</td>
+                </tr>
+
+            }
+        </table>
+
+        <h4>Avaliação Pendente</h4>
+        <table class="table">
+            <tr class="text-left">
+                <th>Classificação</th>
+                <th>Nome Candidato</th>
+                <th>Data Envio</th>
+                <th>Parecer</th>
+                <th>Detalhamento</th>
+            </tr>
+
+            @if (pendente.Any())
+            {
+                int index = 1;
+                foreach (var item in pendente)
+                {
+                    var parecer = listaParecer
+                    .Where(p => p.Cpf == item.documentos[0].Cpf && p.IdCargoEdital == item.documentos[0].IdCargoEdital)
+                    .OrderByDescending(p => p.Data)
+                    .FirstOrDefault();
+
+                    var statusDescricao = parecer != null && statusDictionary.ContainsKey(parecer.Status)
+                    ? statusDictionary[parecer.Status]
+                    : "Pendente";
+
+                    <tr class="text-left">
+                        <td>@($"#{index.ToString().PadLeft(3, '0')}")</td>
+
+                        <td>@Html.DisplayFor(modelItem => item.documentos[0].NomeCandidato)</td>
+                        <td>
+                            @item.documentos[0].DataCadastro
+                        </td>
+                        <td>@statusDescricao</td>
+                        
+                            @if (parecer != null)
+                            {
+                            <td>
+                                    @parecer.Justificativa
+                            </td>
+                            }
+                            else
+                            {
+                            <td>
+                                Sem Informação</td>
+                            }
+                        
+                    </tr>
+                    index++;
+                }
+                
+            }
+            else
+            {
+                <tr>
+                    <td colspan="5">Nenhum currículo com avaliação pendente encontrado.</td>
+                </tr>
+            }
+        </table>
+        <div> <br>Qualquer manifestação deve ser enviada ao email: credenciamento@pa.sesc.com.br </div>
+    </div>
+</div>

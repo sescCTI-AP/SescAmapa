@@ -1,0 +1,119 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Eventos</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css">
+    <style>
+        .box-email {
+            border: 1px solid #e2e2e2;
+            border-radius: 3px;
+        }
+
+        .box-email-header {
+            border-bottom: 1px solid #e2e2e2;
+            padding: 15px;
+        }
+
+        .box-email-body {
+            padding: 25px;
+        }
+
+        .box-email-footer {
+            background-color: #00468b;
+            color: #ffffff;
+            border-bottom-left-radius: 3px;
+            border-bottom-right-radius: 3px;
+            padding: 15px;
+            font-size: 0.8em;
+        }
+
+        .table-container {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <br>
+    <div class="container">
+        <div class="box-email">
+            <div class="box-email-header">
+                <img src="https://sesc-pa.com.br/images/static/logo-sesc.webp" width="75" alt="logo-sesc" />
+
+            </div>
+            <div class="box-email-body">
+                <p style="font-size: 2em; font-weight: 500; margin-bottom: 8px; text-transform: capitalize;">
+                    Olá, <span>[[nomeCliente]]</span>
+                </p>
+                <p style="font-size: 1.5em; margin: 0">
+                    Sua inscrição no evento <span>[[curso]]</span> foi recebida com sucesso!
+                </p>
+                <p style="font-size: 1.2em; margin: 10px 0;">
+                    <strong>Detalhes do Participante</strong><br />
+                    <strong>Data da Inscrição:</strong> [[dataInscricao]]<br />
+                    <strong>Nome do participante:</strong> [[nomeCliente]]<br />
+                    <strong>Data de Nascimento:</strong> [[dataNascimento]]<br />
+                    <strong>CPF:</strong> [[cpfAluno]]<br />
+                </p>
+                <p style="font-size: 1.2em; margin: 20px 0; text-align: center;">
+                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&amp;data=[[idinscricao]]" alt="QR Code" />
+
+                </p>
+                <p style="font-size: 1; margin: 20px 0; text-align: center;">
+                    <strong>Passaporte<br /></strong>
+                </p>
+                <p style="font-size: 1.2em; margin: 10px 0;">
+                <p>--------------------------------------------------------------</p>
+                <strong>Detalhes do Evento</strong><br />
+                <strong>Unidade:</strong> [[Unidade]]<br />
+                <strong>Local do Evento:</strong> [[Local]]<br />
+                <strong>Data do Evento:</strong> [[dataEvento]]<br />
+                <strong>Hora do Evento:</strong> [[horaEvento]]<br />
+                </p>
+                <p style="font-size: 1.2em; margin: 10px 0;">
+                    <strong>Instruções Adicionais:</strong><br />
+                    [[Instrucoes]]
+                </p>
+                <div>
+                    <p style="font-size: 1.2em;">Para confirmar sua participação, por favor, realize o pagamento utilizando o código QR-code abaixo:</p>
+                    <p style="font-size: 1.2em; margin: 20px 0; text-align: center;">
+                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&amp;data=[[nEq]]" alt="QR Code" />
+                    </p>
+                    <p style="font-size: 1; margin: 20px 0; text-align: center;">
+                        <strong>Pix Copia e Cola<br /></strong>
+                    </p>
+                    <p style="font-size: 0.8; margin: 20px 0; text-align: center;">
+                        [[nEq]]
+                    </p>
+                    <p>&nbsp;</p>
+                    <div class="table-container">
+                        <table style="width: 100%; border-color: black; height: auto; border-collapse: collapse;" cellpadding="5">
+                            <tbody>
+                                <tr>
+                                    <td style="text-align: left;"><strong>Produto:</strong></td>
+                                    <td style="text-align: left;"><strong>Valor:</strong></td>
+                                </tr>
+                                <tr>
+                                    <td>Taxa de Inscrição Evento - [[curso]]</td>
+                                    <td>[[valor]]</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <p>&nbsp;</p>
+                <p style="font-size: 1;">Por favor, guarde este e-mail para futuras refer&ecirc;ncias e n&atilde;o hesite em entrar em contato conosco se tiver alguma d&uacute;vida.</p>
+                <p style="font-size: 0.8; margin-top: 20px;">Telefone: 4005-9501</p>
+            </div>
+            <div class="box-email-footer">
+                <p style="font-size: 1.2em; margin-bottom: 5px">
+                    &copy; Site Sesc - Desenvolvido por ASTI - Sesc DR/PA <br>
+                </p>
+                Não responda a este e-mail.
+            </div>
+        </div>
+    </div>
+</body>
+</html>

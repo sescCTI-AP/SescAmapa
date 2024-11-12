@@ -1,0 +1,52 @@
+@inject Microsoft.Extensions.Configuration.IConfiguration Configuration
+@using System.Web
+@using SiteSesc.Repositories;
+@{
+    Layout = "../Shared/_LayoutCinema.cshtml";
+    ViewBag.Title = "Cinema - Pagamento"; 
+}
+
+@* acredito que o ideal é que esta tela venha por post *@
+
+<style type="text/css">
+    .button-Prosseguir{
+        height: auto !important;
+        padding: 0 !important;
+    }
+</style>
+
+            
+<div class="pagamentoContainer">
+    <h2 class="AssentoFilmeTitulo">Revisão do pedido e pagamento</h2>
+    <hr>
+    <div class="dadosRevisaoPedido1">
+        <p>Filme: O Menino e o Mundo</p>
+        <p>Sessão: 20:00</p>
+        <p>Assento: D4</p>
+    </div>
+    <hr>
+    <div class="dadosRevisaoPedido2">
+        <span>Total:</span>
+        <span>R$10,00</span>
+    </div>
+    <div class="dadosRevisaoPedido2">
+        <input type="submit" value="Prosseguir" id="BotaoProsseguir" class="button-Prosseguir" role="button"
+        aria-describedby="prosseguir para finalizaçao do pedido">
+    </div>
+</div>
+
+@* a tela deve baixo somente deve ser carregada quando O pagamento for concluido  *@
+<div class="pagamentoContainer">
+    <h2 class="AssentoFilmeTitulo">Ingresso adquirido com sucesso!</h2>
+    <hr>
+    <div class="ingressoAdquirido1">
+        <p>Voce adquiriu um ingresso para o filme "O Menino e o Mundo", sessão das 20:00, assento D4. 
+        Abaixo está o QR-Code referente ao seu ingresso que deve ser apresentado na entrada do cinema do Sesc-Ver-o-Peso. 
+        Para acessar este ingressso futuramente, acesse o menu superior logado e selecione seus ingressos.</p>
+        <div class="ingressoAdquirido2">
+
+        </div>
+    </div>
+
+
+</div>

@@ -1,0 +1,9 @@
+﻿@model List<dynamic>
+
+@foreach (var item in Model)
+{
+    <div class="checkbox checkbox-inline checkbox-success">
+        <input id="item-@item.Id" name="checkboxArea" type="checkbox" value="@item.Id">
+        <label for="item-@item.Id"><b>@item.Nome</b></label>
+    </div>
+}

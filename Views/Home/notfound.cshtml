@@ -1,0 +1,36 @@
+﻿@model ErrorViewModel
+@{
+    Layout = "_Empty";
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Error 404</title>
+</head>
+<style>
+    .full-screen {
+        display: flex;
+        justify-content: center; /* Centraliza horizontalmente */
+        align-items: center; /* Centraliza verticalmente */
+        height: 100vh; /* Altura de 100% da viewport */
+        width: 100vw; /* Largura de 100% da viewport */
+        margin: 0; /* Remove margens */
+        padding: 0; /* Remove preenchimento */
+        box-sizing: border-box; /* Garante que padding e border sejam incluídos no width e height */
+    }
+
+    /* Estilo adicional para o conteúdo, se necessário */
+    .content {
+        text-align: center; /* Centraliza texto dentro da div de conteúdo */
+    }
+</style>
+<body style="background-color: #336699">
+
+    <div class="full-screen">
+        <div class="content">
+            <img src="~/images/static/404.png" width="100%"/>
+        </div>
+    </div>
+</body>
+</html>

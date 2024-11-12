@@ -1,0 +1,1064 @@
+﻿@inject Microsoft.Extensions.Configuration.IConfiguration Configuration
+@model SiteSesc.Models.ApiPagamento.ClienteCentral
+@using SiteSesc.Models.ApiPagamento
+@using SiteSesc.Services
+@using SiteSesc.Models.ModelPartialView;
+@{
+    ViewData["Title"] = "Espaço do cliente";
+    var dependentes = ViewBag.Dependentes as List<ClienteDetails>;
+    var correcao = ViewBag.Correcao as HstSolicitacao;
+    bool clienteCredenciado = true;
+    var usuario = ViewBag.Usuario as Usuario;
+    int anoExpiracao = DateTime.Now.Year;
+    int? tipoCategoria = ViewBag.TipoCategoria;
+    var movimentacao = ViewBag.Movimentacao as List<HSTMOVCART>;
+}
+<link href="~/css/espacocliente/cardpagamento.css" rel="stylesheet" />
+
+<style>
+
+    .rating-container {
+        display: inline-block;
+        direction: rtl; /* Isso faz com que as estrelas sejam renderizadas da direita para a esquerda */
+    }
+
+    .rating-star {
+        font-size: 25px;
+        color: #d9d7d2;
+        cursor: pointer;
+        display: inline-block;
+        padding: 0 5px;
+        transition: color 0.2s;
+    }
+
+        .rating-star:hover,
+        .rating-star:hover ~ .rating-star {
+            color: #deb217;
+        }
+
+
+    a {
+        cursor: pointer
+    }
+
+    #btn-switch {
+        padding: clamp(0.3rem, 0.3rem + 1vh, 0.6rem) 1.5rem;
+        margin-left: 2rem;
+    }
+
+    .img-circular {
+        position: relative;
+        width: 200px;
+        height: 200px;
+        object-fit: cover;
+        border-radius: 50%
+    }
+
+    .PrimeiroSegundoNome {
+        text-transform: capitalize;
+    }
+
+    .container-dep, .portfolio-wrap {
+        position: relative;
+        width: 200px;
+        height: 200px;
+        border-radius: 50%;
+    }
+
+    .portfolio-info {
+        position: relative;
+        margin: 20px;
+    }
+
+        .portfolio-info h4 {
+            font-size: 18px !important;
+            margin: 15px;
+            position: absolute;
+            cursor: default;
+        }
+
+    .portfolio .portfolio-wrap::before {
+        border-radius: 50%;
+    }
+
+    .portfolio .portfolio-wrap .portfolio-info::before {
+        display: block;
+        content: "";
+        width: 48px;
+        height: 48px;
+        position: absolute;
+        top: 0;
+        left: 0;
+        border-top: 3px solid #004c99;
+        border-left: 3px solid #004c99;
+        transition: all 0.5s ease 0s;
+        z-index: 1;
+    }
+
+    .portfolio .portfolio-wrap .portfolio-info::after {
+        display: block;
+        content: "";
+        width: 48px;
+        height: 48px;
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        border-bottom: 3px solid #004c99;
+        border-right: 3px solid #004c99;
+        transition: all 0.5s ease 0s;
+        z-index: 1;
+    }
+
+    .portfolio-links {
+        position: relative;
+        margin-top: 140px;
+    }
+
+
+        .portfolio-links .bx-search-alt {
+            transition: 0.8s ease;
+        }
+
+        .portfolio-links:hover .bx-search-alt {
+            scale: 150%;
+            transition: 0.5s ease;
+        }
+
+
+    #dependentesContainer {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 0 !important;
+        margin: 0 !important;
+        gap: 2rem;
+    }
+
+    .totalArea {
+        width: 100%;
+    }
+
+    .container-dep, .portfolio-wrap {
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+
+    .botoesCredenciaisContainer {
+        display: flex;
+        flex-direction: column;
+        align-items: start;
+        width: fit-content;
+    }
+
+    .botaoCredenciais {
+        max-width: 220px;
+    }
+
+    .superiores {
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-start;
+        gap: 1rem;
+        width: fit-content;
+    }
+
+    .bcAzul, .bcTransparente {
+        height: 60px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: 0.5s;
+        margin-top: 2rem !important;
+    }
+
+    .bcAzul {
+        background-color: #004c99;
+    }
+
+        .bcAzul:hover {
+            background-color: #3866e8;
+        }
+
+    .bcTransparente:hover {
+        background-color: rgba(56,102,232,0.2);
+    }
+
+    .btnRenovacao {
+        transition: 0.5s;
+        margin-top: 2rem !important;
+        background: transparent;
+        border: 2px solid #0563bb;
+        color: #0563bb;
+    }
+
+    .bg-transaparent {
+        background: transparent;
+        border: 2px solid #0563bb;
+        color: #0563bb;
+    }
+
+    .renovarCredencial {
+        color: #fff;
+        width: 100%;
+        background: linear-gradient(90deg, rgba(255,0,0,0.5) 0%, rgba(255,0,0,0.5) 20%, rgba(255,0,0,1) 80%, rgba(255,0,0,1) 100%);
+        background-size: 600%;
+        background-position: 0%;
+        cursor: pointer;
+        border: 2px solid rgba(255,0,0, 1);
+        min-height: 80px;
+        position: relative;
+        z-index: 0;
+        border-radius: 40PX;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: center;
+        animation: glowing 2.3s linear 1;
+        transition: all .3s ease;
+    }
+
+    @@keyframes glowing {
+        0% {
+            background: rgba(5,99,187, 0);
+            border: 2px solid rgba(5,99,187,1);
+            color: #0563bb
+        }
+
+        60% {
+            background: rgba(5,99,187, 0);
+            border: 2px solid rgba(5,99,187,1);
+            color: #0563bb;
+            box-shadow: 0 0 15px rgba(255,0,0, 0);
+        }
+
+        80% {
+            background: rgba(255,0,0, 0.9);
+            border: 2px solid rgba(255,0,0, 1);
+            color: white;
+            box-shadow: 0 0 15px rgba(255,0,0, 0.3);
+        }
+
+        100% {
+            background: rgba(255,0,0, 0.5);
+            border: 2px solid rgba(255,0,0, 1);
+            color: white;
+        }
+    }
+
+    .renovarCredencial:hover {
+        box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.3);
+        transform: translateY(-5px);
+        background-position: 100%;
+        transition: all 1s ease;
+    }
+
+
+
+    @@media only screen and (max-width: 992px) {
+        .botoesCredenciaisContainer {
+            align-items: center;
+            justify-content: center;
+            margin: auto;
+        }
+
+        .superiores {
+            justify-content: center;
+        }
+
+        .nomeMeusDados {
+            text-align: center;
+        }
+
+        .imagemMeusDados {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .areaSaldo {
+            padding-top: 2rem;
+        }
+    }
+
+
+    @@media only screen and (min-width: 768px) {
+    }
+
+    @@media only screen and (max-width: 767px) {
+        .botoesCredenciaisContainer {
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .superiores {
+            flex-direction: column;
+            align-items: center;
+            gap: 0;
+        }
+    }
+
+    .tp-entrada {
+        color: green !important;
+    }
+
+    .tp-saida {
+        color: red !important;
+    }
+</style>
+
+@await Component.InvokeAsync("SideMenu", new { area = "cliente" })
+
+@if (!clienteCredenciado)
+{
+    <section id="hero" class="d-flex flex-column justify-content-center">
+
+        <div class="container" data-aos="zoom-in" data-aos-delay="100">
+            <h1 class="PrimeiroSegundoNome">Olá, @Util.PrimeiroSegundoNome(Model.Nmcliente.ToLower()).</h1>
+            @if (ViewBag.HasSolicitacao ?? false)
+            {
+                <p><i class="fa-solid fa-circle-exclamation" style="color:dodgerblue"></i>&nbsp; Você possui uma solicitação em análise...</p>
+            }
+        </div>
+    </section>
+}
+else
+{
+
+    <section id="hero" class="d-flex flex-column justify-content-center">
+
+        <div class="container" data-aos="zoom-in" data-aos-delay="100">
+            <h1 class="PrimeiroSegundoNome">Olá, @Util.PrimeiroSegundoNome(Model.Nmcliente.ToLower()).</h1>
+            @if (ViewBag.HasSolicitacao ?? false)
+            {
+                <p><i class="fa-solid fa-circle-exclamation" style="color:dodgerblue"></i>&nbsp; Você possui uma solicitação em análise...</p>
+            }
+            <div class="social-links">
+                <a data-bs-target="#modalConsumo" data-bs-toggle="modal" class="google-plus" title="Meu consumo"><i class="fa-solid fa-hand-holding-dollar font-size-48"></i></a>
+                @* <a href="#" title="Agendamentos"><i class="bx bx-time font-size-48"></i></a> *@
+                <a href="#" title="Meus cupons e descontos"><i class="bx bxs-badge-dollar font-size-48"></i></a>
+                <a onclick="ava('@Model.Nucpf');" title="Ava"><i class="fa-solid fa-graduation-cap font-size-48"></i></a>
+
+                <a data-bs-target="#modalAgendamento" data-bs-toggle="modal" title="Agendamentos"><i class="fa-solid fa-calendar-days font-size-48"></i></a>
+
+            </div>
+            @* data-toggle="modal" data-id="@Url.Action("MovimentacaoCartao", "Cliente", new { numeroCartao = clienteDb2.NUMCARTAO })" *@
+            <div class="row text-center botoesCredenciaisContainer">
+                <div class="superiores">
+                    <div class="botaoCredenciais">
+                        @* <a data-bs-toggle="modal" data-bs-target="#modal-recarga"> *@
+                        <a id="loadPartialButton">
+                            <div class="btn-rounded bg-blue tex-center mt-5 bcAzul">Recarregar Credencial Sesc</div>
+                        </a>
+                    </div>
+                    <div class="botaoCredenciais">
+                        <a data-bs-toggle="modal" data-bs-target="#modal-credencial">
+                            <div class="btn-rounded bg-transaparent text-center mt-5 bcTransparente">Ver Credencial Sesc</div>
+                        </a>
+                    </div>
+                    <div class="botaoCredenciais">
+                        <a asp-action="RedirectToMarmitaApp" asp-controller="Cliente" asp-route-userId="@Model.Nucpf" asp-route-email="@usuario?.Email" asp-route-credencial="@Model.Credencial" asp-route-nome="@Model.Nmcliente.Trim()">
+                            <div class="btn-rounded bg-transaparent text-center mt-5 bcTransparente">Comprar Refeição</div>
+                        </a>
+                    </div>
+                    @if (ViewBag.Rematricula ?? false)
+                    {
+                        if (ViewBag.CartaoVencido == null)
+                        {
+                            if (ViewBag.Inadimplente == null)
+                            {
+                                <div class="botaoCredenciais">
+                                    <a class="btn-square-purple-150 rounded cursor-pointer" onclick="getRematricula('@Model.Nucpf')">
+                                        <div class="btn-rounded bg-warning text-center mt-5 bcTransparente">Rematrículas</div>
+                                    </a>
+                                </div>
+                            }
+                        }
+                    }
+                </div>
+                @if (ViewBag.Renovacao ?? false)
+                {
+                    if (ViewBag.HasSolicitacao == false)
+                    {
+                        <div class="totalArea">
+                            <a asp-action="Renovacao" asp-controller="SolicitacaoCadastroCliente" asp-route-CDUOP="@Model.Cduop" asp-route-SQMATRIC="@Model.Sqmatric">
+                                <div class="btn-rounded btnRenovacao renovarCredencial" id="botaoRenovacao">Renove Sua Credencial</div>
+                            </a>
+                        </div>
+                    }
+
+                }
+            </div>
+
+            <div class="areaSaldo">
+                <p>Saldo na sua Credencial Sesc: <span id="saldoContainer"></span></p>
+            </div>
+        </div>
+    </section>
+
+    <main id="main">
+        <section id="perfil" class="about">
+            <div class="container" data-aos="fade-up">
+                <div class="section-title">
+                    <h2>Meus dados</h2>
+                    <p>Esses são os dados no Sesc, caso precise alterar alguma informação entre em contato com a Central de Atendimentos!</p>
+                </div>
+                <div class="row">
+                    <div class="col-lg-4 imagemMeusDados">
+                        <img src="@Model.FotoCliente" class="img-fluid" alt="" style="border-radius: 50%">
+                    </div>
+                    <div class="col-lg-8 pt-4 pt-lg-0 content">
+                        <h3 class="nomeMeusDados">@Model.Nmcliente</h3>
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <ul>
+                                    <li><i class="bi bi-chevron-right"></i> <strong>Credencial Sesc:</strong> <span>@Model.Credencial</span></li>
+                                    <li><i class="bi bi-chevron-right"></i> <strong>Categoria:</strong> <span>@Model.Categoria</span>
+                                    <li><i class="bi bi-chevron-right"></i> <strong>CPF:</strong> <span>@Model.Nucpf.Substring(0, 3).***.***-@Model.Nucpf.Substring(@Model.Nucpf.Length - 2)</span></li>
+                                        @* <li><i class="bi bi-chevron-right"></i> <strong>RG:</strong> <span>@Model.Nureggeral</span></li> *@
+                                        @if (Model.Enderecos.Any())
+                                        {
+                                        <li><i class="bi bi-chevron-right"></i> <strong>Endereço:</strong> <span>@Model.Enderecos.FirstOrDefault().EnderecoCompleto</span></li>
+
+                                        }
+                                    <li><i class="bi bi-chevron-right"></i> <strong>Email:</strong> <span>@usuario?.Email</span></li>
+                                </ul>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="matriculas" class="resume">
+            <div class="container" data-aos="fade-up">
+                <div class="section-title">
+                    <h2>Minhas matrículas e serviços</h2>
+                    <p>Essas são suas matrículas ativas no Sesc @Configuration["Ambiente:UF"]</p>
+                </div>
+                <div class="row">
+                    <div id="matriculasContainer" class="row"></div>
+                </div>
+            </div>
+        </section>
+
+        @if (Model.Cduotitul == null)
+        {
+            <section id="dependentes" class="portfolio section-bg">
+                <div class="container" data-aos="fade-up">
+                    <div class="section-title">
+                        <h2>Dependentes</h2>
+
+                        @if (tipoCategoria != null)
+                        {
+                            if (tipoCategoria != 1)
+                            {
+                                <a asp-action="Create" asp-controller="SolicitacaoCadastroCliente" asp-area="Cliente" asp-route-categoria="@tipoCategoria" asp-route-CDUOTITUL="@Model.Cduop" asp-route-SQTITULMAT="@Model.Sqmatric" class="btn-sm btn-rounded bg-transaparent">Adicionar dependente</a>
+                            }
+                        }
+
+                        <p class="mt-3">Aqui estão relacionados seus dependentes</p>
+
+                    </div>
+
+                    <div id="dependentesContainer" class="row " data-aos="fade-up" data-aos-delay="200"></div>
+
+                </div>
+            </section>
+        }
+
+
+        <section id="cobrancas" class="services">
+            <div class="container" data-aos="fade-up">
+
+                <div class="section-title">
+                    <h2>Minhas cobranças</h2>
+                    <p>Aqui estão relacionadas as próximas cobranças em aberto ou pendentes</p>
+                    <br>
+                    @if (Model.Cduotitul != null)
+                    {
+                        <a asp-action="CobrancasPorCpf" asp-controller="Cobranca" asp-route-cpfDependente="@Model.Nucpf"><p>Ver todas as cobranças</p></a>
+                    }
+                    else
+                    {
+                        <a asp-action="CobrancasPorCpf" asp-controller="Cobranca"><p>Ver todas as cobranças</p></a>
+                    }
+                </div>
+                <div id="cobrancasContainer" class="row"></div>
+            </div>
+        </section>
+    </main>
+}
+
+<div class="modal fade" id="modal-msg" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Mensagem do atendente</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>@correcao?.Observacao</p>
+            </div>
+            <div class="modal-footer">
+                <a asp-action="Edit" asp-controller="SolicitacaoCadastroCliente" asp-route-id="@correcao?.IdSolicitacaoCadastroCliente" type="button" class="btn btn-outline-primary button-rounded">Corrigir</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="modal-credito" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Pagamento com cartão de crédito</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div id="partialViewContainer"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modalConsumo" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Meu consumo</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="table-responsive">
+                    <table class="table table-hover" id="tdMovimentacaoCartaoCliente">
+                        <thead>
+                            <tr>
+                                <th>PRODUTO</th>
+                                <th>DATA</th>
+                                <th>HORA</th>
+                                <th>VALOR</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (movimentacao != null)
+                            {
+                                foreach (var mov in movimentacao)
+                                {
+                                    <tr class="@mov.classMov">
+                                        <td>@mov.DSPRODUTO</td>
+                                        <td>@mov.DTMOVIMENT.ToShortDateString()</td>
+                                        <td>@mov.HORAMOV</td>
+                                        <td>@mov.VLPRODMOV.ToString("C")</td>
+                                    </tr>
+                                }
+                            }
+                            <div id="modal-consumo"></div>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<div class="modal fade" id="modalAgendamento" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h6 class="modal-title">Selecione um cliente</h6>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            </div>
+            <div class="modal-body overflow-auto" @*style="height:80vh"*@>
+                <div class="col-md">
+                    @if (clienteCredenciado)
+                    {
+                        <a href="@Url.Action("Agendamento", "AgendamentoMatriculaEscolar", new { cpf = Model.Nucpf })">
+                            <div class="card card-accordion shadow-border rounded-20">
+                                <div class="card-body p-2">
+                                    <div class="col-md-12">
+                                        <div class="row">
+                                            <div class="col-md-2">
+                                                <img src="@Model.FotoCliente" style="height: 100px; width: 100px; border-radius:100px; object-fit: cover; border: 5px solid white"
+                                                     alt="foto-cliente" />
+                                            </div>
+                                            <div class="col-md-6">
+                                                <p class="text-bold mb-0">
+                                                    @Html.DisplayFor(modelItem => Model.Nmcliente)
+                                                </p>
+                                                <p class="mb-0">
+                                                    Matrícula:  @Html.DisplayFor(modelItem => Model.Credencial)
+                                                </p>
+                                                <p class="mb-0">
+                                                    CPF:  @Html.DisplayFor(modelItem => Model.Nucpf)
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    }
+                </div>
+
+                <div id="dependentesAgendamentoContainer"></div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div id="modalContainer"></div>
+<div id="partialRecarga"></div>
+
+
+
+@if (ViewBag.Rematricula ?? false)
+{
+    <div class="modal fade" id="modalRematricula" tabindex="-1" role="dialog" aria-labelledby="modalRematricula" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Rematrícula educação infantil</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+                <div class="modal-body">
+                    <h4>Selecione um usuário</h4>
+                    <div id="dependentesRematricula"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="input-login" data-dismiss="modal">Cancelar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+
+@await Html.PartialAsync("PartialView/_PartialViewCredencial")
+@* @await Html.PartialAsync("PartialView/_PartialViewRecarga") *@
+
+
+@section Scripts {
+    <script src="~/js/3th/jquery.maskmoney.min.js"></script>
+    <script src="~/js/detectaBandeira.js"></script>
+    <script src="~/js/pagamento/cardpix.js"></script>
+    <script src="~/js/3th/loadingoverlay.min.js"></script>
+
+    @if (correcao != null)
+    {
+        <script>
+            $(document).ready(function () {
+                $('#modal-msg').modal('show')
+            });
+        </script>
+    }
+    <script>
+
+
+        document.addEventListener('DOMContentLoaded', function () {
+            fetch('/cliente/get-credencial/' + '@Model?.Nucpf')
+                .then(response => response.text())
+                .then(data => {
+                    // console.log(data);
+                    document.getElementById('img-credencial').src = data;
+                })
+                .catch(error => console.error('Erro ao buscar credencial:', error));
+
+
+            $('#loadPartialButton').click(function () {
+                $.ajax({
+                    url: '/cliente/partialview-recarga/' + '@Model?.Nucpf',
+                    type: 'GET',
+                    success: function (result) {
+                        $('#partialRecarga').html(result);
+                        $('#modal-recarga').modal('show');
+                    },
+                    error: function (xhr, status, error) {
+                        console.error(error);
+                    }
+                });
+            });
+        });
+
+        function ava(cpf) {
+            $.ajax({
+                url: '@Url.Action("LoginMoodle")/' + '?cpf=' + cpf,
+                type: 'GET',
+                success: function (data) {
+                    if (data.code === 1) {
+                        window.open(data.url, '_blank');
+                    } else {
+                        swal({
+                            title: 'Ops',
+                            text: 'Desculpe, tente novamente mais tarde',
+                            icon: 'warning',
+                            timer: 1500
+                        });
+                    }
+                    //console.log("url: " + data.url);
+
+                },
+                error: function () {
+                    alert("error");
+                }
+            });
+        }
+
+        function getRematricula(cpf) {
+            $.ajax({
+                url: '/cliente/obter-dependentes-rematricula/' + cpf,
+                type: 'GET',
+                beforeSend: function () {
+                    $.LoadingOverlay("show",
+                        {
+                            background: "rgba(176, 177, 178, 0.5)",
+                            text: "Aguarde..."
+                        });
+                },
+                complete: function () {
+                    $.LoadingOverlay("hide");
+                },
+                success: function (data) {
+                    if (data != null) {
+                        console.log(data);
+                        $('#dependentesRematricula').empty();
+
+                        $.each(data.clientes, function (index, value) {
+                            $('#dependentesRematricula').append('<a href="/cliente/rematricula/matriculas-cliente?cpf=' + value.nucpf + '"> <div class="card card-accordion shadow-border rounded"  style="margin-bottom: 20px"><div class="col-md-12"> <div class="row"> <div class="col-md-2"> <img src="' + value.fotoCliente + '" style="height: 100px; width: 100px; border-radius:100px; object-fit: cover; border: 5px solid white" alt="foto-cliente" /> </div> <div class="col-md-6"> <p class="text-bold mb-0"> ' + value.nmcliente + ' </p> <p class="mb-0"> Matrícula: ' + value.matricula + ' </p> <p class="mb-0"> CPF:  ' + value.nucpf + ' </p> </div> </div> </div> </div> </div> </a>');
+                        });
+
+                        $('#modalRematricula').modal('show');
+                    } else {
+                        swal({
+                            title: 'Ops',
+                            text: 'Desculpe, tente novamente mais tarde',
+                            icon: 'warning',
+                            timer: 1500
+                        });
+                    }
+                },
+                error: function () {
+                    swal({
+                        title: 'Ops',
+                        text: 'Desculpe, tente novamente mais tarde',
+                        icon: 'warning',
+                        timer: 1500
+                    });
+                }
+            });
+        }
+
+        function movimentacao(numcartao) {
+            fetch('/cliente/movimentacao-cartao/' + '@Model.Numcartao')
+                .then(response => response.json())
+                .then(data => {
+                    const container = document.getElementById('modal-consumo');
+                    console.log(data);
+                    const table = document.createElement('table');
+                    table.classList.add('table', 'table-hover');
+                    table.id = 'tdMovimentacaoCartaoCliente';
+
+                    // Criar thead
+                    const thead = document.createElement('thead');
+                    const headerRow = document.createElement('tr');
+
+                    const headers = ['PRODUTO', 'DATA', 'HORA', 'VALOR'];
+                    headers.forEach(headerText => {
+                        const th = document.createElement('th');
+                        th.textContent = headerText;
+                        headerRow.appendChild(th);
+                    });
+
+                    thead.appendChild(headerRow);
+                    table.appendChild(thead);
+
+                    // Criar tbody
+                    const tbody = document.createElement('tbody');
+
+
+                    data.forEach(cons => {
+                        // Criação do elemento <tr>
+                        const tr = document.createElement('tr');
+
+                        // Criação do elemento <td> para dsproduto
+                        const tdProduto = document.createElement('td');
+                        tdProduto.textContent = cons.dsproduto;
+                        tr.appendChild(tdProduto);
+
+                        // Criação do elemento <td> para dtmoviment
+                        const tdDtMoviment = document.createElement('td');
+                        tdDtMoviment.textContent = cons.dtmoviment;
+                        tdDtMoviment.classList.add('text-center');
+                        tr.appendChild(tdDtMoviment);
+
+                        // Criação do elemento <td> para horamov
+                        const tdHoraMov = document.createElement('td');
+                        tdHoraMov.textContent = cons.horamov;
+                        tdHoraMov.classList.add('text-center');
+                        tr.appendChild(tdHoraMov);
+
+                        tbody.appendChild(tr);
+                        // container.insertAdjacentHTML('beforeend', htmlContent);
+                    });
+                    table.appendChild(tbody);
+                    $('#modalConsumo').modal('show');
+                })
+                .catch(error => console.error('Erro ao buscar consumo:', error));
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            fetch('/cliente/get-dependentes')
+                .then(response => response.json())
+                .then(data => {
+                    const container = document.getElementById('dependentesContainer');
+                    const containerAgendamento = document.getElementById('dependentesAgendamentoContainer');
+                    console.log(data);
+                    data.forEach(dependente => {
+
+                        const htmlContent = `
+                                                    <div class="col-lg-4 col-md-6 container-dep ${dependente.nmcliente.split(' ')[0]}">
+                                                        <div class="portfolio-wrap">
+                                                            <img src="${dependente.fotoCliente}" class="img-fluid img-circular" alt="">
+                                                            <div class="portfolio-info">
+                                                                <h4>${dependente.nmcliente}</h4>
+                                                                <div class="portfolio-links">
+                                                                    <a href="/cliente?cpfDependente=${dependente.nucpf}" class="portfolio-lightbox" title="${dependente.nmcliente}">
+                                                                        <i class="bx bx-search-alt"></i>
+                                                                    </a>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                               `;
+
+
+                        const htmlContentAgendamento = `
+                                                        <div class="col-md">
+                                                            <a href="/cliente/agendamento-escolar/${dependente.nucpf}">
+                                                                <div class="card card-accordion shadow-border rounded-20 mt-2">
+                                                                    <div class="card-body p-2">
+                                                                        <div class="col-md-12">
+                                                                            <div class="row">
+                                                                                <div class="col-md-2">
+                                                                                    <img src="${dependente.fotoCliente}" style="height: 100px; width: 100px; border-radius:100px; object-fit: cover; border: 5px solid white" alt="">
+                                                                                </div>
+                                                                                <div class="col-md-6">
+                                                                                    <p class="text-bold mb-0">
+                                                                                        ${dependente.nmcliente}
+                                                                                    </p>
+                                                                                    <p class="mb-0">
+                                                                                        Matrícula: ${dependente.matricula}
+                                                                                    </p>
+                                                                                    <p class="mb-0">
+                                                                                        CPF: ${dependente.nucpf}
+                                                                                    </p>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </a>
+                                                        </div>
+                                                       `;
+                        container.insertAdjacentHTML('beforeend', htmlContent);
+                        containerAgendamento.insertAdjacentHTML('beforeend', htmlContentAgendamento);
+                    });
+                })
+                .catch(error => console.error('Erro ao buscar dependentes:', error));
+        });
+
+
+        document.addEventListener('DOMContentLoaded', function () {
+            fetch('/cliente/get-matriculas/' + '@Model?.Nucpf')
+                .then(response => response.json())
+                .then(data => {
+                    const container = document.getElementById('matriculasContainer');
+                    data.forEach(matricula => {
+                        console.log(matricula);
+                        const htmlContent = `
+                                                    <div class="resume-item pb-0">
+                                                        <h4>
+                                                            ${matricula.progocorr.dsusuario}
+                                                        </a></h4>
+                                                        <ul>
+                                                            <li>
+                                                                <a href="cliente/cobrancas/atividade/${matricula.cdelement}/@Model?.Nucpf" class="nav-link scrollto p-0 text-black">
+                                                                    <i class="fa fa-money"> </i>
+                                                                    <span> Mensalidades </span>
+                                                                </a>
+                                                            </li>
+                                                            <li>
+                                                                <a href="#" class="nav-link scrollto p-0 text-black">
+                                                                    <i class="fa fa-paper"> </i>
+                                                                    <span> Ver termo de adesão </span>
+                                                                </a>
+                                                            </li>
+                                                                            <li>Avalie aqui!</li>
+                                                                <div class="rating-container">
+                                                                    <span class="rating-star" data-value="5" data-link="cliente/atividade/detalhes/${matricula.cdelement}/@Model?.Nucpf">&#9733;</span>
+                                                                    <span class="rating-star" data-value="4" data-link="cliente/atividade/detalhes/${matricula.cdelement}/@Model?.Nucpf">&#9733;</span>
+                                                                    <span class="rating-star" data-value="3" data-link="cliente/atividade/detalhes/${matricula.cdelement}/@Model?.Nucpf">&#9733;</span>
+                                                                    <span class="rating-star" data-value="2" data-link="cliente/atividade/detalhes/${matricula.cdelement}/@Model?.Nucpf">&#9733;</span>
+                                                                    <span class="rating-star" data-value="1" data-link="cliente/atividade/detalhes/${matricula.cdelement}/@Model?.Nucpf">&#9733;</span>
+
+                                                                    </div>
+
+                                                        </ul>
+                                                    </div>
+                                                `;
+                        container.insertAdjacentHTML('beforeend', htmlContent);
+                    });
+
+                    // Event listener for rating stars
+                    const stars = document.querySelectorAll('.rating-star');
+                    stars.forEach(star => {
+                        star.addEventListener('click', function () {
+                            const ratingValue = this.getAttribute('data-value');
+                            const link = this.getAttribute('data-link');
+                            // Redirect to the evaluation link with the rating value
+                            window.location.href = link + `?rating=${ratingValue}`;
+                        });
+                    });
+                })
+                .catch(error => console.error('Erro ao buscar matrículas:', error));
+        });
+
+
+        function showLoading() {
+            var loadingImg = document.createElement('img');
+            loadingImg.src = '/images/loading.gif';
+            loadingImg.alt = 'Carregando...';
+            loadingImg.id = 'loadingImg';
+
+            var loadingDiv = document.createElement('div');
+            loadingDiv.id = 'loading';
+            loadingDiv.style.display = 'flex'; // Inicialmente oculto
+
+            loadingDiv.appendChild(loadingImg);
+            document.body.appendChild(loadingDiv);
+        }
+
+        function removeLoading() {
+            var loadingImg = document.getElementById('loading');
+            if (loadingImg) {
+                loadingImg.remove();
+            }
+        }
+
+        function exibeFormCredito(idclasse, cdelement, sqcobranca) {
+            showLoading();
+            $.ajax({
+                url: '/cliente/cobrancas/partialview-credito/' + '@Model?.Nucpf' + '/' + '@Model?.Cduop' + '/' + '@Model?.Sqmatric' + '/' + idclasse + '/' + cdelement + '/' + sqcobranca,
+                type: 'GET',
+                success: function (partialHtml) {
+                    $('#partialViewContainer').html(partialHtml);
+                    $('#modal-credito').modal('show');
+                    removeLoading();
+                },
+                error: function () {
+                    console.error('Erro ao carregar a Partial View');
+                    removeLoading();
+                }
+            });
+
+        }
+
+
+
+        document.addEventListener('DOMContentLoaded', function () {
+            fetch('/cliente/get-cobrancas/' + '@Model?.Nucpf')
+                .then(response => response.json())
+                .then(data => {
+                    const container = document.getElementById('cobrancasContainer');
+                    data.forEach(cobrancas => {
+                        const vencimento = formatDate(cobrancas.vencimento);
+                        const valorOriginal = formatCurrency(cobrancas.valorOriginal);
+                        const valorRecebido = formatCurrency(cobrancas.valorRecebido);
+                        const htmlContent = `
+                                                        <div class="col-lg-4 col-md-6 d-flex align-items-stretch" data-aos="zoom-in" data-aos-delay="100" id="div-${cobrancas.cdelement}-${cobrancas.sqcobranca}">
+                                                            <div class="icon-box">
+                                                                <i class="" style="font-size: 48px"></i>
+                                                                <h4><a href="">${cobrancas.atividade}</a></h4>
+                                                                <h6>Vencimento: ${vencimento}</h6>
+                                                                <h5>Valor original: ${valorOriginal}</h5>
+                                                                <h5>Valor atualizado: ${valorRecebido}</h5>
+                                                                <br>
+                                                                <hr>
+                                                                <div class="row">
+                                                                    <span style="font-style: italic; margin-bottom: 20px;">Pague agora <br> Selecione uma forma de pagamento</span>
+                                                                    <div class="row">
+                                                                        <div class="col-md">
+                                                                            <a id="btn-${cobrancas.cdelement}-${cobrancas.sqcobranca}" class="btn-transparent" onclick="exibeFormCredito('OCRID','${cobrancas.cdelement}',${cobrancas.sqcobranca})">
+                                                                                <div class="card border-radius-30 btn-pgto text-center bg-hover-green">
+                                                                                    <div class="card-body pt-4">
+                                                                                        <i class="bx bxs-credit-card-alt font-size-48"></i><br />
+                                                                                        <span>Cartão de crédito</span>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </a>
+                                                                        </div>
+                                                                        <div class="col-md">
+                                                                            <div class="form-pix" id="form-pix-${cobrancas.cdelement}-${cobrancas.sqcobranca}">
+                                                                                <input hidden name="dados.IDCLASSE" value="OCRID" />
+                                                                                <input hidden name="dados.CDUOP" value="@Model.Cduop" />
+                                                                                <input hidden name="dados.SQMATRIC" value="@Model.Sqmatric" />
+                                                                                <input hidden name="dados.CPF" value="@Model.Nucpf" />
+                                                                                <input hidden name="dados.CDELEMENT" value="${cobrancas.cdelement}" />
+                                                                                <input hidden name="dados.SQCOBRANCA" value="${cobrancas.sqcobranca}" />
+                                                                                <a class="btn-transparent" onclick="geraPix('form-pix-${cobrancas.cdelement}-${cobrancas.sqcobranca}')">
+                                                                                    <div class="card border-radius-30 btn-pgto text-center bg-hover-green">
+                                                                                        <div class="card-body pt-4">
+                                                                                            <i class="fa-brands fa-pix font-size-48"></i><br />
+                                                                                            <span>Pix</span>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </a>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                `;
+                        container.insertAdjacentHTML('beforeend', htmlContent);
+                    });
+                })
+                .catch(error => console.error('Erro ao buscar cobranças:', error));
+        });
+
+
+        document.addEventListener('DOMContentLoaded', function () {
+            fetch('/cliente/get-saldo/' + '@Model?.Nucpf')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('saldoContainer').innerHTML = formatCurrency(data);
+                })
+                .catch(error => console.error('Erro ao buscar saldo:', error));
+        });
+
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            const day = date.getDate().toString().padStart(2, '0');
+            const month = (date.getMonth() + 1).toString().padStart(2, '0');
+            const year = date.getFullYear();
+            return `${day} -${month} -${year} `;
+        }
+
+        function formatCurrency(value) {
+            return value.toLocaleString('pt-BR', {
+                style: 'currency',
+                currency: 'BRL'
+            });
+        }
+
+
+    </script>
+}

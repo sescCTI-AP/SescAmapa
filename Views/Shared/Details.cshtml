@@ -1,0 +1,252 @@
+﻿@inject Microsoft.Extensions.Configuration.IConfiguration Configuration
+@model SiteSesc.Models.Noticia
+@using SiteSesc.Models.ModelPartialView
+@using System.Text
+@using System;
+@using System.Net;
+
+@{
+    var listaNoticias = ViewBag.ListNoticias as List<NoticiaCard>;
+    var listComentarios = ViewBag.ListComentarios as List<Comentarios>;
+    var listPostsRecentes = ViewBag.ListPostsRecentes as List<PostsRecentes>;
+    var listAreas = ViewBag.ListAreas as List<Area>;
+}
+
+<section class="blog_details-area pt-120 pb-80">
+    <div class="container">
+        <div class="blog_details-img">
+            <img src="@Model.Arquivo.CaminhoVirtualFormatado()" width="100%" alt="@Model.TituloCurto" loading="lazy" >
+        </div>
+        <div class="row">
+            <div class="col-xl-8 col-lg-8">
+                <div class="blog_details-wrap mb-60">
+                    <div class="blog_details-top mb-50">
+                        <h3 class="blog_details-title">@Model.TituloCurto</h3>
+                        
+                        <div class="blog_details-meta">
+                            <div class="blog_details-author">
+                                @*                                 <div class="blog_details-author-img">
+                                <img src="~/images/erika.jpg" style="border-radius: 50%" alt="">
+                                </div> *@
+                                <div class="blog_details-author-info">
+                                    <span>Autor</span>
+                                    <h5><a @*href="team.html"*@>@Model.Usuario.Nome</a></h5>
+                                </div>
+                            </div>
+                            <div class="blog_details-category">
+                                <h5><a href="#">@Model.Area.Nome</a></h5>
+                                <h5 class="blog_details-title">@Model.IdUnidade.NomeCurto</h5>
+                            </div>
+                            <div class="footer-social">
+                                <span>Compartilhe essa notícia</span>
+                                            @{
+                                                string textoConcat = "https://sesc-pa.com.br"; 
+                                                string[] words = ViewBag.CurrentUrl.Split('/');
+                                                for (int i = 3; i < words.Length; i++)
+                                                {
+                                                    textoConcat = textoConcat +"/"+ Encoding.UTF8.GetString(Encoding.Default.GetBytes(@words[i]));
+                                                }
+                                            }
+                                            <ul>
+                                                <!--<li><a href="#"><i class="fa-brands fa-x-twitter"></i></a></li>-->
+                                                <li class="padronizar-share-icon">
+                                                    <a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=@textoConcat">
+                                                    <i class="fa-brands fa-facebook-f"></i>
+                                                    </a>
+                                                </li>
+                                                <li class="padronizar-share-icon">
+                                                    <a target="_blank" href="https://www.linkedin.com/shareArticle?mini=true&url=@textoConcat">
+                                                        <i class="fa-brands fa-linkedin-in"></i>
+                                                    </a>
+                                                </li>
+                                                <li class="padronizar-share-icon">
+                                                    <a target="_blank" href="https://api.whatsapp.com/send?text=@textoConcat" >
+                                                        <i class="fa-brands fa-whatsapp"></i>
+                                                    </a>
+                                                </li>
+                                                <li class="padronizar-share-icon">
+                                                    <a onclick="share()">
+                                                        <i class="fa fa-share" aria-hidden="true"></i>
+                                                    </a>
+                                                </li>
+                                            </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="blog_details-content">
+                        <div class="blog_details-inner-text mr-80">
+                            @*Remover para o conteúdo *@
+                            <p>@Html.Raw(Model.CorpoNoticia)</p>
+                        </div>
+
+                        <div class="blog_details-highlight">
+                            <div class="blog_details-highlight-img">
+                                <img src="assets/img/blog/details/2.jpg" alt="">
+                            </div>
+                            <div class="blog_details-highlight-text">
+                                <h3>Saiba tudo o que o Sesc @Configuration["Ambiente:Estado"] oferece.</h3>
+                            </div>
+                        </div>
+                    </div>
+
+                    @*                     <div class="event-active swiper pb-80">
+                    <div class="swiper-wrapper">
+                    @if (listaNoticias != null)
+                    foreach (var noticia in listaNoticias)
+                    {
+                    <div class="swiper-slide">
+                    @await Html.PartialAsync("PartialView/_PartialViewNoticiaCard", noticia)
+                    </div>
+                    }
+                    }
+                    </div>
+                    </div> *@
+
+                  @*   <div class="blog_details-comment pb-40">
+                        <h4 class="blog_details-comment-title">@listComentarios.Count() Comentários:</h4>
+                        @if (listComentarios != null)
+                        {
+                            foreach (var comentario in listComentarios)
+                            {
+                                <div class="swiper-slide">
+                                    @await Html.PartialAsync("PartialView/_PartialViewComentario", comentario)
+                                </div>
+                            }
+                        }
+                    </div>
+                    <div class="blog_details-message">
+                        <h3 class="blog_details-message-title">Envie uma mensagem</h3>
+                        <form action="#" class="blog_details-form">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="blog_details-form-input mb-30">
+                                        <input type="text" placeholder="Digite seu nome">
+                                        <span class="inner-icon"><i class="fa-solid fa-user"></i></span>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="blog_details-form-input mb-30">
+                                        <input type="email" placeholder="Digite seu email">
+                                        <span class="inner-icon"><i class="fa-solid fa-envelope"></i></span>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="blog_details-form-input mb-30">
+                                        <input type="text" placeholder="Digite seu telefone">
+                                        <span class="inner-icon"><i class="fa-solid fa-phone-volume"></i></span>
+                                    </div>
+                                </div>
+
+                                <div class="col-12">
+                                    <div class="blog_details-form-input mb-50 blog_details-form-textarea">
+                                        <textarea name="message" cols="30" rows="10" placeholder="Digite algo"></textarea>
+                                        <span class="inner-icon"><i class="fa-solid fa-pen"></i></span>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="blog_details-form-submit">
+                                        <div class="blog_details-form-btn">
+                                            <a href="#" class="theme-btn blog_details-btn">Enviar comentário</a>
+                                        </div>
+                                        <div class="blog_details-form-condition">
+                                            <label class="condition_label">
+                                                Eu aceito os termos e condições.
+                                                <input type="checkbox">
+                                                <span class="check_mark"></span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div> *@
+                </div>
+            </div>
+            <div class="col-xl-4 col-lg-4">
+                <div class="blog_details-sidebar mb-60">
+                    <div class="blog_details-widget">
+                        <h4 class="blog_details-widget-title">Busca</h4>
+                        <form action="#">
+                            <input type="text" placeholder="Procure algo">
+                            <button type="submit"><i class="fa-solid fa-search"></i></button>
+                        </form>
+                    </div>
+                    <div class="blog_details-widget">
+                        <h4 class="blog_details-widget-title">Posts recentes</h4>
+
+                        @if (listPostsRecentes != null)
+                        {
+                            foreach (var post in listPostsRecentes)
+                            {
+                                @await Html.PartialAsync("PartialView/_PartialViewPostsRecentes", post)
+
+                            }
+                        }
+
+                    </div>
+                    <div class="blog_details-widget widget-category">
+                        <h4 class="blog_details-widget-title">Categorias</h4>
+                        <div class="blog_details-widget-category">
+                            <ul>
+                                @if (listAreas != null)
+                                {
+                                    foreach (var area in listAreas)
+                                    {
+                                        <li><a href="@Url.Action("Index", "Area", new { nome = area.NameRoute})">@area.Nome</a></li>
+                                    }
+                                }
+                            </ul>
+                        </div>
+                    </div>
+@*                     <div class="blog_details-widget">
+                        <h4 class="blog_details-widget-title">Próximos eventos</h4>
+                        <div class="blog_details-widget-course">
+                            <div class="blog_details-course-info">
+                                <h6>
+                                    <a href="#">
+                                        Circuito Sesc do Corriga - Gurupi
+                                    </a>
+                                </h6>
+                                <a href="#" class="inner-course-rate">Saiba mais</a>
+                            </div>
+                        </div>
+                        <div class="blog_details-widget-course">
+                            <div class="blog_details-course-info">
+                                <h6>
+                                    <a href="#">
+                                        Palco Giratório
+                                    </a>
+                                </h6>
+                                <a href="#" class="inner-course-rate">Saiba mais</a>
+                            </div>
+                        </div>
+                        <div class="blog_details-widget-course">
+                            <div class="blog_details-course-info">
+                                <h6>
+                                    <a href="#">
+                                        Intensivão ENEM
+                                    </a>
+                                </h6>
+                                <a href="#" class="inner-course-rate">Saiba mais</a>
+                            </div>
+                        </div>
+                    </div> *@
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    function share(){
+        if (navigator.share !== undefined) {
+            navigator.share({
+                title: 'Sesc no Pará',
+                text: "@WebUtility.HtmlDecode(Model.TituloCurto)",
+                url: "@textoConcat",
+            })
+            .then()
+            .catch((error) => console.log('Error sharing', error));
+        }
+    }
+</script>

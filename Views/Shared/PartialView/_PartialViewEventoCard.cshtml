@@ -1,0 +1,159 @@
+﻿@model SiteSesc.Models.ModelPartialView.EventoCard
+
+<style>
+    .programacao-Container {
+        display: flex !important;
+        flex-direction: row !important;
+        justify-content: flex-start !important;
+        align-items: flex-start !important;
+        padding: 0.5rem;
+        flex-wrap: wrap;
+    }
+
+    .programacao-Container-Margin {
+        display: flex !important;
+        flex-direction: row !important;
+        justify-content: flex-start !important;
+        align-items: flex-start !important;
+        padding: 0.5rem;
+        width: 50%;
+    }
+
+    .programacao-Content {
+        background:white;
+        border: 2px solid #ccc;
+        border-radius: 10px;
+        width: 100%;
+        min-height: 6.8rem;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between !important;
+        align-items: space-between !important;
+        padding: 0.5rem;
+        cursor: pointer;
+    }
+
+        .programacao-Content:hover, .programacao-Content:focus {
+            border: 2px solid #F6BE00;
+        }
+
+    .programacao-Area {
+        display: flex;
+        flex-direction: column;
+        padding: 0 0.5rem 0 1rem;
+        width: 100%;
+    }
+
+    .programcao-Data-Content {
+        min-height: 100% !important;
+    }
+
+    .programcao-Data {
+        width: 100% !important;
+        min-height: 100% !important;
+        max-width: 80px !important;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        flex-direction: column;
+        padding: 0 1rem;
+        border-right: 3px solid #004c99;
+    }
+
+    .programacao-dia, .programacao-mes {
+        color: #004c99;
+        font-family: "Roboto", sans-serif;
+        text-align: center;
+    }
+
+    .programcao-Data-Travessao {
+        background: #D0D0CE;
+        display: block;
+        height: 2px;
+        width: 10px;
+        margin: 3px;
+    }
+
+    .programacao-dia {
+        font-size: 24px;
+        font-weight: 900;
+    }
+
+    .programacao-mes {
+        color: #004c99;
+        text-transform: uppercase;
+        font-size: 16px;
+        line-height: 90%
+    }
+
+    @@media only screen and (min-width: 992px) and (max-width: 1199px) {
+        .programacao-Content {
+            width: 100%;
+            height: 130px;
+        }
+    }
+
+    @@media only screen and (max-width: 1199px) {
+        .programacao-Container {
+            width: 100%;
+        }
+    }
+
+    @@media only screen and (max-width: 991px) {
+
+        .programacao-Container-Margin {
+            width: 100%;
+        }
+    }
+</style>
+
+<div class="programacao-Container-Margin">
+    <a class="programacao-Content" tabindex="0" href="@Url.Action("Details", "Evento", new { area2 = Model.NameRoute, slug2 = Model.Slug })">
+        @if (@Model.EventDataInicio.ToString("dd/MMM") == @Model.EventDataFim.ToString("dd/MMM"))
+        {
+            <div class="programcao-Data-Content">
+                @{
+                    string original = Model.EventDataInicio.ToString("dd/MMM");
+                    string[] words = original.Split('/');
+                    string dataMes = words[1].Remove(words[1].Length - 1, 1);
+                }
+                <div class="programcao-Data">
+                    <spam class="programacao-dia">@words[0]<br></spam>
+                    <spam class="programacao-mes">@dataMes</spam>
+                </div>
+            </div>
+        }
+        else
+        {
+
+            <div class="programcao-Data-Content">
+
+                @{
+                    string original1 = Model.EventDataInicio.ToString("dd/MMM");
+                    string[] words1 = original1.Split('/');
+                    string dataMes1 = words1[1].Remove(words1[1].Length - 1, 1);
+                    string original2 = Model.EventDataFim.ToString("dd/MMM");
+                    string[] words2 = original2.Split('/');
+                    string dataMes2 = words2[1].Remove(words2[1].Length - 1, 1);
+                }
+                <div class="programcao-Data">
+                    <spam class="programacao-dia">@words1[0]<br></spam>
+                    <spam class="programacao-mes">@dataMes1</spam>
+                    <div class="programcao-Data-Travessao"></div>
+
+                    <spam class="programacao-dia">@words2[0]<br></spam>
+                    <spam class="programacao-mes">@dataMes2</spam>
+                </div>
+            </div>
+        }
+
+        <div class="programacao-Area">
+            <div class="course-top-title">
+                <h6>@Model.EventCategory - @Model.EventLocation</h6>
+                <h6>@Model.EventCidade</h6>
+            </div>
+            <h5 class="programacao-Titulo">@Model.EventTitle</h5>
+        </div>
+    </a>
+</div>

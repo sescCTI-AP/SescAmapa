@@ -1,0 +1,339 @@
+﻿@model List<SiteSesc.Models.Cardapio.cdp_ComposicaoCardapio>
+@using System.Globalization
+@using SiteSesc.Models.Cardapio
+@{
+    var dia = DateTime.Today.ToString("dddd", new CultureInfo("pt-BR"));
+    var hora = DateTime.Now.Hour;
+    if (dia.ToLower() == "segunda-feira" && hora > 14)
+    {
+        dia = "terça-feira";
+    }
+    else if (dia.ToLower() == "terça-feira" && hora > 14)
+    {
+        dia = "quarta-feira";
+    }
+    else if (dia.ToLower() == "quarta-feira" && hora > 14)
+    {
+        dia = "quinta-feira";
+    }
+    else if (dia.ToLower() == "quinta-feira" && hora > 14)
+    {
+        dia = "sexta-feira";
+    }
+
+    var idPalmas = 1;
+    var idGurupi = 9;
+    var unidades = ViewBag.Unidades as List<UnidadeOperacional>;
+    var grupos = ViewBag.GrupoItens as List<cdp_GrupoItemCardapio>;
+}
+
+<style>
+
+    .nav-link{cursor: pointer;}
+    .cardapioContainer{width: calc(100% - 2rem);; max-width: 1200px; margin: 2rem auto;}
+    .areaTitulo{
+        background: url("../images/cardapio.webp") center no-repeat;
+        background-size: cover;
+        color: white;
+        min-height: 200px;
+        width: calc(100% - 2rem);
+        max-width: 1600px;
+        overflow: hidden;
+        padding: 0 1rem;
+        margin: 1rem auto;
+        border-radius: 0.5rem ;
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+    }
+
+    .areaTitulo h2{
+        color: white;
+        text-shadow: 0 0 50px black;
+        font-size: clamp(30px, 30px + 1vw, 46px)
+    }
+
+</style>
+
+
+@*-----------CONTEUDO-----------*@
+<div class="areaTitulo">
+    <h2>
+        Cardápio
+    </h2>
+</div>
+<div class="cardapioContainer">
+
+
+    <div class="pt-0">
+        <div class="pr-0">
+            
+            <div class="text-center">
+                @*-----------IMAGEM DIA E TITULO-----------*@
+
+                <div class="alert alert-danger text-center" style="display: block;">
+                    <p style="font-size: 18px; "><strong>COMUNICADO RESTURANTE DO COMERCIÁRIO – BELÉM (RUA SEN. MANOEL BARATA)</strong></p>
+                    <p style="font-size: 14px; text-align:justify;">Informamos que, em virtude do furto de cabos da rede elétrica, até 01/11 (sexta-feira), as refeições serão servidas em marmitas, entregues na unidade Sesc Ver-o-peso (Blvd. Castilhos França, 522/523 – Campina), no horário das 11h00 às 14h00. Logo que a energia neste prédio for reestabelecida, voltaremos às atividades normais.</p>
+                    <p>A Direção Regional do Sesc no Pará.</p>
+                </div>
+
+
+
+                <div class="row">
+                    <div class="col">
+                        <div class="text-center">
+                            <label style="text-transform: uppercase; margin-right: 20px">
+                                @if (dia.ToLower() == "sábado" || dia.ToLower() == "domingo")
+                                {
+                                    <h5 style="text-transform:capitalize">SEGUNDA-FEIRA</h5>
+                                }
+                                else
+                                {
+                                    <h5 style="text-transform:capitalize">@dia</h5>
+                                }
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <p>Selecione uma unidade abaixo</p>
+                @if (unidades != null)
+                {
+                    <ul class="nav nav-pills">
+                        @foreach (var unidade in unidades)
+                        {
+                            string nomeDeclarado = "";
+                            @if(unidade.Nome == "CENTRO DE ATIVIDADES DO SESC BELÉM - SESC DOCA  "){
+                                nomeDeclarado = "Sesc Doca";
+                            }else if(unidade.Nome == "RESTAURANTE DO COMERCIARIO CENTRAL"){
+                                nomeDeclarado = "Restaurante do Comerciário";
+                            }else{
+                                nomeDeclarado = unidade.Nome;
+                            }
+
+                            <li class="nav-item p-1">
+                                <a class="nav-link cardapioUnidadeDefault" onclick="unidadeSelecionada(@unidade.Id)" id="unidadeItem-@unidade.Id" >@nomeDeclarado</a>
+                            </li>
+                        }
+                    </ul>
+                }
+            </div>
+
+
+            @if (unidades != null)
+            {
+                foreach (var unidade in unidades)
+                {
+                    <div class="crdpContainer" id="unidade-@unidade.Id">
+                        <div class="cardapioMenu">
+                            @if (Model.Any(c => c.Cardapio.IdUnidadeOperacional == unidade.Id))
+                            {
+                                var itens = Model.Where(c => c.Cardapio.IdUnidadeOperacional == unidade.Id).ToList();
+                                        @*--AVISOS--*@
+
+                                <div class="cardapioItemContainer">
+                                    <div class="cardapioItemTitulo" id="proteina">
+                                        <div class="cardapioItemOpacityETitulo">
+                                            Proteínas
+                                        </div>
+                                    </div>
+                                    <ul class="cardapioItemLista">
+                                        @if (itens.Any(c => c.ItemCardapio.IdGrupoItemCardapio == 1))
+                                        {
+                                            foreach (var item in itens.Where(c => c.ItemCardapio.IdGrupoItemCardapio == 1).ToList())
+                                            {
+                                                <li>
+                                                    @item.ItemCardapio.Nome
+                                                </li>
+                                            }
+                                        }
+                                    </ul>
+                                </div>
+
+                                <div class="cardapioItemContainer">
+                                    <div class="cardapioItemTitulo" id="guarnicao">
+                                        <div class="cardapioItemOpacityETitulo">
+                                            Guarnição
+                                        </div>
+                                    </div>
+                                    <ul class="cardapioItemLista">
+                                        @if (itens.Any(c => c.ItemCardapio.IdGrupoItemCardapio == 2))
+                                        {
+                                            foreach (var item in itens.Where(c => c.ItemCardapio.IdGrupoItemCardapio == 2).ToList())
+                                            {
+                                                <li>
+                                                    @item.ItemCardapio.Nome
+                                                </li>
+                                            }
+                                        }
+                                    </ul>
+                                </div>
+
+                                <div class="cardapioItemContainer">
+                                    <div class="cardapioItemTitulo" id="salada">
+                                        <div class="cardapioItemOpacityETitulo">
+                                            Salada
+                                        </div>
+                                    </div>
+                                    <ul class="cardapioItemLista">
+                                    @if (itens.Any(c => c.ItemCardapio.IdGrupoItemCardapio == 3))
+                                    {
+                                        foreach (var item in itens.Where(c => c.ItemCardapio.IdGrupoItemCardapio == 3).ToList())
+                                        {
+                                            <li>
+                                                @item.ItemCardapio.Nome
+                                            </li>
+                                        }
+                                    }
+                                    </ul>
+                                </div>
+
+                                <div class="cardapioItemContainer">
+                                    <div class="cardapioItemTitulo" id="opcional">
+                                        <div class="cardapioItemOpacityETitulo">
+                                            Outros
+                                        </div>
+                                    </div>
+                                    <ul class="cardapioItemLista">
+                                    @if (itens.Any(c => c.ItemCardapio.IdGrupoItemCardapio == 5))
+                                    {
+                                        foreach (var item in itens.Where(c => c.ItemCardapio.IdGrupoItemCardapio == 5).ToList())
+                                        {
+                                            <li>
+                                                @item.ItemCardapio.Nome
+                                            </li>
+                                        }
+                                    }
+                                    </ul>
+                                </div>
+
+
+
+                                @* <div class="badge badge-secondary">Prato base</div>
+                                <ul>
+                                    @if (itens.Any(c => c.ItemCardapio.IdGrupoItemCardapio == 4))
+                                    {
+                                        foreach (var item in itens.Where(c => c.ItemCardapio.IdGrupoItemCardapio == 4).ToList())
+                                        {
+                                            <li>
+                                                @item.ItemCardapio.Nome
+                                            </li>
+                                        }
+                                    }
+                                </ul>
+
+                                <div class="badge badge-dark">Opcional</div>
+                                <ul>
+                                    @if (itens.Any(c => c.ItemCardapio.IdGrupoItemCardapio == 5))
+                                    {
+                                        foreach (var item in itens.Where(c => c.ItemCardapio.IdGrupoItemCardapio == 5).ToList())
+                                        {
+                                            <li>
+                                                @item.ItemCardapio.Nome
+                                            </li>
+                                        }
+                                    }
+                                </ul> *@
+                            }
+                        </div>
+                    </div>
+                }
+
+                @*foreach (var card in Model)
+                {
+                    <div class="tab-pane fade show active" id="unidade-@card.Cardapio.IdUnidadeOperacional">
+
+                        @if (Model.Count() > 0)
+                        {
+                            var itens = Model.Where(c => c.Cardapio.IdUnidadeOperacional == card.Cardapio.IdUnidadeOperacional).ToList();
+                            <div class="badge badge-warning">PROTEÍNAS</div>
+                            <ul>
+                                @if (itens.Any(c => c.ItemCardapio.IdGrupoItemCardapio == 1))
+                                {
+                                    foreach (var item in itens.Where(c => c.ItemCardapio.IdGrupoItemCardapio == 1).ToList())
+                                    {
+                                        <li>
+                                            @item.ItemCardapio.Nome
+                                        </li>
+                                    }
+                                }
+                            </ul>
+
+                            <div class="badge badge-info">GUARNIÇÃO</div>
+                            <ul>
+                                @if (itens.Any(c => c.ItemCardapio.IdGrupoItemCardapio == 2))
+                                {
+                                    foreach (var item in itens.Where(c => c.ItemCardapio.IdGrupoItemCardapio == 2).ToList())
+                                    {
+                                        <li>
+                                            @item.ItemCardapio.Nome
+                                        </li>
+                                    }
+                                }
+                            </ul>
+
+                            <div class="badge badge-success">SALADA</div>
+                            <ul>
+                                @if (itens.Any(c => c.ItemCardapio.IdGrupoItemCardapio == 3))
+                                {
+                                    foreach (var item in itens.Where(c => c.ItemCardapio.IdGrupoItemCardapio == 3).ToList())
+                                    {
+                                        <li>
+                                            @item.ItemCardapio.Nome
+                                        </li>
+                                    }
+                                }
+                            </ul>
+
+                            <div class="badge badge-secondary">PRATO BASE</div>
+                            <ul>
+                                @if (itens.Any(c => c.ItemCardapio.IdGrupoItemCardapio == 4))
+                                {
+                                    foreach (var item in itens.Where(c => c.ItemCardapio.IdGrupoItemCardapio == 4).ToList())
+                                    {
+                                        <li>
+                                            @item.ItemCardapio.Nome
+                                        </li>
+                                    }
+                                }
+                            </ul>
+
+                            <div class="badge badge-dark">OPCIONAL</div>
+                            <ul>
+                                @if (itens.Any(c => c.ItemCardapio.IdGrupoItemCardapio == 5))
+                                {
+                                    foreach (var item in itens.Where(c => c.ItemCardapio.IdGrupoItemCardapio == 5).ToList())
+                                    {
+                                        <li>
+                                            @item.ItemCardapio.Nome
+                                        </li>
+                                    }
+                                }
+                            </ul>
+                        }
+                        else
+                        {
+                            <div class="alert alert-info text-center">
+                                Desculpe, até o momento não há cardápio definido para hoje.<br />Tente novamente mais tarde
+                            </div>
+                        }
+
+                    </div>
+                } *@
+            }
+
+            <script>
+                function unidadeSelecionada(v){
+                    let uni = '#unidade-'+v;
+                    $(".crdpContainer").not(uni).hide('fast');
+                    $('#unidade-'+v).toggle('fast');
+                    $('#unidadeItem-'+v).toggleClass('cardapioUnidadeAtiva');
+                    $('.nav-link').not('#unidadeItem-'+v).removeClass('cardapioUnidadeAtiva');
+                }
+            </script>
+        
+        </div>
+        <div class="text-center">
+            <span style="font-size: 12px; color: red">*Cliente informamos que o cardápio pode, eventualmente, sofrer alterações de acordo com a disponibilidade dos itens e/ou fatores externos.</span>
+        </div>
+    </div>
+</div>

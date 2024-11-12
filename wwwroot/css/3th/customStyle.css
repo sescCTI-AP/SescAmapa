@@ -1,0 +1,95 @@
+﻿table tr td {
+    font-size: 18px;
+}
+
+.toggle-checkbox {
+    margin-right: 0 !important;
+}
+
+.bootstrap-datetimepicker-widget {
+    width: 100% !important;
+}
+
+/*.table {
+    text-align: center !important;
+}*/
+
+.radio-lg {
+    cursor: pointer;
+    -webkit-transform: scale(1.5);
+    -ms-transform: scale(1.5);
+    -ms-transform: scale(1.5);
+}
+
+.fc-title, .fc-time {
+    color: white;
+}
+
+.fc-event-container {
+    cursor: pointer;
+}
+
+.pagte_button {
+    padding: 6px 0 !important;
+    margin: 0 !important;
+}
+
+.dataTables_filter label input {
+    width: 250px !important;
+}
+
+.dt-buttons {
+    display: none;
+}
+
+.check-bg {
+    -ms-transform: scale(1.5); /* IE */
+    -moz-transform: scale(1.5); /* FF */
+    -webkit-transform: scale(1.5); /* Safari and Chrome */
+    -o-transform: scale(1.5); /* Opera */
+    margin-top: 6px;
+}
+
+.dataTables_wrapper {
+    padding: 0 !important;
+}
+
+.btn-manager {
+    margin: 0 !important;
+}
+
+.card-heading {
+    padding-bottom: 0 !important;
+}
+
+.card-block {
+    padding: 20px;
+}
+
+.card-block-index {
+    padding-top: 0 !important;
+}
+
+.sem-marcador {
+    list-style-type: none;
+}
+
+a:link {
+    text-decoration: none;
+}
+
+.title-section {
+    font-size: 12px;
+    font-weight: bold;
+    background-color: #808080;
+    width: 200px;
+    color: white;
+    margin-top: 0;
+}
+
+
+.pagination > .paginate_button {
+    padding: 6px 0 !important;
+    margin: 0 !important;
+}
+

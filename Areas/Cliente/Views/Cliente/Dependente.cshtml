@@ -1,0 +1,58 @@
+﻿@model SiteSesc.Models.ApiPagamento.ClienteCentral
+
+<style>
+    a {
+        cursor: pointer
+    }
+
+    .img-circular {
+        width: 200px;
+        height: 200px;
+        object-fit: cover;
+        border-radius: 50%
+    }
+
+    .container-dep, .portfolio-wrap {
+        width: 200px;
+        height: 200px;
+        border-radius: 50%;
+        margin: 20px
+    }
+
+    .portfolio-info {
+        margin: 30px
+    }
+
+</style>
+
+@await Component.InvokeAsync("SideMenu", new { area = "cliente" })
+
+
+<section id="hero" class="d-flex flex-column justify-content-center">
+    <div class="container" data-aos="zoom-in" data-aos-delay="100">
+        <div class="row">
+            <div class="col-lg-4">
+                <img src="@Model.FotoCliente" class="img-fluid" alt="" style="border-radius: 50%">
+            </div>
+            <div class="col-lg-8 pt-4 pt-lg-0 content">
+                <h3>@Model.Nmcliente</h3>
+                <div class="row">
+                    <div class="col-lg-12">
+                        <ul>
+                            <li> <strong>Credencial Sesc:</strong> <span>@Model.Credencial</span></li>
+                            <li> <strong>Categoria:</strong> <span>@Model.Categoria</span></li>
+                            <li> <strong>CPF:</strong> <span>@Model.Nucpf</span></li>
+                            @* <li> <strong>RG:</strong> <span>@Model.Nureggeral</span></li> *@
+                            @if (Model.Enderecos.Any())
+                            {
+                                <li> <strong>Endereço:</strong> <span>@Model.Enderecos.FirstOrDefault().EnderecoCompleto</span></li>
+                            }
+                        </ul>
+                        <a asp-action="CobrancasPorCpf" asp-controller="Cobranca" asp-route-cpfDependente="@Model.Nucpf"><p>Ver todas as cobranças</p></a>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

@@ -1,0 +1,299 @@
+﻿@model SiteSesc.Models.ApiPagamento.MatriculasCentral
+@using SiteSesc.Models.ApiPagamento
+@using SiteSesc.Models.Avaliacao
+@{
+    ViewBag.Title = "Detalhe de Atividade";
+
+    var cobrancas = ViewBag.Cobrancas as List<CobrancaAtualizada>;
+    var cliente = ViewBag.Cliente as ClienteCentral;
+    bool dep = false;
+    bool cancelamento = ViewBag.Cancelamento;
+    var avaliacoes = ViewBag.Avaliacoes as List<AvaliacaoAtividadeCliente>;
+}
+<link href="~/css/espacocliente/cardpagamento.css" rel="stylesheet" />
+<link href="~/css/espacocliente/rating.css" rel="stylesheet" />
+
+@await Component.InvokeAsync("SideMenu", new { area = "cliente" })
+<br />
+<br />
+<br />
+
+<section id="hero" class="d-flex flex-column justify-content-center">
+    <div class="container" data-aos="zoom-in" data-aos-delay="100">
+        <h2>Atividade: <b>@Model.progocorr.dsusuario</b></h2>
+        <h5>Inicio da atividade: @Model.progocorr.dtiniocorr.ToShortDateString()</h5>
+        <h5>Término da atividade: @Model.progocorr.dtfimocorr.ToShortDateString()</h5>
+
+        @if (!cancelamento)
+        {
+            <div>
+                <a data-bs-toggle="modal" data-bs-target="#exampleModal" style="color: black; background-color: lightpink; border-radius: 15px; padding-right: 15px; padding-left: 15px">Solicitar cancelamento</a>
+            </div>
+
+            @*<---FORMULARIO AVALIAÇÃO DE ATIVIDADE --->*@
+            <form id="form-avaliacao" class="card-footer pt-0 border-0 mt-5"
+                  asp-controller="Atividade" asp-action="AvaliacaoAtividade"
+                  data-ajax="true" method="post" data-ajax-method="post"
+                  enctype="application/x-www-form-urlencoded"
+                  data-ajax-failure="failed" data-ajax-success="success"
+                  data-ajax-loading="#spinner" data-ajax-mode="before" data-ajax-update="#avaliacoes-passadas" style="background-color: white !important; border-radius: 10px;">
+
+                <input type="hidden" value="@Model.cdprograma.ToString()" name="cdprograma" />
+                <input type="hidden" value="@Model.cdconfig.ToString()" name="cdconfig" />
+                <input type="hidden" value="@Model.sqocorrenc.ToString()" name="sqocorrec" />
+                <h3>Avaliar atividade</h3>
+
+                <input id="rating" name="rating" type="hidden" />
+
+                <div class="col">
+    <div class="rate2 p-0 mb-0">
+        <input class="rating" type="radio" id="star0" name="rate" value="0" />
+        <label for="star0">Nenhuma Estrela</label>
+    </div>
+    <div class="rate p-0 mb-0">
+        <input class="rating" type="radio" id="star5" name="rate" value="5" />
+        <label for="star5">5 stars</label>
+        <input class="rating" type="radio" id="star4" name="rate" value="4" />
+        <label for="star4">4 stars</label>
+        <input class="rating" type="radio" id="star3" name="rate" value="3" />
+        <label for="star3">3 stars</label>
+        <input class="rating" type="radio" id="star2" name="rate" value="2" />
+        <label for="star2">2 stars</label>
+        <input class="rating" type="radio" id="star1" name="rate" value="1" />
+        <label for="star1">1 star</label>                     
+    </div>
+                
+                    <label id="required-rating-label" class="badge text-danger col-12 text-left pb-3 d-none">Por favor atribua uma nota, considerando 1 (uma) estrela muito ruim e 5 (cinco) estrelas muito bom.</label>
+                </div>
+
+                <div class="px-3 pt-0 pb-3">
+                    <input id="comentario-avaliacao" class="form-control row mx-0" name="comentario" placeholder="Escreva um comentário (somente os gestores do Sesc visualizarão sua mensagem)" />
+                    <div class="row text-right pt-2 mx-0">
+                        <button class="btn btn-sm btn-info" style="border-radius: 0px" type="submit">Enviar avaliação</button>
+                        <h2 id="spinner" style="display:none"><i class="fa fa-spinner fa-spin"></i></h2>
+                    </div>
+
+                </div>
+            </form>
+
+            <hr class="col-11 mx-auto" />
+
+            @*<---TODAS AVALIAÇÕES DO CLIENTE--->*@
+            <div id="avaliacoes-passadas" class="container">
+                @if (avaliacoes != null)
+                {
+                    @foreach (var avaliacao in avaliacoes)
+                    {
+                        <partial name="../Shared/Partials/_AddAvaliacaoAtividade" model="@avaliacao" />
+                    }
+                }
+            </div>
+        }
+        else
+        {
+            <p class="alert alert-warning">Sua solicitação de cancelamento está em análise</p>
+        }
+    </div>
+</section>
+
+
+
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Solicitação de cancelamento</h5>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form id="form-cancelamento" class="card-footer pt-0 border-0" asp-controller="Atividade" asp-action="SolicitacaoCancelamento" method="post">
+                <div class="modal-body">
+                    <div class="alert alert-warning">
+                        <b>Atenção!</b> Sua solicitação será atendida em até 3 dias úteis.
+                    </div>
+                    <div>
+                        <h2>
+                            Qual o motivo da sua solicitação?
+                        </h2>
+                        <input name="cdprograma" value="@Model.cdprograma" hidden />
+                        <input name="cdconfig" value="@Model.cdconfig" hidden />
+                        <input name="sqocorrenc" value="@Model.sqocorrenc" hidden />
+                        <input name="cpf" value="@cliente?.Nucpf" hidden />
+                        <input name="dependente" value="@dep" hidden />
+
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="motivoCancelamento" id="radio1" value="Não atendeu minhas expectativas">
+                            <label class="form-check-label" for="radio1">
+                                Não atendeu minhas expectativas.
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="motivoCancelamento" id="radio2" value="As instalações não me agradaram">
+                            <label class="form-check-label" for="radio2">
+                                As instalações não me agradaram.
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="motivoCancelamento" id="radio3" value="Fiquei insatisfeito(a) com o serviço / atendimento.">
+                            <label class="form-check-label" for="radio3">
+                                Fiquei insatisfeito(a) com o serviço / atendimento.
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="motivoCancelamento" id="radio4" value="Férias / Viagem">
+                            <label class="form-check-label" for="radio4">
+                                Férias / Viagem.
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="motivoCancelamento" id="radio5" value="Motivos de saúde.">
+                            <label class="form-check-label" for="radio5">
+                                Motivos de saúde.
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="motivoCancelamento" id="radio5" value="Motivos financeiros.">
+                            <label class="form-check-label" for="radio5">
+                                Motivos financeiros.
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="motivoCancelamento" id="radio5" value="Motivos pessoais.">
+                            <label class="form-check-label" for="radio5">
+                                Motivos pessoais.
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="motivoCancelamento" id="radio5" value="Indisponibilidade.">
+                            <label class="form-check-label" for="radio5">
+                                Indisponibilidade.
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="motivoCancelamento" id="radio6" value="Outro motivo">
+                            <label class="form-check-label" for="radio6">
+                                Outro motivo
+                            </label>
+                            <input id="input-outro-motivo" class="input-login" placeholder="descreva o motivo" />
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-modal-cancelar" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-modal-confirma" id="btn-confirma-cancelamento" disabled>Confirmar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts{
+    <script>
+        let motivoCancelamentodescricao = '';
+
+        $(document).ready(function () {
+            $('#input-outro-motivo').hide();
+            $('#form-cancelamento').change(function () {
+                selected_value = $("input[name='motivoCancelamento']:checked").val();
+                if (selected_value === 'Outro motivo') {
+                    $('#input-outro-motivo').show();
+                    $('#input-outro-motivo').attr('disabled', false);
+                    motivoCancelamentodescricao = selected_value;
+                } else {
+                    $('#input-outro-motivo').hide();
+                    $('#input-outro-motivo').val('');
+                    $('#input-outro-motivo').attr('disabled', true);
+                    motivoCancelamentodescricao = selected_value;
+                    $('#btn-confirma-cancelamento').prop('disabled', false);
+                    //alert(motivoCancelamentodescricao);
+                }
+            });
+            $('#input-outro-motivo').keypress(function () {
+                motivoCancelamentodescricao = $('#input-outro-motivo').val();
+                $('#btn-confirma-cancelamento').prop('disabled', false);
+            });
+        });
+
+
+        $(function () {
+
+            //<---SUBMISSÃO DO FORMULÁRIO--->
+            $("#form-avaliacao").submit(function (e) {
+                var r = $("#rating").val();
+                console.log(r);
+
+                if ($("#rating").val() === "") {
+                    e.preventDefault();
+                    $('#required-rating-label').removeClass('d-none');
+                    return false;
+                }
+                else {
+                    return true;
+                }
+            });
+
+            //<---FUNCIONAMENTO DO RATING--->
+            $('.rating').on('change', function () { $('#rating').val($(this).val()); })
+        })
+
+        //<---FALHA REQUISIÇÃO AJAX--->
+        failed = function () {
+            new Noty({
+                layout: 'topRight',
+                theme: 'relax',
+                type: 'error',
+                text: 'Descuple, ocorreu um erro ao registrar sua avaliação!',
+                timeout: 5000,
+                progressBar: true,
+            }).show();
+        };
+
+        //<---SUCESSO REQUISIÇÃO AJAX--->
+        success = function () {
+            resetaCampos();
+            new Noty({
+                layout: 'topRight',
+                theme: 'relax',
+                type: 'success',
+                text: 'Obrigado, sua avaliação foi registrada com sucesso!',
+                timeout: 5000,
+                progressBar: true,
+            }).show();
+        }
+
+        //<---RESETA VALORES DE FORMULARIO--->
+        function resetaCampos() {
+            $('#required-rating-label').addClass('d-none');
+            $("#rating").val('');
+            $(".rating").prop('checked', false);
+            $('#comentario-avaliacao').val('');
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            // Função para ler o parâmetro da URL
+            function getUrlParameter(name) {
+                name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+                const regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+                const results = regex.exec(location.search);
+                return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+            }
+
+            // Obter o valor do parâmetro 'rating' da URL
+            const ratingParam = getUrlParameter('rating');
+            if (ratingParam) {
+                // Atualizar o campo oculto e marcar o rating no formulário
+                document.getElementById('rating').value = ratingParam;
+
+                // Marcar o input de rádio correspondente ao valor do rating
+                const starInput = document.querySelector(`input[name="rate"][value="${ratingParam}"]`);
+                if (starInput) {
+                    starInput.checked = true;
+                }
+            }
+        });
+
+    </script>
+}
+

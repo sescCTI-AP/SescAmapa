@@ -1,0 +1,372 @@
+﻿@model IEnumerable<SiteSesc.Models.ProcessoSeletivo.psl_cargoProcessoSeletivo>
+@using SiteSesc.Models.ProcessoSeletivo
+@using SiteSesc.Repositories
+@using SiteSesc.Models.ProcessoSeletivo.ViewModel
+@{
+    ViewBag.Title = "Cargos";
+    var cargos = ViewBag.Cargos as List<CargoViewModel>;
+    var processo = ViewBag.Processo as psl_processoSeletivo;
+    var edital = Model.First();
+    bool hasExperiencia = false;
+    bool hasFormacao = false;
+}
+
+<style>
+    #formCurriculo label {
+        margin-top: 20px;
+        margin-bottom: 0px
+    }
+
+    .border-dashed {
+        border: 1px solid white;
+        margin-top: 10px;
+        margin-bottom: 10px;
+        border-radius: 30px;
+        padding: 10px
+    }
+
+    .alert {
+        border-radius: 20px !important
+    }
+
+    .iconValid {
+        color: green;
+    }
+
+    label {
+        margin-top: 2px !important
+    }
+
+    .drop-area {
+        border: 2px dashed #ccc;
+        border-radius: 20px;
+        width: 400px;
+        font-family: sans-serif;
+        margin: 20px auto;
+        padding: 20px;
+    }
+
+        .drop-area:hover {
+            border-color: #333;
+        }
+
+    .fileElem {
+        display: none;
+    }
+</style>
+
+<div class="container bg-white" style="margin-top: 50px; margin-bottom: 100px">
+
+    <h4>Processo Seletivo Nº. @processo.NumeroProcessoSeletivo</h4>
+
+    <h6 class="mt-5">Cargos disponíveis</h6>
+
+    <table class="table table-hover" id="table-cargos">
+        <tr>
+            <th>
+                CARGO
+            </th>
+            <th>
+                CIDADE
+            </th>
+            @*<th class="text-center">
+                LIMITE DE CURRÍCULOS
+            </th>*@
+            @*<th class="text-center">
+                CURRÍCULOS RECEBIDOS
+            </th>*@
+            <th></th>
+        </tr>
+        @foreach (var item in cargos)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Cargo.Nome)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Cargo.Cidade.Nome)
+                </td>
+                @*<td class="text-center">
+                    @Html.DisplayFor(modelItem => item.Cargo.VagasCurriculo)
+            </td>*@
+                @*<td class="text-center">
+                    <span>@item.CurriculosRecebidos</span>
+            </td>*@
+                <td>
+                    @if (item.VagasDisponiveis > 0)
+                    {
+                        <a class="text-white theme-btn" onclick="showModal('@item.Cargo.Id','@item.Cargo.HasDocExperiencia', '@item.Cargo.HasDocFormacao');">Enviar documentação</a>
+                    }
+                    else
+                    {
+                        <label class="badge badge-warning">Limite de currículos atingidos</label>
+                    }
+                </td>
+            </tr>
+        }
+    </table>
+</div>
+
+<div class="modal fade" id="modalCargo" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <form id="formCurriculo">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Anexar documentação</h5>
+                </div>
+                <div class="modal-body">
+
+                    <input type="hidden" id="idCargo" />
+                    <label for="Nome">Nome</label>
+                    <input id="Nome" name="Nome" class="form-control" required />
+
+                    <label for="Cpf">CPF</label>
+
+                    <input id="Cpf" name="Cpf" class="form-control" data-mask="000.000.000-00" data-mask-reverse="true" required />
+
+                    <label for="Email">Email</label>
+                    <input id="Email" name="Email" type="email" class="form-control" required />
+
+
+                    <div id="drop-area-curriculo" class="drop-area" onclick="selectFile('curriculo');">
+                        <label><b>Currículo</b></label>
+                        <p id="file-curriculo" class="text-center">Clique para seleciona o arquivo</p>
+                        <input type="file" id="curriculo-file" class="fileElem" multiple onchange="handleFiles(this.files, 'curriculo')">
+                    </div>
+
+                    <div id="drop-area-diploma" class="drop-area" onclick="selectFile('diploma');">
+                        <label><b>Diploma</b></label>
+                        <p id="file-diploma" class="text-center">Clique para seleciona o arquivo</p>
+                        <input type="file" id="diploma-file" class="fileElem" multiple onchange="handleFiles(this.files, 'diploma')">
+                    </div>
+                    <div id="drop-area-experiencia" class="drop-area" onclick="selectFile('experiencia');">
+                        <label><b>Comprovante de experiência</b></label>
+                        <p id="file-experiencia" class="text-center">Clique para seleciona o arquivo</p>
+                        <input type="file" id="experiencia-file" class="fileElem" multiple onchange="handleFiles(this.files, 'experiencia')">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Enviar</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+@section Scripts
+{
+    <script src="~/js/3th/jquery.mask.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $("#ok").hide();
+        });
+
+        $("#diploma-file").change(function () {
+            $("#okFormacao").show();
+        });
+
+        $("#experiencia-file").change(function () {
+            $("#okFormacao").show();
+        });
+
+        function createSelectFile(tipoDocumento) {
+            var divRow = document.createElement("div");
+            divRow.setAttribute("id", "div" + tipoDocumento);
+            divRow.className = 'col border-dashed pb-3';
+            if (tipoDocumento === "Experiencia") {
+                var divAlert = document.createElement("div");
+                divAlert.className = "alert alert-warning";
+                const spanAlert = document.createElement("span");
+                const textoAlert = document.createTextNode("Adicione uma foto da carteira de trabalho, ou contrato de trabalho, que comprove o período de experiência");
+                spanAlert.appendChild(textoAlert);
+                divAlert.appendChild(spanAlert);
+                divRow.appendChild(divAlert);
+            }
+            const paragrafo = document.createElement("label");
+            const texto = document.createTextNode(tipoDocumento);
+            paragrafo.appendChild(texto);
+            divRow.appendChild(paragrafo);
+
+            const divInput = document.createElement("div");
+            divInput.className = 'input-wrapper';
+            const label = document.createElement("label");
+            label.setAttribute("for", tipoDocumento);
+            const textoLabel = document.createTextNode("Selecione um arquivo");
+            label.appendChild(textoLabel);
+            const inputArquivo = document.createElement("input");
+            inputArquivo.setAttribute("type", "file");
+            inputArquivo.setAttribute("required", "");
+            inputArquivo.setAttribute("id", tipoDocumento);
+            const spanArquivo = document.createElement("span");
+            spanArquivo.setAttribute("id", "span" + tipoDocumento);
+            const spanValidArquivo = document.createElement("span");
+            spanValidArquivo.setAttribute("id", "ok" + tipoDocumento);
+            const iconValidaArquivo = document.createElement("i");
+            iconValidaArquivo.className = "fa fa-check fa-2x ";
+            spanValidArquivo.appendChild(iconValidaArquivo);
+            divInput.appendChild(label);
+            divInput.appendChild(inputArquivo);
+            divInput.appendChild(spanArquivo);
+            divInput.appendChild(spanValidArquivo);
+            divRow.appendChild(divInput);
+            document.getElementById('select' + tipoDocumento).appendChild(divRow);
+            $('#ok' + tipoDocumento).hide();
+        }
+
+        function showModal(id, experiencia, formacao) {
+            $("#diploma-file").val('');
+            $("#experiencia-file").val('');
+            $("#drop-area-diploma").hide();
+            $("#drop-area-experiencia").hide();
+
+            //pesquisa cargo
+            $.ajax({
+                url: "/obter-cargo/" + id,
+                type: "GET",
+                processData: false,
+                contentType: false,
+                success: function (data) {
+                    if (data.code === 1) {
+                        if (data.cargo.hasDocExperiencia) {
+                            $("#drop-area-experiencia").show();
+                        }
+                        if (data.cargo.hasDocFormacao) {
+                            $("#drop-area-diploma").show();
+
+                        }
+                        console.log(data);
+
+                    } else {
+
+                    }
+                },
+                error: function (err) {
+                }
+            });
+
+            console.log('1');
+
+            $('#idCargo').val(id);
+            $('#modalCargo').modal('show');
+        };
+
+
+        $('#formCurriculo').submit(function (e) {
+            e.preventDefault();
+            const cargo = $('#idCargo').val();
+            const documento = $('#curriculo-file').get(0).files;
+            const nome = $('#Nome').val();
+            const email = $('#Email').val();
+            const cpf = $('#Cpf').val();
+            const anexo = new FormData();
+
+            if (cpf.length < 14) {
+                noty({
+                    text: 'CPF inválido',
+                    type: 'error',
+                    layout: 'topRight',
+                    timeout: 3000
+                });
+                return;
+            }
+            if (documento.length > 0 && nome != '' && nome != undefined && email != '' && email != undefined && cpf != '' && cpf != undefined) {
+                anexo.append("IdCargo", cargo);
+                anexo.append("Curriculo", documento[0]);
+                if ($('#diploma-file').val() !== '' && $('#diploma-file').val() !== undefined) {
+                    anexo.append("Diploma", $('#diploma-file').get(0).files[0]);
+                }
+                if ($('#experiencia-file').val() !== '' && $('#experiencia-file').val() !== undefined) {
+                    anexo.append("Experiencia", $('#experiencia-file').get(0).files[0]);
+                }
+                anexo.append("Nome", nome);
+                anexo.append("Email", email);
+                anexo.append("Cpf", cpf);
+                let tamanhoArquivo = ((documento[0].size / 1024) / 1024).toFixed(2);//resultado em MB
+                // let tamanhoDiploma = ((documento[0].size / 1024) / 1024).toFixed(2);//resultado em MB
+                // let tamanhoExperiencia = ((documento[0].size / 1024) / 1024).toFixed(2);//resultado em MB
+                if (tamanhoArquivo) {
+                    $.ajax({
+                        url: "@Url.Action("AnexarCurriculo")",
+                        type: "POST",
+                        processData: false,
+                        contentType: false,
+                        data: anexo,
+                        beforeSend: function () {
+                            $.LoadingOverlay("show",
+                                {
+                                    background: "rgba(176, 177, 178, 0.5)",
+                                    text: "Enviando..."
+                                });
+                        },
+                        complete: function () {
+                            $.LoadingOverlay("hide");
+                        },
+                        success: function (data) {
+                            if (data.code === 1) {
+                                noty({
+                                    text: data.message,
+                                    type: data.classAlert,
+                                    timeout: 2500,
+                                    progressBar: true
+                                });
+                                
+                                limparCampos();
+
+                                $('#modalCargo').modal('hide');
+
+                                $('#table-cargos').load(location.href + ' #table-cargos>*',
+                                    function () {
+                                        $('[data-toggle="tooltip"]').tooltip();
+                                    });
+                            } else {
+                                noty({
+                                    text: data.message,
+                                    type: data.classAlert,
+                                    timeout: 2500,
+                                    progressBar: true
+                                });
+                            }
+                        },
+                        error: function (err) {
+                            noty({
+                                text: 'Falha ao enviar o curriculo',
+                                type: 'error',
+                                timeout: 2500,
+                                progressBar: true
+                            });
+                        }
+                    });
+                } else {
+                    noty({
+                        text: 'O Arquivo ultrapassou o tamanho máximo permite que é de 300 Mb',
+                        type: 'warning',
+                        timeout: 3500,
+                        progressBar: true
+                    });
+                }
+            } else {
+                noty({
+                    text: 'Preencha todos os campos',
+                    type: 'warning',
+                    timeout: 2500,
+                    progressBar: true
+                });
+            }
+        })
+
+        function limparCampos(){
+            $('#Nome').val("");
+            $('#Cpf').val("");
+            $('#Email').val("");
+            $('#curriculo-file').val("");
+            $('#diploma-file').val("");
+            $('#experiencia-file').val("");
+            $('#file-curriculo').text("Clique para seleciona o arquivo");
+            $('#file-diploma').text("Clique para seleciona o arquivo");
+            $('#file-experiencia').text("Clique para seleciona o arquivo");
+        }
+    </script>
+}

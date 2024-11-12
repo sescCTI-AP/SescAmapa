@@ -1,0 +1,1043 @@
+﻿@model IEnumerable<SiteSesc.Models.Edital.edt_cargoEdital>
+@using SiteSesc.Models.Edital
+@using SiteSesc.Repositories
+@using SiteSesc.Models.Edital.ViewModel
+@{
+    ViewBag.Title = "Cargos";
+    var cargos = ViewBag.Cargos as List<CargoViewModel>;
+    var listaPessoa = ViewBag.tipoPessoaEdital as List<edt_tipoPessoaEdital>;
+    var processo = ViewBag.Edital as edt_edital;
+    var edital = Model.First();
+    bool hasExperiencia = false;
+    bool hasFormacao = false;
+}
+
+<style>
+    #formCurriculo label {
+        margin-top: 20px;
+        margin-bottom: 0px
+    }
+
+    .border-dashed {
+        border: 1px solid white;
+        margin-top: 10px;
+        margin-bottom: 10px;
+        border-radius: 30px;
+        padding: 10px
+    }
+
+    .alert {
+        border-radius: 20px !important
+    }
+
+    .iconValid {
+        color: green;
+    }
+
+    label {
+        margin-top: 2px !important
+    }
+
+    .drop-area {
+        border: 2px dashed #ccc;
+        border-radius: 20px;
+        width: 400px;
+        font-family: sans-serif;
+        margin: 20px auto;
+        padding: 20px;
+    }
+
+        .drop-area:hover {
+            border-color: #333;
+        }
+
+    .fileElem {
+        display: none;
+    }
+</style>
+
+<div class="container bg-white" style="margin-top: 50px; margin-bottom: 100px">
+
+    <h4>Edital Nº. @processo.NumeroEdital</h4>
+
+    <h6 class="mt-5">Cargos disponíveis</h6>
+
+    <table class="table table-hover" id="table-cargos">
+        <tr>
+            <th>
+                CARGO
+            </th>
+            <th>
+                PROJETO
+            </th>
+            <th>
+                VALOR
+            </th>
+            <th>
+                CIDADE
+            </th>
+            <th class="text-center">
+                LIMITE DE CURRÍCULOS
+            </th>
+            <th class="text-center">
+                CURRÍCULOS RECEBIDOS
+            </th>
+            <th></th>
+            <td></td>
+        </tr>
+        @foreach (var item in cargos)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Cargo.Nome)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Cargo.Projeto)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Cargo.Valor)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Cargo.Cidade.Nome)
+                </td>
+                <td class="text-center">
+                    @Html.DisplayFor(modelItem => item.Cargo.VagasCurriculo)
+            </td>
+                <td class="text-center">
+                    <span>@item.CurriculosRecebidos</span>
+            </td>
+                <td>
+                    @if (item.VagasDisponiveis > 0 && processo.DataFimCurriculo.HasValue && processo.DataFimCurriculo.Value > DateTime.Now)
+                    {
+                        <a class="text-white theme-btn" onclick="showModal('@item.Cargo.Id','@item.Cargo.HasDocExperiencia', '@item.Cargo.HasDocFormacao');">Inscreva-se</a>
+                    }
+                    else
+                    {
+                        
+                    }
+                </td>
+                <td>
+                    <a class="btn btn-warning theme-btn" href="@Url.Action("Acompanhar","Edital", new { Id = item.Cargo.Id })">Acompanhar</a>
+                </td>
+            </tr>
+        }
+    </table>
+</div>
+
+@* <div class="modal fade" id="modalCargo" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <form id="formCurriculo">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Anexar documentação</h5>
+                </div>
+                <div class="modal-body">
+
+                    <input type="hidden" id="idCargo" />
+                    <label for="Nome">Nome</label>
+                    <input id="Nome" name="Nome" class="form-control" required />
+
+                    <label for="Cpf">CPF</label>
+
+                    <input id="Cpf" name="Cpf" class="form-control" data-mask="000.000.000-00" data-mask-reverse="true" required />
+
+                    <label for="Email">Email</label>
+                    <input id="Email" name="Email" type="email" class="form-control" required />
+
+                    <input type="hidden" value="" id="statusAtualAvaliacao">
+                    <label for="Id">Tipo de Pessoa</label><br />
+                    <select id="tipoPessoa" class="form-control">
+                        <option disabled>Selecione o tipo de Pessoa</option>
+                        @if(listaPessoa != null){
+                            foreach (var tipoPessoa in listaPessoa)
+                            {
+                                <option value="@tipoPessoa.Id">@tipoPessoa.Descricao</option>
+                            }
+                        }
+ 
+                    </select>
+
+
+                    <div id="drop-area-curriculo" class="drop-area" onclick="selectFile('curriculo');">
+                        <label><b>Currículo</b></label>
+                        <p id="file-curriculo" class="text-center">Clique para seleciona o arquivo</p>
+                        <input type="file" id="curriculo-file" class="fileElem" multiple onchange="handleFiles(this.files, 'curriculo')">
+                    </div>
+
+                    <div id="drop-area-diploma" class="drop-area" onclick="selectFile('diploma');">
+                        <label><b>Diploma</b></label>
+                        <p id="file-diploma" class="text-center">Clique para seleciona o arquivo</p>
+                        <input type="file" id="diploma-file" class="fileElem" multiple onchange="handleFiles(this.files, 'diploma')">
+                    </div>
+                    <div id="drop-area-experiencia" class="drop-area" onclick="selectFile('experiencia');">
+                        <label><b>Comprovante de experiência</b></label>
+                        <p id="file-experiencia" class="text-center">Clique para seleciona o arquivo</p>
+                        <input type="file" id="experiencia-file" class="fileElem" multiple onchange="handleFiles(this.files, 'experiencia')">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Enviar</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+ *@
+
+<div class="modal fade" id="modalCargo" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <form id="formCurriculo">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Anexar documentação</h5>
+                </div>
+                <div class="modal-body">
+
+                    <input type="hidden" id="idCargo" />
+                    <label for="Nome">Nome</label>
+                    <input id="Nome" name="Nome" class="form-control" required />
+
+                    <label for="Cpf" id="labelCpf">CPF</label>
+                    <input id="Cpf" name="Cpf" class="form-control" data-mask="000.000.000-00" data-mask-reverse="true" required />
+
+
+                    <label for="Email">Email</label>
+                    <input id="Email" name="Email" type="email" class="form-control" required />
+
+                    @* <input type="hidden" value="" id="statusAtualAvaliacao"> *@
+                    <label for="Id">Tipo de Pessoa</label><br />
+                    <select id="tipoPessoa" class="form-control" onchange="mostrarDocumentos()">
+                        <option disabled selected>Selecione o tipo de Pessoa</option>
+                        @if (listaPessoa != null)
+                        {
+                            foreach (var tipoPessoa in listaPessoa)
+                            {
+                                <option value="@tipoPessoa.Id">@tipoPessoa.Descricao</option>
+                            }
+                        }
+                    </select>
+                    @*Arquivos fixos para todos os tipos de Pessoa*@
+                    <div id="drop-area-portifolio" class="drop-area" onclick="selectFile('portifolio');">
+                        <label><b>Portfólio Artistico / Clipping</b></label>
+                        <p id="file-portifolio" class="text-center">Clique para selecionar o arquivo</p>
+                        <input type="file" id="portifolio-file" class="fileElem" multiple onchange="handleFiles(this.files, 'portifolio')">
+                    </div>
+
+                    <div id="drop-area-tecnica" class="drop-area" onclick="selectFile('tecnica');">
+                        <label><b>Ficha Técnica</b></label>
+                        <p id="file-tecnica" class="text-center">Clique para selecionar o arquivo</p>
+                        <input type="file" id="tecnica-file" class="fileElem" multiple onchange="handleFiles(this.files, 'tecnica')">
+                    </div>
+
+                    <div id="drop-area-anexo1" class="drop-area" onclick="selectFile('anexo1');">
+                        <label><b>Anexo I – Formulário de Inscrição</b></label>
+                        <p id="file-anexo1" class="text-center">Clique para selecionar o arquivo</p>
+                        <input type="file" id="anexo1-file" class="fileElem" multiple onchange="handleFiles(this.files, 'anexo1')">
+                    </div>
+
+                    <div id="drop-area-anexo2" class="drop-area" onclick="selectFile('anexo2');">
+                        <label><b>Anexo II – Proposta de Serviço</b></label>
+                        <p id="file-anexo2" class="text-center">Clique para selecionar o arquivo</p>
+                        <input type="file" id="anexo2-file" class="fileElem" multiple onchange="handleFiles(this.files, 'anexo2')">
+                    </div>
+
+                    <div id="drop-area-anexo3" class="drop-area" onclick="selectFile('anexo3');">
+                        <label><b>Anexo III – Ficha Cadastral</b></label>
+                        <p id="file-anexo3" class="text-center">Clique para selecionar o arquivo</p>
+                        <input type="file" id="anexo3-file" class="fileElem" multiple onchange="handleFiles(this.files, 'anexo3')">
+                    </div>
+
+                    <div id="drop-area-anexo4" class="drop-area" onclick="selectFile('anexo4');">
+                        <label><b>Anexo IV – Declaração de Inexistência de Vínculo</b></label>
+                        <p id="file-anexo4" class="text-center">Clique para selecionar o arquivo</p>
+                        <input type="file" id="anexo4-file" class="fileElem" multiple onchange="handleFiles(this.files, 'anexo4')">
+                    </div>
+
+                    <div id="drop-area-anexo5" class="drop-area" onclick="selectFile('anexo5');">
+                        <label><b>Anexo V – Currículo Artístico</b></label>
+                        <p id="file-anexo5" class="text-center">Clique para selecionar o arquivo</p>
+                        <input type="file" id="anexo5-file" class="fileElem" multiple onchange="handleFiles(this.files, 'anexo5')">
+                    </div>
+
+                    <div id="drop-area-anexo6" class="drop-area" onclick="selectFile('anexo6');">
+                        <label><b>Anexo VI – Termo de Consentimento para Tratamento de Dados Pessoais</b></label>
+                        <p id="file-anexo6" class="text-center">Clique para selecionar o arquivo</p>
+                        <input type="file" id="anexo6-file" class="fileElem" multiple onchange="handleFiles(this.files, 'anexo6')">
+                    </div>
+
+                    @*Arquivos expecificos para tipo de Pessoa Física*@
+                    <div id="drop-area-rgcnh" class="drop-area documentos" style="display:none;" onclick="selectFile('rgcnh');">
+                        <label><b>RG ou CNH</b></label>
+                        <p id="file-rgcnh" class="text-center">Clique para selecionar o arquivo</p>
+                        <input type="file" id="rgcnh-file" class="fileElem" multiple onchange="handleFiles(this.files, 'rgcnh')">
+                    </div>
+
+                    <div id="drop-area-cpf" class="drop-area documentos" style="display:none;" onclick="selectFile('cpf');">
+                        <label><b>CPF</b></label>
+                        <p id="file-cpf" class="text-center">Clique para selecionar o arquivo</p>
+                        <input type="file" id="cpf-file" class="fileElem" multiple onchange="handleFiles(this.files, 'cpf')">
+                    </div>
+
+                    <div id="drop-area-pis" class="drop-area documentos" style="display:none;" onclick="selectFile('pis');">
+                        <label><b>NIT/PIS/PASEP</b></label>
+                        <p id="file-pis" class="text-center">Clique para selecionar o arquivo</p>
+                        <input type="file" id="pis-file" class="fileElem" multiple onchange="handleFiles(this.files, 'pis')">
+                    </div>
+
+                    <div id="drop-area-comprovante_bancario" class="drop-area documentos" style="display:none;" onclick="selectFile('comprovante_bancario');">
+                        <label><b>Comprovante Bancário (agência e conta)</b></label>
+                        <p id="file-comprovante_bancario" class="text-center">Clique para selecionar o arquivo</p>
+                        <input type="file" id="comprovante_bancario-file" class="fileElem" multiple onchange="handleFiles(this.files, 'comprovante_bancario')">
+                    </div>
+
+                    <div id="drop-area-certificado_escolar" class="drop-area documentos" style="display:none;" onclick="selectFile('certificado_escolar');">
+                        <label><b>Certificado de Nível de Escolaridade</b></label>
+                        <p id="file-certificado_escolar" class="text-center">Clique para selecionar o arquivo</p>
+                        <input type="file" id="certificado_escolar-file" class="fileElem" multiple onchange="handleFiles(this.files, 'certificado_escolar')">
+                    </div>
+
+                    <div id="drop-area-comprovante_residencia" class="drop-area documentos" style="display:none;" onclick="selectFile('comprovante_residencia');">
+                        <label><b>Comprovante Residencial Atualizado</b></label>
+                        <p id="file-comprovante_residencia" class="text-center">Clique para selecionar o arquivo</p>
+                        <input type="file" id="comprovante_residencia-file" class="fileElem" multiple onchange="handleFiles(this.files, 'comprovante_residencia')">
+                    </div>
+
+                    @*Arquivos expecificos para tipo de Pessoa Jurídica*@
+                    <div id="drop-area-cnpj" class="drop-area documentos" style="display:none;" onclick="selectFile('cnpj');">
+                        <label><b>Comprovante de situação cadastral junto à Receita Federal (CNPJ)</b></label>
+                        <p id="file-cnpj" class="text-center">Clique para selecionar o arquivo</p>
+                        <input type="file" id="cnpj-file" class="fileElem" multiple onchange="handleFiles(this.files, 'cnpj')">
+                    </div>
+
+                    <div id="drop-area-fgts" class="drop-area documentos" style="display:none;" onclick="selectFile('fgts');">
+                        <label><b>Certidão Regularidade do FGTS dentro do prazo de validade</b></label>
+                        <p id="file-fgts" class="text-center">Clique para selecionar o arquivo</p>
+                        <input type="file" id="fgts-file" class="fileElem" multiple onchange="handleFiles(this.files, 'fgts')">
+                    </div>
+
+                    <div id="drop-area-cs_eirelli" class="drop-area documentos" style="display:none;" onclick="selectFile('cs_eirelli');">
+                        <label><b>Contrato social para sociedade empresária limitada e Eirelli</b></label>
+                        <p id="file-cs_eirelli" class="text-center">Clique para selecionar o arquivo</p>
+                        <input type="file" id="cs_eirelli-file" class="fileElem" multiple onchange="handleFiles(this.files, 'cs_eirelli')">
+                    </div>
+
+                    <div id="drop-area-estatuto" class="drop-area documentos" style="display:none;" onclick="selectFile('estatuto');">
+                        <label><b>Estatuto para sociedade anônima</b></label>
+                        <p id="file-estatuto" class="text-center">Clique para selecionar o arquivo</p>
+                        <input type="file" id="estatuto-file" class="fileElem" multiple onchange="handleFiles(this.files, 'estatuto')">
+                    </div>
+
+                    <div id="drop-area-requerimento_ei" class="drop-area documentos" style="display:none;" onclick="selectFile('requerimento_ei');">
+                        <label><b>Requerimento de Empresário Individual (no caso de firma individual)</b></label>
+                        <p id="file-requerimento_ei" class="text-center">Clique para selecionar o arquivo</p>
+                        <input type="file" id="requerimento_ei-file" class="fileElem" multiple onchange="handleFiles(this.files, 'requerimento_ei')">
+                    </div>
+
+                    <div id="drop-area-certidao_negativa_federal" class="drop-area documentos" style="display:none;" onclick="selectFile('certidao_negativa_federal');">
+                        <label><b>Certidão Negativa Tributos Federais e Dívida Ativa da União atualizado</b></label>
+                        <p id="file-certidao_negativa_federal" class="text-center">Clique para selecionar o arquivo</p>
+                        <input type="file" id="certidao_negativa_federal-file" class="fileElem" multiple onchange="handleFiles(this.files, 'certidao_negativa_federal')">
+                    </div>
+
+                    <div id="drop-area-certidao_negativa_municipal_estadual" class="drop-area documentos" style="display:none;" onclick="selectFile('certidao_negativa_municipal_estadual');">
+                        <label><b>Certidão Negativa Municipal e Estadual dentro do prazo de validade</b></label>
+                        <p id="file-certidao_negativa_municipal_estadual" class="text-center">Clique para selecionar o arquivo</p>
+                        <input type="file" id="certidao_negativa_municipal_estadual-file" class="fileElem" multiple onchange="handleFiles(this.files, 'certidao_negativa_municipal_estadual')">
+                    </div>
+
+                    <div id="drop-area-estatuto_social" class="drop-area documentos" style="display:none;" onclick="selectFile('estatuto_social');">
+                        <label><b>Ata de Constituição e Estatuto Social (regras sobre a constituição, funcionamento e obrigações da entidade/empresa - se for o caso)</b></label>
+                        <p id="file-estatuto_social" class="text-center">Clique para selecionar o arquivo</p>
+                        <input type="file" id="estatuto_social-file" class="fileElem" multiple onchange="handleFiles(this.files, 'estatuto_social')">
+                    </div>
+
+                    <div id="drop-area-regularidade_fgts" class="drop-area documentos" style="display:none;" onclick="selectFile('regularidade_fgts');">
+                        <label><b>Certidão de regularidade com o Fundo de Garantia de Tempo de Serviço - FGTS</b></label>
+                        <p id="file-regularidade_fgts" class="text-center">Clique para selecionar o arquivo</p>
+                        <input type="file" id="regularidade_fgts-file" class="fileElem" multiple onchange="handleFiles(this.files, 'regularidade_fgts')">
+                    </div>
+
+                    @*Arquivos expecificos para tipo de Pessoa Jurídica MEI*@
+                    <div id="drop-area-mei" class="drop-area documentos" style="display:none;" onclick="selectFile('mei');">
+                        <label><b>Pessoa Jurídica (MEI)</b></label>
+                        <p id="file-mei" class="text-center">Clique para selecionar o arquivo</p>
+                        <input type="file" id="mei-file" class="fileElem" multiple onchange="handleFiles(this.files, 'mei')">
+                    </div>
+
+                    <div id="drop-area-ccmei" class="drop-area documentos" style="display:none;" onclick="selectFile('ccmei');">
+                        <label><b>Certificado da Condição do Microempreendedor Individual (CCMEI)</b></label>
+                        <p id="file-ccmei" class="text-center">Clique para selecionar o arquivo</p>
+                        <input type="file" id="ccmei-file" class="fileElem" multiple onchange="handleFiles(this.files, 'ccmei')">
+                    </div>
+
+                    <div id="drop-area-cnpj_mei" class="drop-area documentos" style="display:none;" onclick="selectFile('cnpj_mei');">
+                        <label><b>Comprovante de situação cadastral junto à Receita Federal (CNPJ)</b></label>
+                        <p id="file-cnpj_mei" class="text-center">Clique para selecionar o arquivo</p>
+                        <input type="file" id="cnpj_mei-file" class="fileElem" multiple onchange="handleFiles(this.files, 'cnpj_mei')">
+                    </div>
+
+                    <div id="drop-area-fgts_mei" class="drop-area documentos" style="display:none;" onclick="selectFile('fgts_mei');">
+                        <label><b>Certidão Regularidade do FGTS dentro do prazo de validade</b></label>
+                        <p id="file-fgts_mei" class="text-center">Clique para selecionar o arquivo</p>
+                        <input type="file" id="fgts_mei-file" class="fileElem" multiple onchange="handleFiles(this.files, 'fgts_mei')">
+                    </div>
+
+                    <div id="drop-area-certidao_negativa_federal_mei" class="drop-area documentos" style="display:none;" onclick="selectFile('certidao_negativa_federal_mei');">
+                        <label><b>Certidão Negativa Tributos Federais e Dívida Ativa da União atualizado</b></label>
+                        <p id="file-certidao_negativa_federal_mei" class="text-center">Clique para selecionar o arquivo</p>
+                        <input type="file" id="certidao_negativa_federal_mei-file" class="fileElem" multiple onchange="handleFiles(this.files, 'certidao_negativa_federal_mei')">
+                    </div>
+
+                    <div id="drop-area-certidao_negativa_municipal_estadual_mei" class="drop-area documentos" style="display:none;" onclick="selectFile('certidao_negativa_municipal_estadual_mei');">
+                        <label><b>Certidão Negativa Municipal e Estadual dentro do prazo de validade</b></label>
+                        <p id="file-certidao_negativa_municipal_estadual_mei" class="text-center">Clique para selecionar o arquivo</p>
+                        <input type="file" id="certidao_negativa_municipal_estadual_mei-file" class="fileElem" multiple onchange="handleFiles(this.files, 'certidao_negativa_municipal_estadual_mei')">
+                    </div>
+
+                    @*Arquivos expecificos Acessoriação*@
+                    <div id="drop-area-cnpj_acessoria" class="drop-area documentos" style="display:none;" onclick="selectFile('cnpj_acessoria');">
+                        <label><b>Comprovante de situação cadastral junto à Receita Federal (CNPJ)</b></label>
+                        <p id="file-cnpj_acessoria" class="text-center">Clique para selecionar o arquivo</p>
+                        <input type="file" id="cnpj_acessoria-file" class="fileElem" multiple onchange="handleFiles(this.files, 'cnpj_acessoria')">
+                    </div>
+
+                    <div id="drop-area-fgts_acessoria" class="drop-area documentos" style="display:none;" onclick="selectFile('fgts_acessoria');">
+                        <label><b>Certidão Regularidade do FGTS dentro do prazo de validade</b></label>
+                        <p id="file-fgts_acessoria" class="text-center">Clique para selecionar o arquivo</p>
+                        <input type="file" id="fgts_acessoria-file" class="fileElem" multiple onchange="handleFiles(this.files, 'fgts_acessoria')">
+                    </div>
+
+                    <div id="drop-area-cs_eirelli_associacao" class="drop-area documentos" style="display:none;" onclick="selectFile('cs_eirelli_associacao');">
+                        <label><b>Contrato social para sociedade empresária limitada e Eirelli (se for o caso)</b></label>
+                        <p id="file-cs_eirelli_associacao" class="text-center">Clique para selecionar o arquivo</p>
+                        <input type="file" id="cs_eirelli_associacao-file" class="fileElem" multiple onchange="handleFiles(this.files, 'cs_eirelli_associacao')">
+                    </div>
+
+                    <div id="drop-area-estatuto_associacao" class="drop-area documentos" style="display:none;" onclick="selectFile('estatuto_associacao');">
+                        <label><b>Estatuto para sociedade anônima (se for o caso)</b></label>
+                        <p id="file-estatuto_associacao" class="text-center">Clique para selecionar o arquivo</p>
+                        <input type="file" id="estatuto_associacao-file" class="fileElem" multiple onchange="handleFiles(this.files, 'estatuto_associacao')">
+                    </div>
+
+                    <div id="drop-area-requerimento_ei_associacao" class="drop-area documentos" style="display:none;" onclick="selectFile('requerimento_ei_associacao');">
+                        <label><b>Requerimento de Empresário Individual (no caso de firma individual)</b></label>
+                        <p id="file-requerimento_ei_associacao" class="text-center">Clique para selecionar o arquivo</p>
+                        <input type="file" id="requerimento_ei_associacao-file" class="fileElem" multiple onchange="handleFiles(this.files, 'requerimento_ei_associacao')">
+                    </div>
+
+                    <div id="drop-area-certidao_negativa_federal_associacao" class="drop-area documentos" style="display:none;" onclick="selectFile('certidao_negativa_federal_associacao');">
+                        <label><b>Certidão Negativa Tributos Federais e Dívida Ativa da União atualizado</b></label>
+                        <p id="file-certidao_negativa_federal_associacao" class="text-center">Clique para selecionar o arquivo</p>
+                        <input type="file" id="certidao_negativa_federal_associacao-file" class="fileElem" multiple onchange="handleFiles(this.files, 'certidao_negativa_federal_associacao')">
+                    </div>
+
+                    <div id="drop-area-certidao_negativa_municipal_estadual_associacao" class="drop-area documentos" style="display:none;" onclick="selectFile('certidao_negativa_municipal_estadual_associacao');">
+                        <label><b>Certidão Negativa Municipal e Estadual dentro do prazo de validade</b></label>
+                        <p id="file-certidao_negativa_municipal_estadual_associacao" class="text-center">Clique para selecionar o arquivo</p>
+                        <input type="file" id="certidao_negativa_municipal_estadual_associacao-file" class="fileElem" multiple onchange="handleFiles(this.files, 'certidao_negativa_municipal_estadual_associacao')">
+                    </div>
+
+                    <div id="drop-area-estatuto_social_associacao" class="drop-area documentos" style="display:none;" onclick="selectFile('estatuto_social_associacao');">
+                        <label><b>Ata de Constituição e Estatuto Social (regra sobre a constituição, funcionamento e obrigações da entidade/empresa – se for o caso)</b></label>
+                        <p id="file-estatuto_social_associacao" class="text-center">Clique para selecionar o arquivo</p>
+                        <input type="file" id="estatuto_social_associacao-file" class="fileElem" multiple onchange="handleFiles(this.files, 'estatuto_social_associacao')">
+                    </div>
+
+                    <div id="drop-area-estatuto_associacao_representante" class="drop-area documentos" style="display:none;" onclick="selectFile('estatuto_associacao_representante');">
+                        <label><b>Estatuto da associação representante</b></label>
+                        <p id="file-estatuto_associacao_representante" class="text-center">Clique para selecionar o arquivo</p>
+                        <input type="file" id="estatuto_associacao_representante-file" class="fileElem" multiple onchange="handleFiles(this.files, 'estatuto_associacao_representante')">
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Enviar</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+@section Scripts
+{
+    <script src="~/js/3th/jquery.mask.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $("#ok").hide();
+        });
+
+         $("#diploma-file").change(function () {
+             $("#okFormacao").show();
+         });
+
+         $("#experiencia-file").change(function () {
+             $("#okFormacao").show();
+         });
+
+        $("#tipoPessoa").change(function () {
+
+          /*  var anexo = $('#tipoPessoa').val();
+            console.log(anexo);
+            $.ajax({
+                url: "@Url.Action("buscar-documentos-edital")",
+                type: "POST",
+                processData: false,
+                contentType: false,
+                data: anexo,
+                beforeSend: function () {
+                    $.LoadingOverlay("show",
+                        {
+                            background: "rgba(176, 177, 178, 0.5)",
+                            text: "Enviando..."
+                        });
+                },
+                complete: function () {
+                    $.LoadingOverlay("hide");
+                },
+                success: function (data) {
+                    //add mudança de campos aqui.
+                },
+                error: function (err) {
+                    noty({
+                        text: 'Falha ao enviar o curriculo',
+                        type: 'error',
+                        timeout: 2500,
+                        progressBar: true
+                    });
+                }
+            });*/
+        });
+
+        function createSelectFile(tipoDocumento) {
+            var divRow = document.createElement("div");
+            divRow.setAttribute("id", "div" + tipoDocumento);
+            divRow.className = 'col border-dashed pb-3';
+             if (tipoDocumento === "Experiencia") {
+                 var divAlert = document.createElement("div");
+                 divAlert.className = "alert alert-warning";
+                 const spanAlert = document.createElement("span");
+                 const textoAlert = document.createTextNode("Adicione uma foto da carteira de trabalho, ou contrato de trabalho, que comprove o período de experiência");
+                 spanAlert.appendChild(textoAlert);
+                 divAlert.appendChild(spanAlert);
+                 divRow.appendChild(divAlert);
+             }
+            const paragrafo = document.createElement("label");
+            const texto = document.createTextNode(tipoDocumento);
+            paragrafo.appendChild(texto);
+            divRow.appendChild(paragrafo);
+
+            const divInput = document.createElement("div");
+            divInput.className = 'input-wrapper';
+            const label = document.createElement("label");
+            label.setAttribute("for", tipoDocumento);
+            const textoLabel = document.createTextNode("Selecione um arquivo");
+            label.appendChild(textoLabel);
+            const inputArquivo = document.createElement("input");
+            inputArquivo.setAttribute("type", "file");
+            inputArquivo.setAttribute("required", "");
+            inputArquivo.setAttribute("id", tipoDocumento);
+            const spanArquivo = document.createElement("span");
+            spanArquivo.setAttribute("id", "span" + tipoDocumento);
+            const spanValidArquivo = document.createElement("span");
+            spanValidArquivo.setAttribute("id", "ok" + tipoDocumento);
+            const iconValidaArquivo = document.createElement("i");
+            iconValidaArquivo.className = "fa fa-check fa-2x ";
+            spanValidArquivo.appendChild(iconValidaArquivo);
+            divInput.appendChild(label);
+            divInput.appendChild(inputArquivo);
+            divInput.appendChild(spanArquivo);
+            divInput.appendChild(spanValidArquivo);
+            divRow.appendChild(divInput);
+            document.getElementById('select' + tipoDocumento).appendChild(divRow);
+            $('#ok' + tipoDocumento).hide();
+        }
+
+        function showModal(id, experiencia, formacao) {
+            
+            $("#diploma-file").val('');
+            $("#experiencia-file").val('');
+            $("#drop-area-diploma").hide();
+            $("#drop-area-experiencia").hide();
+
+            //pesquisa cargo
+            $.ajax({
+                url: "/obter-cargo-edital/" + id,
+                type: "GET",
+                processData: false,
+                contentType: false,
+                success: function (data) {
+                    if (data.code === 1) {
+                        if (data.cargo.hasDocExperiencia) {
+                            $("#drop-area-experiencia").show();
+                        }
+                        if (data.cargo.hasDocFormacao) {
+                            $("#drop-area-diploma").show();
+
+                        }
+                        console.log(data);
+
+                    } else {
+
+                    }
+                },
+                error: function (err) {
+                }
+            });
+
+            console.log('1');
+
+            $('#idCargo').val(id);
+            $('#modalCargo').modal('show');
+        };
+
+
+        $('#formCurriculo').submit(function (e) {
+            e.preventDefault();
+            const tipoPessoa = $('#tipoPessoa').val();
+            const cargo = $('#idCargo').val();
+            //const documento = $('#portifolio-file', '#tecnica-file', '#anexo1-file', '#anexo2-file', '#anexo3-file', '#anexo4-file', '#anexo5-file', '#anexo6-file').get(0).files;]
+            const portfolioClipping = $('#portifolio-file').get(0).files;
+            const fichaTecnica = $('#tecnica-file').get(0).files;
+            const anexoUm = $('#anexo1-file').get(0).files;
+            const anexoDois = $('#anexo2-file').get(0).files;
+            const anexoTres = $('#anexo3-file').get(0).files;
+            const anexoQuatro = $('#anexo4-file').get(0).files;
+            const anexoCinco = $('#anexo5-file').get(0).files;
+            const anexoSeis = $('#anexo6-file').get(0).files;
+
+
+            if(tipoPessoa == "1"){
+                //Documento necessários para o envio de pessoa física
+                const docComprovanteBancario = $('#comprovante_bancario-file').get(0).files;
+                const docCertificadoEscolar = $('#certificado_escolar-file').get(0).files;
+                const docComprovanteResidencia = $('#comprovante_residencia-file').get(0).files;
+                const rgcnh = $('#rgcnh-file').get(0).files;
+                const docCpf = $('#cpf-file').get(0).files;
+                const docPis = $('#pis-file').get(0).files;
+            }
+
+            if (tipoPessoa == "2") {
+                //Documento necessários para o envio de pessoa jurídica
+                const Cnpj = $('#cnpj-file').get(0).files;
+                const Fgts = $('#fgts-file').get(0).files;
+                const Cseirelli = $('#cs_eirelli-file').get(0).files;
+                const Estatuto = $('#estatuto-file').get(0).files;
+                const Requerimentoei = $('#requerimento_ei-file').get(0).files;
+                const CertificadoNegativaFederal = $('#certidao_negativa_federal-file').get(0).files;
+                const CertificadoNegativaEstadual = $('#certidao_negativa_municipal_estadual-file').get(0).files;
+                const EstatutoSocial = $('#estatuto_social-file').get(0).files;
+                const RegularidadeFgts = $('#regularidade_fgts-file').get(0).files;
+            }
+
+            if (tipoPessoa == "3") {
+                //Documento necessários para o envio de pessoa jurídica MEI
+                const Mei = $('#mei-file').get(0).files;
+                const Ccmei = $('#ccmei-file').get(0).files;
+                const Cnpjmei = $('#cnpj_mei-file').get(0).files;
+                const Fgtsmei = $('#fgts_mei-file').get(0).files;
+                const CertificadoNegativaFederalMei = $('#certidao_negativa_federal_mei-file').get(0).files;
+                const CertificadoNegativaEstadualMei = $('#certidao_negativa_municipal_estadual_mei-file').get(0).files;
+            }
+
+            if (tipoPessoa == "4") {
+                //Documento necessários para o envio de Associações
+                const Cnpjacessoria = $('#cnpj_acessoria-file').get(0).files;
+                const Fgtsacessoria = $('#fgts_acessoria-file').get(0).files;
+                const Cseirelliassociacao = $('#cs_eirelli_associacao-file').get(0).files;
+                const Estatutoassociacao = $('#estatuto_associacao-file').get(0).files;
+                const RequerimentoEiAssociacao = $('#requerimento_ei_associacao-file').get(0).files;
+                const CertidaoNegativaFederalAssociacao = $('#certidao_negativa_federal_associacao-file').get(0).files;
+                const CertidaoNegativaEstadualAssociacao = $('#certidao_negativa_municipal_estadual_associacao-file').get(0).files;
+                const EstatutoSocialAssociacao = $('#estatuto_social_associacao-file').get(0).files;
+                const EstatutoAssociacaoRepresentante = $('#estatuto_associacao_representante-file').get(0).files;
+            }
+
+            
+
+            const nome = $('#Nome').val();
+            const email = $('#Email').val();
+            const cpf = $('#Cpf').val();
+            const anexo = new FormData();
+           
+            if (cpf.length < 14) {
+                noty({
+                    text: 'CPF inválido',
+                    type: 'error',
+                    layout: 'topRight',
+                    timeout: 3000
+                });
+                return;
+            }
+  
+                if (nome != '' && nome != undefined && email != '' && email != undefined && cpf != '' && cpf != undefined
+                    && portfolioClipping.length > 0 && fichaTecnica.length > 0 && anexoUm.length > 0 && anexoDois.length > 0 &&
+                    anexoTres.length > 0 && anexoQuatro.length > 0 && anexoCinco.length > 0 && anexoSeis.length > 0 ) {
+
+                        //documentos comuns                   
+                        anexo.append("Nome", nome);
+                        anexo.append("Email", email);
+                        anexo.append("Cpf", cpf);
+                        anexo.append("tipoPessoa", tipoPessoa);
+                        anexo.append("IdCargo", cargo);
+
+                        if ($('#portifolio-file').val() !== '' && $('#portifolio-file').val() !== undefined) {
+                            anexo.append("PortfolioArtistico", portfolioClipping[0]);
+                        }
+                        if ($('#tecnica-file').val() !== '' && $('#tecnica-file').val() !== undefined) {
+                            anexo.append("FichaTecnica", fichaTecnica[0]);
+                        }
+                        //Formulário de inscrição
+                        if ($('#anexo1-file').val() !== '' && $('#anexo1-file').val() !== undefined) {
+                            anexo.append("FormularioInscricao", anexoUm[0]);
+                        }
+                        //Proposta de Serviço
+                        if ($('#anexo2-file').val() !== '' && $('#anexo2-file').val() !== undefined) {
+                            // anexo.append("PropostaServico", anexoDois[0]);
+                            anexo.append("PropostaServico", anexoDois[0]);
+                        }
+                        //Declaração de Inexistência de Vínculo
+                        if ($('#anexo4-file').val() !== '' && $('#anexo4-file').val() !== undefined) {
+                            anexo.append("DeclaracaoAusenciaVinculo", anexoQuatro[0]);
+                        }
+                        //Currículo Artístico
+                        if ($('#anexo5-file').val() !== '' && $('#anexo5-file').val() !== undefined) {
+                            anexo.append("CurriculoArtistico", anexoCinco[0]);
+                        }
+                        //Termo de Autorização de Uso de Imagem e Voz
+                        if ($('#anexo6-file').val() !== '' && $('#anexo6-file').val() !== undefined) {
+                            anexo.append("TermoAutorizacaoUsoImagemVoz", anexoSeis[0]);
+                        }
+                        //Termo de Consentimento para Tratamento de Dados Pessoas
+                        //Inserir aqui caso precise
+                        //
+
+
+                        if (tipoPessoa == "1") {
+                            //pessoa física
+                            if ($('#rgcnh-file').val() !== '' && $('#rgcnh-file').val() !== undefined) {
+                                anexo.append("RgCnh", $('#rgcnh-file').get(0).files[0]);
+                            }
+                            if ($('#cpf-file').val() !== '' && $('#cpf-file').val() !== undefined) {
+                              anexo.append("DocumentoCpf", $('#cpf-file').get(0).files[0]);
+                            }
+                            if ($('#pis-file').val() !== '' && $('#pis-file').val() !== undefined) {
+                                anexo.append("NitPisPasep", $('#pis-file').get(0).files[0]);
+                            }
+                            if ($('#comprovante_bancario-file').val() !== '' && $('#comprovante_bancario-file').val() !== undefined) {
+                                anexo.append("ComprovanteBancario", $('#comprovante_bancario-file').get(0).files[0]);
+                            }
+                            if ($('#certificado_escolar-file').val() !== '' && $('#certificado_escolar-file').val() !== undefined) {
+                                anexo.append("CertificadoNivelEscolaridade", $('#certificado_escolar-file').get(0).files[0]);
+                            }
+                            if ($('#comprovante_residencia-file').val() !== '' && $('#comprovante_residencia-file').val() !== undefined) {
+                                anexo.append("ComprovanteResidencialAtualizado", $('#comprovante_residencia-file').get(0).files[0]);
+                            }
+                            //Ficha Cadastral
+                            if ($('#anexo3-file').val() !== '' && $('#anexo3-file').val() !== undefined) {
+                                anexo.append("FichaCadastralPessoaFisica", $('#anexo3-file').get(0).files[0]);
+                            }
+                        }
+
+                        if(tipoPessoa == "2"){
+                            //pessoa Juridica
+                             if ($('#cnpj-file').val() !== '' && $('#cnpj-file').val() !== undefined) {
+                                anexo.append("Cnpj", $('#cnpj-file').get(0).files[0]);
+                             }
+                            if ($('#fgts-file').val() !== '' && $('#fgts-file').val() !== undefined) {
+                                anexo.append("Fgts", $('#fgts-file').get(0).files[0]);
+                             }
+                            if ($('#cs_eirelli-file').val() !== '' && $('#cs_eirelli-file').val() !== undefined) {
+                                anexo.append("Cseirelli", $('#cs_eirelli-file').get(0).files[0]);
+                             }
+                            if ($('#estatuto-file').val() !== '' && $('#estatuto-file').val() !== undefined) {
+                                anexo.append("Estatuto", $('#estatuto-file').get(0).files[0]);
+                             }
+                            if ($('#requerimento_ei-file').val() !== '' && $('#requerimento_ei-file').val() !== undefined) {
+                                anexo.append("Requerimentoei", $('#requerimento_ei-file').get(0).files[0]);
+                             }
+                            if ($('#certidao_negativa_federal-file').val() !== '' && $('#certidao_negativa_federal-file').val() !== undefined) {
+                                 anexo.append("CertificadoNegativaFederal", $('#certidao_negativa_federal-file').get(0).files[0]);
+                             }
+                            if ($('#certidao_negativa_municipal_estadual-file').val() !== '' && $('#certidao_negativa_municipal_estadual-file').val() !== undefined) {
+                                anexo.append("CertificadoNegativaEstadual", $('#certidao_negativa_municipal_estadual-file').get(0).files[0]);
+                             }
+                            if ($('#estatuto_social-file').val() !== '' && $('#estatuto_social-file').val() !== undefined) {
+                                 anexo.append("EstatutoSocial", $('#estatuto_social-file').get(0).files[0]);
+                             }
+                            if ($('#regularidade_fgts-file').val() !== '' && $('#regularidade_fgts-file').val() !== undefined) {
+                                 anexo.append("RegularidadeFgts", $('#regularidade_fgts-file').get(0).files[0]);
+                             }
+
+                        }
+
+                        if (tipoPessoa == "3") {
+                            //pessoa Juridica MEI
+                            if ($('#mei-file').val() !== '' && $('#mei-file').val() !== undefined) {
+                                anexo.append("Mei", $('#mei-file').get(0).files[0]);
+                             }
+                            if ($('#ccmei-file').val() !== '' && $('#ccmei-file').val() !== undefined) {
+                                anexo.append("Ccmei", $('#ccmei-file').get(0).files[0]);
+                              }
+                            if ($('#cnpj_mei-file').val() !== '' && $('#cnpj_mei-file').val() !== undefined) {
+                                anexo.append("Cnpjmei", $('#cnpj_mei-file').get(0).files[0]);
+                              }
+                            if ($('#fgts_mei-file').val() !== '' && $('#fgts_mei-file').val() !== undefined) {
+                                anexo.append("Fgtsmei", $('#fgts_mei-file').get(0).files[0]);
+                            }
+                    
+                            if ($('#certidao_negativa_federal_mei-file').val() !== '' && $('#certidao_negativa_federal_mei-file').val() !== undefined) {
+                                anexo.append("CertificadoNegativaFederalMei", $('#certidao_negativa_federal_mei-file').get(0).files[0]);
+                            }
+                             if ($('#certidao_negativa_municipal_estadual_mei-file').val() !== '' && $('#certidao_negativa_municipal_estadual_mei-file').val() !== undefined) {
+                                anexo.append("CertificadoNegativaEstadualMei", $('#certidao_negativa_municipal_estadual_mei-file').get(0).files[0]);
+                            }
+                        }
+
+                        if (tipoPessoa == "4") {
+                            if ($('#cnpj_acessoria-file').val() !== '' && $('#cnpj_acessoria-file').val() !== undefined) {
+                                anexo.append("Cnpjacessoria", $('#cnpj_acessoria-file').get(0).files[0]);
+                                    }
+                            if ($('#fgts_acessoria-file').val() !== '' && $('#fgts_acessoria-file').val() !== undefined) {
+                                anexo.append("Fgtsacessoria", $('#fgts_acessoria-file').get(0).files[0]);
+                            }
+                            if ($('#cs_eirelli_associacao-file').val() !== '' && $('#cs_eirelli_associacao-file').val() !== undefined) {
+                                anexo.append("Cseirelliassociacao", $('#cs_eirelli_associacao-file').get(0).files[0]);
+                            }
+                            if ($('#estatuto_associacao-file').val() !== '' && $('#estatuto_associacao-file').val() !== undefined) {
+                                anexo.append("Estatutoassociacao", $('#estatuto_associacao-file').get(0).files[0]);
+                            }
+                            if ($('#requerimento_ei_associacao-file').val() !== '' && $('#requerimento_ei_associacao-file').val() !== undefined) {
+                                anexo.append("RequerimentoEiAssociacao", $('#requerimento_ei_associacao-file').get(0).files[0]);
+                            }
+                            if ($('#certidao_negativa_federal_associacao-file').val() !== '' && $('#certidao_negativa_federal_associacao-file').val() !== undefined) {
+                                anexo.append("CertidaoNegativaFederalAssociacao", $('#certidao_negativa_federal_associacao-file').get(0).files[0]);
+                            }
+                            if ($('#certidao_negativa_municipal_estadual_associacao-file').val() !== '' && $('#certidao_negativa_municipal_estadual_associacao-file').val() !== undefined) {
+                                anexo.append("CertidaoNegativaEstadualAssociacao", $('#certidao_negativa_municipal_estadual_associacao-file').get(0).files[0]);
+                            }
+                            if ($('#estatuto_social_associacao-file').val() !== '' && $('#estatuto_social_associacao-file').val() !== undefined) {
+                                anexo.append("EstatutoSocialAssociacao", $('#estatuto_social_associacao-file').get(0).files[0]);
+                            }
+                            if ($('#estatuto_associacao_representante-file').val() !== '' && $('#estatuto_associacao_representante-file').val() !== undefined) {
+                                anexo.append("EstatutoAssociacaoRepresentante", $('#estatuto_associacao_representante-file').get(0).files[0]);
+                            }
+                        }
+                                                
+                        //verificar o tamanho de todos os arquivos
+                        let tamanhoArquivo = ((portfolioClipping[0].size / 1024) / 1024).toFixed(2);//resultado em MB
+
+                        if (tamanhoArquivo) {
+                            if (tipoPessoa > 0 || tipoPessoa !== undefined) {
+                                $.ajax({
+                                    url: "@Url.Action("anexar-curriculo-edital")",
+                                    type: "POST",
+                                    processData: false,
+                                    contentType: false,
+                                    data: anexo,
+                                    beforeSend: function () {
+                                        $.LoadingOverlay("show",
+                                            {
+                                                background: "rgba(176, 177, 178, 0.5)",
+                                                text: "Enviando..."
+                                            });
+                                    },
+                                    complete: function () {
+                                        $.LoadingOverlay("hide");
+                                    },
+                                    success: function (data) {
+                                        if (data.code === 1) {
+                                            noty({
+                                                text: data.message,
+                                                type: data.classAlert,
+                                                timeout: 2500,
+                                                progressBar: true
+                                            });
+
+                                            limparCampos();
+
+                                            $('#modalCargo').modal('hide');
+
+                                            $('#table-cargos').load(location.href + ' #table-cargos>*',
+                                                function () {
+                                                    $('[data-toggle="tooltip"]').tooltip();
+                                                });
+                                        } else {
+                                            noty({
+                                                text: data.message,
+                                                type: data.classAlert,
+                                                timeout: 2500,
+                                                progressBar: true
+                                            });
+                                        }
+                                    },
+                                    error: function (err) {
+                                        noty({
+                                            text: 'Falha ao enviar o curriculo',
+                                            type: 'error',
+                                            timeout: 2500,
+                                            progressBar: true
+                                        });
+                                    }
+                                });
+                            } else {
+                            noty({
+                                text: 'É necessário escolher um tipo de usuário (pessoa física, jurídica, mei, ou associação)',
+                                type: 'warning',
+                                timeout: 3500,
+                                progressBar: true
+                            });
+                            }
+                           
+                        } else {
+                            noty({
+                                text: 'O Arquivo ultrapassou o tamanho máximo permite que é de 300 Mb',
+                                type: 'warning',
+                                timeout: 3500,
+                                progressBar: true
+                            });
+                        }
+                    } else {
+                        noty({
+                            text: 'Preencha todos os campos da Pessoa ',
+                            type: 'warning',
+                            timeout: 2500,
+                            progressBar: true
+                        });
+                    }
+        })
+        
+        //Função que ao selecionar tipo de Pessoa (Física, Jurídica, Jurídica MEI, Associação) muda os tipos de Arquivos para envio.
+        function mostrarDocumentos() {
+            // $('Cpf').val('');
+            // if (tipoPessoa > 1) {
+            //     $('labelCpf').text('CNPJ');
+            //     $('Cpf').mask("00.000.000/0000-00");
+            // } else {
+            //     $('labelCpf').text('CPF');
+            //     $('Cpf').mask("000.000.000-00");
+            // }
+
+            // console.log($('labelCpf'));
+            $.LoadingOverlay("show",
+                {
+                    background: "rgba(176, 177, 178, 0.5)",
+                    text: "Carregando..."
+                });
+            var tipoPessoa = document.getElementById("tipoPessoa").value;
+            var documentos = document.getElementsByClassName("documentos");
+
+            // Esconde todos os documentos
+            for (var i = 0; i < documentos.length; i++) {
+                documentos[i].style.display = "none";
+            }
+
+            // Mostra os documentos correspondentes ao tipo de pessoa selecionado
+            if (tipoPessoa === "1") { // Pessoa Física
+                document.getElementById("drop-area-rgcnh").style.display = "block";
+                document.getElementById("drop-area-cpf").style.display = "block";
+                document.getElementById("drop-area-pis").style.display = "block";
+                document.getElementById("drop-area-comprovante_bancario").style.display = "block";
+                document.getElementById("drop-area-certificado_escolar").style.display = "block";
+                document.getElementById("drop-area-comprovante_residencia").style.display = "block";
+
+            } else if (tipoPessoa === "2") { // Pessoa Jurídica
+                document.getElementById("drop-area-cnpj").style.display = "block";
+                document.getElementById("drop-area-fgts").style.display = "block";
+                document.getElementById("drop-area-cs_eirelli").style.display = "block";
+                document.getElementById("drop-area-estatuto").style.display = "block";
+                document.getElementById("drop-area-requerimento_ei").style.display = "block";
+                document.getElementById("drop-area-certidao_negativa_federal").style.display = "block";
+                document.getElementById("drop-area-certidao_negativa_municipal_estadual").style.display = "block";
+                document.getElementById("drop-area-estatuto_social").style.display = "block";
+                document.getElementById("drop-area-regularidade_fgts").style.display = "block";
+
+            }
+            else if (tipoPessoa === "3") { // Pessoa Jurídica MEI
+                document.getElementById("drop-area-mei").style.display = "block";
+                document.getElementById("drop-area-ccmei").style.display = "block";
+                document.getElementById("drop-area-cnpj_mei").style.display = "block";
+                document.getElementById("drop-area-fgts_mei").style.display = "block";
+                document.getElementById("drop-area-certidao_negativa_federal_mei").style.display = "block";
+                document.getElementById("drop-area-certidao_negativa_municipal_estadual_mei").style.display = "block";
+            }
+            else if (tipoPessoa === "4") { // Associações
+                document.getElementById("drop-area-cnpj_acessoria").style.display = "block";
+                document.getElementById("drop-area-fgts_acessoria").style.display = "block";
+                document.getElementById("drop-area-cs_eirelli_associacao").style.display = "block";
+                document.getElementById("drop-area-estatuto_associacao").style.display = "block";
+                document.getElementById("drop-area-requerimento_ei_associacao").style.display = "block";
+                document.getElementById("drop-area-certidao_negativa_federal_associacao").style.display = "block";
+                document.getElementById("drop-area-certidao_negativa_municipal_estadual_associacao").style.display = "block";
+                document.getElementById("drop-area-estatuto_social_associacao").style.display = "block";
+                document.getElementById("drop-area-estatuto_associacao_representante").style.display = "block";
+            }
+
+            $.LoadingOverlay("hide");
+
+        }
+
+        function limparCampos(){
+            $('#Nome').val("");
+            $('#Cpf').val("");
+            $('#Email').val("");
+            $('#tipoPessoa').val("");
+             //$('#curriculo-file').val("");
+             //$('#diploma-file').val("");
+             //$('#experiencia-file').val("");
+            $('#portifolio-file').val("");
+            $('#tecnica-file').val("");
+            $('#anexo1-file').val("");
+            $('#anexo2-file').val("");
+            $('#anexo3-file').val("");
+            $('#anexo4-file').val("");
+            $('#anexo5-file').val("");
+            $('#anexo6-file').val("");
+
+            // $('#rgcnh-file').val("");
+            // $('#cpf-file').val("");
+            // $('#pis-file').val("");
+            // $('#comprovante_bancario-file').val("");
+            // $('#certificado_escolar-file').val("");
+            // $('#comprovante_residencia-file').val("");
+            //fisica
+            $('#file-rgcnh').text("Clique para seleciona o arquivo");
+            $('#file-cpf').text("Clique para seleciona o arquivo");
+            $('#file-pis').text("Clique para seleciona o arquivo");
+            $('#file-comprovante_bancario').text("Clique para seleciona o arquivo");
+            $('#file-certificado_escolar').text("Clique para seleciona o arquivo");
+            $('#file-comprovante_residencia').text("Clique para seleciona o arquivo");
+            //juridica
+            $('#file-cnpj').text("Clique para seleciona o arquivo");
+            $('#file-fgts').text("Clique para seleciona o arquivo");
+            $('#file-cs_eirelli').text("Clique para seleciona o arquivo");
+            $('#file-estatuto').text("Clique para seleciona o arquivo");
+            $('#file-requerimento_ei').text("Clique para seleciona o arquivo");
+            $('#file-certidao_negativa_federal').text("Clique para seleciona o arquivo");
+            $('#file-certidao_negativa_municipal_estadual').text("Clique para seleciona o arquivo");
+            $('#file-estatuto_social').text("Clique para seleciona o arquivo");
+            $('#file-regularidade_fgts').text("Clique para seleciona o arquivo");
+            //juridica MEI
+            $('#file-mei').text("Clique para seleciona o arquivo");
+            $('#file-ccmei').text("Clique para seleciona o arquivo");
+            $('#file-cnpj_mei').text("Clique para seleciona o arquivo");
+            $('#file-fgts_mei').text("Clique para seleciona o arquivo");
+            $('#file-certidao_negativa_federal_mei').text("Clique para seleciona o arquivo");
+            $('#file-certidao_negativa_municipal_estadual_mei').text("Clique para seleciona o arquivo");
+            //Associação
+            $('#file-cnpj_acessoria').text("Clique para seleciona o arquivo");
+            $('#file-fgts_acessoria').text("Clique para seleciona o arquivo");
+            $('#file-cs_eirelli_associacao').text("Clique para seleciona o arquivo");
+            $('#file-estatuto_associacao').text("Clique para seleciona o arquivo");
+            $('#file-requerimento_ei_associacao').text("Clique para seleciona o arquivo");
+            $('#file-certidao_negativa_federal_associacao').text("Clique para seleciona o arquivo");
+            $('#file-certidao_negativa_municipal_estadual_associacao').text("Clique para seleciona o arquivo");
+            $('#file-estatuto_associacao_representante').text("Clique para seleciona o arquivo");
+            
+        }
+    </script>
+}

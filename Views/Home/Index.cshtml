@@ -1,0 +1,312 @@
+﻿@inject Microsoft.Extensions.Configuration.IConfiguration Configuration
+@using SiteSesc.Models.Admin
+@using SiteSesc.Models.ModelPartialView;
+@using System.Web
+
+@{
+    ViewData["Title"] = Configuration["Ambiente:Estado"];
+    var listaCursos = ViewBag.ListCursos as List<CursoItem>;
+    var listaNoticias = ViewBag.ListNoticias as List<NoticiaCard>;
+    var listaCategorias = ViewBag.ListCategorias as List<CategoriaCard>;
+    var listProgramacao = ViewBag.ListProgramacao as List<EventoCard>;
+    var listaAreas = ViewBag.Areas as List<Area>;
+    var banners = ViewBag.Banners as List<Banner>;
+    var activeSlide = true;
+    var active = "";
+    var indicator = 0;
+    var unidades = ViewBag.Unidades as List<UnidadeOperacional>;
+}
+
+
+<style>
+    .container-banner {
+        margin: 0px !important;
+        max-width: 100% !important
+    }
+
+    .active {
+        display: block; /* Apenas cards ativos são exibidos */
+    }
+
+    .inative {
+        display: none; /* Apenas cards ativos são exibidos */
+    }
+
+    .credencial-banner-content {
+        max-width: 100%; /* Garante que a imagem não exceda a largura do contêiner */
+        height: 150px; /* Mantém a proporção da imagem */
+        transition: transform 0.3s ease-in-out; /* Transição suave para transformação */
+        border-radius: 16px;
+    }
+
+    .position-relative {
+        position: relative; /* Permite posicionamento absoluto dentro deste contêiner */
+    }
+
+    .click-icon {
+        transition: transform 0.3s ease-in-out; /* Transição suave para transformação */
+        cursor: pointer; /* Muda o cursor para indicar que é clicável */
+        vertical-align: middle; /* Para centralizar o ícone verticalmente */
+    }
+
+    .link-text:hover .click-icon {
+        transform: scale(1.8); /* Aumenta o tamanho do ícone ao passar o mouse */
+    }
+
+    a:hover .credencial-banner-content {
+        transform: scale(1.05); /* Aumenta levemente a imagem ao passar o mouse */
+    }
+
+    .course-wrap {
+        width: 100%;
+        margin-left: 0;
+        margin-right: 0;
+        background-color: rgba(243,244,253,0.7) !important;
+    }
+
+    /* area data credencial*/
+
+    .flip-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        max-width: 190px;
+        margin:auto;
+    }
+
+    .flipper {
+        position: relative;
+        width: 100%;
+        max-width: 300px;
+        height: 150px;
+        padding: 0;
+        transition: transform 1.0s ease;
+        transform-style: preserve-3d;
+    }
+
+    .containerCredencial:hover .flipper, .credencialArea:focus .flipper {
+        transform: rotateY(180deg);
+    }
+
+
+    .credencialAreaUtil{
+        display: flex;
+        margin: 1.25rem;
+        width: calc(100% - 2.5rem);
+        padding: 1rem;
+        border-radius: 0.5rem;
+        flex-direction: row;
+    }
+
+    @@media only screen and (max-width: 767px){
+        .credencialAreaUtil{
+            flex-direction: column;
+        }
+        .flip-container{
+            margin-bottom: 1rem;
+            max-width: 160px;
+            max-height: 128px;
+            margin-top: 0% !important;
+        }
+    }
+
+    .credencialArea:focus .credencialAreaUtil, .credencialArea:hover .credencialAreaUtil{ 
+        background: white;
+    }
+    
+    .credencialArea:focus, .credencialArea:hover  {
+        @* box-shadow: inset 0px 0px 0px 5px linear-gradient(180deg, rgba(246,190,0,1) 20%, rgba(246,190,0,0) 100%); *@
+        box-shadow: inset 0 0 3px 2px white, inset 0 0 12px 12px white;
+        background: rgba(246,190,0,1);
+    }
+
+    .front, .back {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        backface-visibility: hidden;
+    }
+
+    .back {
+        transform: rotateY(180deg);
+    }
+    
+    .front svg, .back svg {
+        width: 200%;
+        max-width: 160px;
+    }
+
+    .front svg {
+        color: #004c99;
+    }
+
+    .back svg {
+        color: rgb(246,190,0);
+    }
+
+    .flip-container:nth-child(2) .back, .flip-container:nth-child(3) .back{
+        transform: rotateX(180deg);
+    }
+
+    .container,
+    .programacao-Container,
+    .container-custom-1,
+    .tab-content,
+    .areaTitulo {
+        background-color: transparent !important; /* Remove o fundo */
+    }
+
+    .section-background{
+        background-color: transparent !important; /* Substitua pelo código da cor desejada */ 
+    }
+
+    .section-background2{
+        background-color: transparent !important;
+    }
+
+    
+    /* Programação e programa*/
+    
+    .prog-card-container{
+        width: calc(100% - 2rem );
+        margin: auto;
+        overflow-x: auto;
+        padding: 1rem 1rem;
+        display: inline-grid;
+        justify-content: space-between;
+	    gap: 20px;
+        grid-template-columns: repeat(5, auto);
+        grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+    }
+
+    .prog-card-container::-webkit-scrollbar-track{
+        -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+        border-radius: 10px;
+        background-color: #F5F5F5;
+    }
+
+    .prog-card-container::-webkit-scrollbar{
+        width: 12px;
+        background-color: #F5F5F5;
+    }
+
+    .prog-card-container::-webkit-scrollbar-thumb{
+        border-radius: 10px;
+        -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+        background-color: #004c99;
+    }
+
+    .category-item{
+        width: 180px ;
+        transition: all 1s ease ;
+    }
+
+    .cardHover{
+        position: relative;
+    }
+
+    .cardHover::before{
+        box-shadow: inset 0px 0px 0px 3px rgba(246,190,0,0);
+        width: 180px;
+        content: " ";
+        height: 257px;
+        transition: all 0.5s ease ;
+        position: absolute;
+        border-radius: 10px;
+    }    
+
+    .cardHover:focus::before, .cardHover:hover::before{
+        transition: all 0.2s ease ;
+        box-shadow: inset 0px 0px 0px 3px rgba(246,190,0,1);       
+    }
+
+@@media screen and (max-width: 800px) {
+
+	.prog-card-container {
+		overflow-x: scroll !important;
+		display: flex !important;
+	}
+
+	.category-item {
+		width: auto !important;
+		flex-shrink: 0!important;
+	}
+}
+
+</style>
+
+
+<!-- ATIVIDADES area start -->
+<section class="course-area section-background2">
+    <div class="container-fluid container-custom-1 p-0">
+        <div class="course-wrap pt-60 pb-60">
+            <div class="container">
+                <div class="row">
+                    <div class="col-xl-12">
+                        <div class="course-section-area text-center">
+                            <div class="section-area section-area-top">
+                                <h2 class="section-title mb-20">Atividades</h2> 
+                                <div class="row">
+                                    <div class="col-md"></div>
+                                    <div class="col-md">
+                                        <select id="select-atv-uop" class="form-control mb-30 text-center" onchange="atividadesPorUop()">
+                                            <option>Selecione uma unidade</option>
+                                            @foreach (var item in unidades)
+                                            {   
+                                                string nomeUnidade = item.Nome;
+                                                <option class="atividade-unidade-option" value="@item.Cduop">@nomeUnidade</option>
+                                            }
+                                        </select>
+                                    </div>
+                                    <div class="col-md"></div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xl-12">
+                        <div class="course-tab">
+                            <ul class="nav nav-pills" id="pills-tab" role="tablist">
+
+                               
+
+                                @if (listaAreas != null)
+                                {
+                                    foreach (var area in listaAreas)
+                                    {
+                                <li class="nav-item" role="presentation" data-category="category-@area.Id">
+                                    <a onclick="getAtividadesId(@area.Id)" class="nav-link " id="pills-@area.Id-tab" type="button" role="tab" aria-controls="pills-@area.Id" aria-selected="false">@area.Nome</a>
+                                </li>
+                                    }
+                                }
+                                <li class="nav-item" role="presentation">
+                                    <a class="nav-link" style="color:dodgerblue" asp-action="Atividades" asp-controller="Atividade" role="tab" aria-controls="pills-home" aria-selected="true">
+                                        Ver todas
+                                    </a>
+                                </li>
+
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="course-inner">
+                    <div class="tab-content" id="pills-tabContent">
+                        <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab" tabindex="0">
+                            <div class="row">
+                                <div id="atividadesContainer" class="row"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- ATIVIDADES area end -->
+&nbsp;
+<script src="~/js/atividade/searchatividade.js"></script>
+
+

@@ -1,0 +1,420 @@
+﻿@using SiteSesc.Models.ModelPartialView;
+
+@{
+    var listaCategorias = ViewBag.ListCategorias as List<CategoriaCard>;
+}
+<link href="~/css/public/credencial.css" rel="stylesheet" />
+
+
+<style>
+    .fixo-banner-container{
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .fixo-banner-content{
+        width: 100%;
+        max-width: 1600px;
+        height: auto;
+        margin: auto;
+    }
+
+    .fixo-banner-content img{
+        width: calc(100% - 2rem);
+        margin: 1rem;
+        max-width: 1600px;
+        border-radius: 1rem;
+    }
+
+    .fixo-info-container{
+        width: 100%;
+        max-width: 1600px;
+        height: auto;
+        margin: auto;
+        padding: 1rem 2rem;
+    }
+
+    .unidade-tutulo{
+        color: #004c99;
+        font-size: clamp(18px, 5vw, 24px);
+        font-weight: bold;
+        cursor: pointer;
+        margin: 1.5rem 0;
+        text-decoration: underline;
+        text-decoration-color: rgba(0,76,153, 0);
+        transition: ease 1.0s;
+        font-style: italic;
+    }
+
+    .unidade-tutulo:hover{
+        text-decoration: underline;
+        text-decoration-color: rgba(0,76,153, 1);
+        transition: ease 0.25s;
+    }
+
+
+    .unidade-sub{
+        display: none;
+        background: #ececea;
+        border-radius: 1rem;
+        padding: 1rem;
+    }
+
+    .unidade-sub-contanier{
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: start;
+        gap: 1rem;
+        padding: 0 1rem;
+        width: 100%;
+    }
+    .unidade-text{
+        width: 60%;
+    }
+
+    .unidade-text p{
+        font-size:  clamp(1.0rem, 5vw, 1.3rem);;
+    }
+
+    .unidade-sub iframe{
+        display: inline-block;
+        width: 100%;
+        max-width: 500px;
+        height: 100%;
+        max-height: 500px;
+        min-height: 300px;
+        border-radius: 1rem;
+        border: 1px solid #CCC;
+    }
+
+    @@media screen and (max-width: 767px) {
+        .unidade-sub-contanier{
+            flex-direction: column;
+        }
+
+        .unidade-text{
+            width: 100%;
+        }
+
+    }
+
+</style>
+
+<div class="fixo-banner-container">
+    <div class="fixo-banner-content">
+        <img src="~/images/static/bg_fale_conosco.webp" />
+    </div>
+</div>
+
+
+<div class="fixo-info-container">
+    <h3><strong>Central de Relacionamento</strong></h3>
+    <div class="unidade-text">
+        <p><strong>Nosso horário de funcionamento: de segunda-feira à sexta-feira das 8h30 às 17h30.</strong></p>
+        <p><strong><em>Telefones para contato:</em></strong></p>
+        <p><a href="tel:+559140059501" class="link-primary">(91) 4005-9501</a> você pode ligar do 01 ao 08.</p>
+
+        <p><strong><em>E-mail para contato:</em></strong></p>
+        <p><a href="mailto:relacionamentocomcliente@pa.sesc.com.br" class="link-primary">relacionamentocomcliente@pa.sesc.com.br</a>.</p>
+        <br>
+    </div>
+
+
+    <h3><strong>Contato de nossas Unidades</strong></h3>
+
+    <div id="u00" class="unidade-tutulo">Sesc em Altamira</div>
+    <div id="u00sub" class="unidade-sub">
+        <div class="unidade-sub-contanier">
+            <div class="unidade-text">
+                <p>Res. Cidade Nova, Quadra 23, Lote 1 - Bela Vista, Altamira - PA, 68378-329</p>
+                <p><a href="tel:+5591981579756" class="link-primary">(91) 98157-9756</a></p>
+            </div>
+            <iframe class="unidade-iframe"
+            scrolling="no" 
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d7967.1627200972625!2d-52.26786703022461!3d-3.2040858999999924!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x929239cc4c5a97d9%3A0x93879786013883fe!2sSesc%20Altamira!5e0!3m2!1spt-BR!2sbr!4v1723649413008!5m2!1spt-BR!2sbr" >
+            </iframe>
+        </div>
+    </div>
+
+    <div id="u01" class="unidade-tutulo">Sesc em Ananindeua - unidade e escola</div>
+    <div id="u01sub" class="unidade-sub">
+        <div class="unidade-sub-contanier">
+            <div class="unidade-text">
+                <p><strong><em>Unidade</em></strong></p>
+                <p>Av. Governador H&eacute;lio Gueiros, 110</p>
+                <p>Secretaria da Ger&ecirc;ncia: <a href="tel:+5591974007532" class="link-primary">(91) 97400-7532</a></p>
+                <p>Infraestrutura (Ger&ecirc;ncia): <a href="tel:+5591984033043" class="link-primary">(91) 98403-3043</a></p>
+                <p>Central de Relacionamento / Caixa: <a href="tel:+5591974007532" class="link-primary">(91) 97400-7532</a></p>
+                <p>Cl&iacute;nica Odontol&oacute;gica: <a href="tel:+5591981579969" class="link-primary">(91) 98157-9969</a></p>
+                <p><strong><em>Escola Sesc</em></strong></p>
+                <p>Av. Governador H&eacute;lio Gueiros, n&ordm; 110</p>
+                <p><a href="tel:+559132450133" class="link-primary">(91) 3245-0133</a> e <a href="tel:+5591982182608" class="link-primary">(91) 98218-2608</a></p>
+            </div>
+            <iframe class="unidade-iframe"
+            scrolling="no" 
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3988.690396880441!2d-48.42314062430947!3d-1.3624203357155666!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x92a461d6842679ab%3A0x75de1c376beb3720!2sSesc%20em%20Ananindeua!5e0!3m2!1spt-BR!2sbr!4v1713192911506!5m2!1spt-BR!2sbr" >
+            </iframe>
+        </div>
+    </div>
+
+    <div id="u02" class="unidade-tutulo">Sesc Casa da M&uacute;sica</div>
+    <div id="u02sub" class="unidade-sub">
+        <div class="unidade-sub-contanier">
+            <div class="unidade-text">
+                <p>Tv. Quintino Bocaiuva, n&ordm; 589 (esquina com Manoel Barata)</p>
+                <p><a href="tel:+559132220359" class="link-primary">(91) 3222-0359</a></p>
+            </div>
+            <iframe class="unidade-iframe" 
+            scrolling="no" 
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3988.548146669634!2d-48.49396432430898!3d-1.4457864358227344!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x92a48e96338975db%3A0x8ea66349aea2976d!2sSesc%20Casa%20da%20M%C3%BAsica!5e0!3m2!1spt-BR!2sbr!4v1713193563691!5m2!1spt-BR!2sbr">
+            </iframe>
+        </div>
+    </div>
+
+    <div id="u03" class="unidade-tutulo">Casa Sesc de Artes C&ecirc;nicas</div>
+    <div id="u03sub" class="unidade-sub">
+        <div class="unidade-sub-contanier">
+            <div class="unidade-text">
+                <p>Avenida Boulevard Castilhos Fran&ccedil;a, 277</p>
+                <p><a href="tel:+5591984861498" class="link-primary">(91) 98486-1498</a></p>
+            </div>
+            <iframe  class="unidade-iframe" 
+            scrolling="no" 
+            src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d493.7322099927899!2d-48.49884439680049!3d-1.4487707067786075!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1spt-BR!2sbr!4v1713202401999!5m2!1spt-BR!2sbr">
+            </iframe>
+        </div>
+    </div>
+
+    <div id="u04" class="unidade-tutulo">Sesc em Castanhal</div>
+    <div id="u04sub" class="unidade-sub">
+        <div class="unidade-sub-contanier">
+            <div class="unidade-text">
+                <p>Av. Bar&atilde;o do Rio Branco, n&ordm; 10 &ndash; Nova Olinda</p>
+                <p><a href="tel:+559137122294" class="link-primary">(91) 3712-2294</a></p>
+            </div>
+            <iframe  class="unidade-iframe" 
+            scrolling="no" 
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3988.80099902957!2d-47.931441!3d-1.2938959999999944!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0xc5253ecca3e3e2f!2sSESC(Servi%C3%A7o+Social+do+Com%C3%A9rcio)+-+Castanhal-PA!5e0!3m2!1spt-BR!2sbr!4v1408457614791"></iframe>
+            </iframe>
+        </div>
+    </div>
+    
+    <div id="u05" class="unidade-tutulo">Escola Sesc em Castanhal</div>
+    <div id="u05sub" class="unidade-sub">
+        <div class="unidade-sub-contanier">
+            <div class="unidade-text">
+                <p>Alameda Ryota Oyama s/n (ao lado do parque de Exposi&ccedil;&atilde;o Agropecu&aacute;ria)</p>
+                <p><a href="tel:+5591982182608" class="link-primary">(91) 98218-2608</a></p>
+            </div>
+            <iframe  class="unidade-iframe" 
+            scrolling="no" 
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1409.7406271697073!2d-47.951526292278594!3d-1.2939015156886884!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x92a5af3b264c1ebf%3A0x42c83fd200e00672!2sEscola%20Sesc%20Castanhal!5e0!3m2!1spt-BR!2sbr!4v1723495546206!5m2!1spt-BR!2sbr" >
+            </iframe>
+        </div>
+    </div>
+
+    <div id="u06" class="unidade-tutulo">Sesc Doca</div>
+    <div id="u06sub" class="unidade-sub">
+        <div class="unidade-sub-contanier">
+            <div class="unidade-text">
+                <p>Rua Senador Manoel Barata, n&ordm; 1873</p>
+                <p><a href="tel:+559140059501" class="link-primary">(91) 4005-9501</a> do 01 até o 08</p>
+                <p><a href="tel:+5591986054632" class="link-primary">(91) 98605-4632</a></p>
+                <p>Turismo Social: <a href="tel:+5591981579968" class="link-primary">(91) 98157-9968</a></p>
+            </div>
+            <iframe  class="unidade-iframe" 
+            scrolling="no" 
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1409.7406271697073!2d-47.951526292278594!3d-1.2939015156886884!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x92a5af3b264c1ebf%3A0x42c83fd200e00672!2sEscola%20Sesc%20Castanhal!5e0!3m2!1spt-BR!2sbr!4v1723495546206!5m2!1spt-BR!2sbr" >
+            </iframe>
+        </div>
+    </div>
+
+    <div id="u07" class="unidade-tutulo">Sesc Ler em Benevides</div>
+    <div id="u07sub" class="unidade-sub">
+        <div class="unidade-sub-contanier">
+            <div class="unidade-text">
+                <p>Av. Joaquim Pereira de Queiroz, 690, Benevides/PA - Presidente Medici</p>
+                <p><a href="tel:+5591981574114" class="link-primary">(91) 98157-4114</a></p>
+            </div>
+            <iframe  class="unidade-iframe" 
+            scrolling="no" 
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d11281.71413196497!2d-48.259741880320334!3d-1.3636964415320567!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x92a45874938a3817%3A0x5ffffa93ec2ff84a!2sSESC!5e0!3m2!1spt-BR!2sbr!4v1723496265852!5m2!1spt-BR!2sbr" >
+            </iframe>
+        </div>
+    </div>
+
+    <div id="u08" class="unidade-tutulo">Sesc Ler Inhangapi</div>
+    <div id="u08sub" class="unidade-sub">
+        <div class="unidade-sub-contanier">
+            <div class="unidade-text">
+                <p>Trav. Pio XII, s/n, Inhangapi/PA - Vila Nova</p>
+                <p><a href="tel:+5591984035492" class="link-primary">(91) 98403-5492</a></p>
+            </div>
+            <iframe  class="unidade-iframe" 
+            scrolling="no" 
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3988.5738432966546!2d-47.910081624309065!3d-1.4310862358030136!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x92a50f422297397b%3A0xa22d2665f8ec53b1!2sCentro%20Educacional%20Sesc%20Inhangapi!5e0!3m2!1spt-BR!2sbr!4v1723496356676!5m2!1spt-BR!2sbr" >
+            </iframe>
+        </div>
+    </div>
+
+    <div id="u09" class="unidade-tutulo">Sesc Ler S&atilde;o Francisco do Par&aacute;</div>
+    <div id="u09sub" class="unidade-sub">
+        <div class="unidade-sub-contanier">
+            <div class="unidade-text">
+                <p>Rodovia PA 320, Km 19, S&atilde;o Francisco do Par&aacute;/PA Lote Agr&iacute;cola, 11</p>
+                <p><a href="tel:+5591984084999" class="link-primary">(91) 98408-4999</a></p>
+            </div>
+            <iframe  class="unidade-iframe" 
+            scrolling="no" 
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3988.9775190683067!2d-47.806486524310614!3d-1.1762926355172922!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x92a5be881796f351%3A0x7fc62bfec292df1e!2sSesc%20Ler%20S%C3%A3o%20Francisco%20do%20Par%C3%A1!5e0!3m2!1spt-BR!2sbr!4v1723496519272!5m2!1spt-BR!2sbr">
+            </iframe>
+        </div>
+    </div>
+
+    <div id="u10" class="unidade-tutulo">Sesc Ler Salinópolis</div>
+    <div id="u10sub" class="unidade-sub">
+        <div class="unidade-sub-contanier">
+            <div class="unidade-text">
+                <p>Rodovia PA 124, Km 12, Salin&oacute;polis/PA - Vila da Coremas</p>
+                <p><a href="tel:+559138591144" class="link-primary">(91) 3859-1144</a></p>
+                <p><a href="tel:+5591981671188" class="link-primary">(91) 98167-1188</a></p>
+            </div>
+            <iframe  class="unidade-iframe" 
+            scrolling="no" 
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d4744.376231520283!2d-47.3120976612638!3d-0.6900473978234772!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x92a8a2db5694dfdf%3A0xcf3263d3cafd8a47!2sSESC%20Servi%C3%A7o%20Social%20do%20Com%C3%A9rcio!5e0!3m2!1spt-BR!2sbr!4v1723560581974!5m2!1spt-BR!2sbr">
+            </iframe>
+        </div>
+    </div>
+
+    <div id="u11" class="unidade-tutulo">Sesc em Marabá</div>
+    <div id="u11sub" class="unidade-sub">
+        <div class="unidade-sub-contanier">
+            <div class="unidade-text">
+                <p>Av. Transamazônica, 1925</p>
+                <p>Telefones fixos: <a href="tel:+559433244344" class="link-primary">(94) 3324-4344</a> e <a href="tel:+559433244444" class="link-primary">(94) 3324-4444</a></p>
+                <p>Central de Atendimento: <a href="tel:+5591984863582" class="link-primary">(91) 98486-3582</a> (segunda a sexta, das 08h às 20h30)</p>
+                <p>Academia: <a href="tel:+5591984560447" class="link-primary">(91) 98456-0447</a></p>
+                <p>Clínica Odontológica em Marabá: <a href="tel:+5591981573600" class="link-primary">(91) 98157-3600</a>;</p>
+                <p>Clínica Odontológica em Rondon do Pará: <a href="tel:+5591986052368" class="link-primary">(91) 98605-2368</a>;</p>
+            </div>
+            <iframe  class="unidade-iframe" 
+            scrolling="no" 
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3972.3211643714535!2d-49.130145424277714!3d-5.367890453710807!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x92c3a759e04ab2bf%3A0x20299a906b1ef28c!2sSesc%20Marab%C3%A1%20-%20Servi%C3%A7o%20Social%20do%20Com%C3%A9rcio!5e0!3m2!1spt-BR!2sbr!4v1723560877485!5m2!1spt-BR!2sbr">
+            </iframe>
+        </div>
+    </div>
+
+    <div id="u12" class="unidade-tutulo">Sesc em Santarém</div>
+    <div id="u12sub" class="unidade-sub">
+        <div class="unidade-sub-contanier">
+            <div class="unidade-text">
+                <p>Rua Wilson Dias da Fonseca, n&ordm; 535</p>
+                <p><a href="tel:+559332225126" class="link-primary">(93) 3222-5126</a></p>
+                <p><a href="tel:+559335221426" class="link-primary">(93) 3522-1426</a></p>
+                <p><a href="tel:+559335232598" class="link-primary">(93) 3523-2598</a></p>
+                <p><a href="tel:+5593991692957" class="link-primary">(93) 99169-2957</a></p>
+            </div>
+            <iframe  class="unidade-iframe" 
+            scrolling="no" 
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3986.264296259149!2d-54.71648602430279!3d-2.418541237913405!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9288f994243c86bb%3A0xa4e48018867f0055!2sSesc%20Santar%C3%A9m%20-%20Servi%C3%A7o%20Social%20do%20Com%C3%A9rcio!5e0!3m2!1spt-BR!2sbr!4v1723560975670!5m2!1spt-BR!2sbr">
+            </iframe>
+        </div>
+    </div>
+
+    <div id="u13" class="unidade-tutulo">Restaurante Manoel Barata</div>
+    <div id="u13sub" class="unidade-sub">
+        <div class="unidade-sub-contanier">
+            <div class="unidade-text">
+                <p>Rua Senador Manoel Barata, n° 160, Bairro Campina, CEP: 66015-020, Belém/PA</p>
+                <p><a href="tel:+559140059536" class="link-primary">(91) 4005-9536</a></p>
+            </div>
+            <iframe  class="unidade-iframe" 
+            scrolling="no" 
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3353.943510012734!2d-48.5027076618603!3d-1.454107086777813!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x92a48ef3026b41b5%3A0x9048118a9afc527b!2sSesc%20-%20Restaurante%20do%20Comerci%C3%A1rio!5e0!3m2!1spt-BR!2sbr!4v1723646541078!5m2!1spt-BR!2sbr" >
+            </iframe>
+        </div>
+    </div>
+
+
+    <div id="u14" class="unidade-tutulo">Sesc Tenoné</div>
+    <div id="u14sub" class="unidade-sub">
+        <div class="unidade-sub-contanier">
+            <div class="unidade-text">
+                <p>Conjunto Residencial Maria Helena Coutinho, Tv. WE4 - 6a linha, S/N</p>
+                <p><a href="tel:+5591984074118" class="link-primary">(91) 98407-4118</a></p>
+            </div>
+            <iframe  class="unidade-iframe" 
+            scrolling="no" 
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3988.7595178415604!2d-48.43848412430972!3d-1.3200128356654033!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x92a460d9d171f425%3A0xc3b4a1abda53fb7e!2sSesc%20Tenon%C3%A9!5e0!3m2!1spt-BR!2sbr!4v1723561044397!5m2!1spt-BR!2sbr">
+            </iframe>
+        </div>
+    </div>
+
+
+    <div id="u15" class="unidade-tutulo">Sesc Ver-o-Peso</div>
+    <div id="u15sub" class="unidade-sub">
+        <div class="unidade-sub-contanier">
+            <div class="unidade-text">
+                <p>Boulevard Castilhos França, nº 522/523</p>
+                <p><a href="tel:+559130840472" class="link-primary">(91) 3084-0472</a> e <a href="tel:+5591984861498" class="link-primary">(91) 98486-1498</a></p>
+            </div>
+            <iframe  class="unidade-iframe" 
+            scrolling="no" 
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3988.7595178415604!2d-48.43848412430972!3d-1.3200128356654033!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x92a460d9d171f425%3A0xc3b4a1abda53fb7e!2sSesc%20Tenon%C3%A9!5e0!3m2!1spt-BR!2sbr!4v1723561044397!5m2!1spt-BR!2sbr">
+            </iframe>
+        </div>
+    </div>
+
+
+</div>
+
+
+<section class="category-area pt-120 pb-60">
+    <div class="container">
+        <div class="row">
+            <div class="col-xl-3 col-lg-3">
+                <div class="category-left pb-60">
+                    <div class="section-area">
+                        <h2 class="section-title mb-20">Aproveite nossos serviços</h2>
+                    </div>
+                    <div class="category-rol">
+                        <div class="category-prev">
+                            <i class="fa-solid fa-arrow-left"></i>
+                        </div>
+                        <div class="category-next">
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-9 col-lg-9">
+                <div class="category-wrap">
+                    <div class="category-active swiper pb-60">
+                        <div class="swiper-wrapper">
+                            @if (listaCategorias != null)
+                            {
+                                foreach (var categoria in listaCategorias)
+                                {
+                                    @await Html.PartialAsync("PartialView/_PartialViewCategoriaDetails", categoria)
+                                }
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    const titulo = document.querySelectorAll('.unidade-tutulo')
+    for (var i = 0 ; i < titulo.length; i++) {
+        titulo[i].addEventListener('click', function() {
+            $("#"+ this.id + "sub").slideToggle('middle')
+        });
+    }
+</script>

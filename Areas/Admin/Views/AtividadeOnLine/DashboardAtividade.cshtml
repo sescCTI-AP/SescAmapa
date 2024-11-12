@@ -1,0 +1,338 @@
+﻿@model SiteSesc.Models.ApiPagamento.AtividadeApi
+@using SiteSesc.Models.ApiPagamento.Relatorios
+@using SiteSesc.Models.SiteViewModels
+@using System.Collections;
+@{ 
+    ViewBag.Title = "Dashboard";
+    var inadimplentes = ViewBag.Inadimplentes;
+    var evasoes = ViewBag.Evasoes;
+    var vagasTotais = ViewBag.VagasTotais;
+    var inscritos = ViewBag.Inscritos;
+    var vagasdisponiveis = ViewBag.VagasDisponiveis;
+    var porcOcupada = ViewBag.PorcentagemOcupada;
+    var porcDisponviel = ViewBag.PorcentagemDisponivel;
+    var graficoES = ViewBag.GraficoEvasoesInscricoes as List<GraficoInscricoesEvasoes>;
+    var mesano = ViewBag.mesAno;
+    // var avaliacoes = ViewBag.Avaliacoes as List<AvaliacaoAtividadeCliente>;
+    decimal? rating = ViewBag.Rating;
+    int x = 0;
+    int limite = 5;
+}
+<link href="~/css/Shared/layout-geral.css" rel="stylesheet" />
+<style>
+    .yellow {
+        color: #ffd500
+    }
+
+    .titulo-grafico {
+        font-size: 18px;
+        font-weight: bold
+    }
+
+    .card no-change-theme {
+        border-radius: 20px !important
+    }
+
+
+    .label-top {
+        font-size: 48px;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+
+    .center-pai {
+        position: relative;
+        height: 150px;
+    }
+
+    div.grafico-rosca {
+        /*        height: 10em;*/
+        position: relative
+    }
+
+        div.grafico-rosca h1 {
+            margin: 0;
+            position: absolute;
+            top: 55%;
+            left: 50%;
+            margin-right: -50%;
+            transform: translate(-50%, -50%)
+        }
+
+    #renderizador .table td, .table th {
+        border-bottom: 1px solid #0064d4 !important;
+        border-top: 0px !important;
+        color: white !important;
+        padding-left: 0 !important;
+        padding-right: 0 !important
+    }
+</style>
+@if (Model != null)
+{
+    <div class="card no-change-theme border-0 limiter">
+        <div class="card-header border-0 bg-transparent p-0">
+            <h3 class="text-center text-bold"><b>@Model.dsusuario</b></h3>
+        </div>
+        <div class="card-body  ">
+            <div class="row ">
+                <div class="col-md-4">
+                    <div id="taxaOcupacao">
+                        <p class="text-center titulo-grafico">Taxa de ocupação</p>
+                        <div class="grafico-rosca">
+                            <canvas id="graficoRosca"></canvas>
+                            <h1>@porcOcupada%</h1>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-8">
+                    <div class="row">
+                        <div class="col-md p-0 m-2">
+                            <div class="card no-change-theme bg-gray center-pai border-0">
+                                <div class="card-header text-center border-0 bg-transparent">
+                                    <label>VAGAS TOTAIS</label>
+                                </div>
+                                <div class="card-body no-change-theme text-center ">
+                                    <h1 class="label-top">@vagasTotais</h1>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md p-0 m-2">
+                            <div class="card no-change-theme bg-info center-pai border-0">
+                                <div class="card-header text-center border-0 bg-transparent">
+                                    <label>INSCRITOS</label>
+                                </div>
+                                <div class="card-body no-change-theme text-center ">
+                                    <h1 class="label-top">@inscritos</h1>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md p-0 m-2">
+                            <div class="card no-change-theme center-pai border-0" style="background-color: orange">
+                                <div class="card-header text-center border-0 bg-transparent">
+                                    <label>VAGAS DISPONÍVEIS</label>
+                                </div>
+                                <div class="card-body no-change-theme text-center">
+                                    <h1 class="label-top">@vagasdisponiveis</h1>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md p-0 m-2">
+                            <div class="card no-change-theme center-pai border-0" style="background-color: darkred">
+                                <div class="card-header text-center border-0 bg-transparent">
+                                    <label class="text-white">INADIMPLENTES</label>
+                                </div>
+                                <div class="card-body no-change-theme text-center">
+                                    <h1 class="label-top text-white">@inadimplentes</h1>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="row p-5">
+                <div id="insc-x-evasoes" style="width: 100% !important">
+                    <p class="text-center titulo-grafico">Inscrições X Evasões</p>
+                    <div class="ct-chart-line">
+                        <canvas id="line-chart" height="80"></canvas>
+                    </div>
+                </div>
+            </div>
+            @* <div class="row p-5"> *@
+@*                 <div class="col-md p-0">
+                    <div class="card no-change-theme bg-dark center-pai border-0">
+                        <div class="card-header text-center border-0 bg-transparent">
+                            <label class="text-white">INADIMPLENTES</label>
+                        </div>
+                        <div class="card-body no-change-theme text-center ">
+                            <h1 class="label-top text-white">@inadimplentes</h1>
+                        </div>
+                    </div>
+                </div> *@
+@*                 <div class="col-md text-center p-3">
+                    <label class="text-center">SATISFAÇÃO DOS USUÁRIOS</label>
+                    @if (rating != null)
+                    {
+                        <span> (Média: @rating)</span> <span id="ver" class="cursor-pointer badge badge-success" href="javascript:void(0);" data-toggle="modal" data-target="#avaliacoes"> Ver</span> <br />
+                        if (rating > 0)
+                        {
+                            @for (x = 0; x < (int)rating; x++)
+                            {
+                                <i class="fa fa-star yellow" aria-hidden="true" style="font-size: 48px"></i>
+                            }
+                            if (x < limite)
+                            {
+                                while (x < limite)
+                                {
+                                    <i class="fa fa-star " aria-hidden="true" style="font-size: 48px"></i>
+                                    x++;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            @for (x = 0; x < limite; x++)
+                            {
+                                <i class="fa fa-star " aria-hidden="true" style="font-size: 48px"></i>
+                            }
+                        }
+                    }
+
+                </div> *@
+            @* </div> *@
+        </div>  
+    </div>}
+
+
+<!-- Modal -->
+@* <div class="modal fade" id="avaliacoes" tabindex="-1" role="dialog" aria-labelledby="avaliacoesTitle" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-white" id="avaliacoesTitle">Avaliações dos clientes</h5>
+                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                @if (avaliacoes != null && avaliacoes.Any())
+                {
+                    <table class="table text-center" id="tbAtividades" style=" background-color: transparent !important;">
+                        <thead>
+                            <tr>
+                                <th>
+                                    COMENTÁRIO
+                                </th>
+                                <th>
+                                    DATA
+                                </th>
+                                <th>
+                                    ESTRELAS
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in avaliacoes)
+                            {
+                                <tr>
+                                    <td>
+                                        @if (String.IsNullOrWhiteSpace(item.comentario))
+                                        {
+                                            <label class="badge badge-warning">Não comentou</label>
+                                        }
+                                        else
+                                        {
+                                            @item.comentario
+                                        }
+
+                                    </td>
+                                    <td class="text-center">
+                                        @item.DataCadastro
+                                    </td>
+                                    <td class="text-center">
+                                        @item.rating
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+                else
+                {
+                    <div class="jumbotron alert-warning">
+                        <h4>Ainda não há nenhuma avaliação lançada!</h4>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div> *@
+
+
+@section Scripts{
+    <script src="~/js/3th/chartist.min.js"></script>
+    <script src="~/js/3th/Chart.min.js"></script>
+
+    <script>
+        let labelMesAno = [];
+        let labelInsritos = [];
+        let labelEvasoes = [];
+        $(document).ready(function () {
+
+            // console.log('@Model.cdelement');
+
+            new Chart(document.getElementById("graficoRosca"), {
+                type: 'doughnut',
+                data: {
+                    labels: ['Vagas disponiveis','Vagas ocupadas'],
+                    datasets: [{
+                        data: ['@porcDisponviel','@porcOcupada'],
+                        backgroundColor: ['orange','#3498eb']
+                    }]
+                },
+                options: {
+
+                }
+            });
+
+            $.ajax({
+                url: '@Url.Action("GetInscricoesEvasoes")/'+"?cdelement="+ '@Model.cdelement',
+                type: 'GET',
+                dataType: "json",
+                contentType: 'application/json; charset=utf-8',
+                success: function (response) {
+                    $(response).each(function () {
+                        labelMesAno.push(this.mesAno);
+                        labelInsritos.push(this.inscricoes);
+                        labelEvasoes.push(this.evasoes);
+                    });
+
+                    new Chart(document.getElementById("line-chart"), {
+                        type: 'line',
+                        data: {
+                            labels: labelMesAno,
+                            datasets: [{
+                                data: labelInsritos,
+                                label: "Inscrições",
+                                borderColor: "#93cf40",
+                                fill: true,
+                                fillColor: "rgba(63,127,191,0.67)"
+                            }, {
+                                data: labelEvasoes,
+                                label: "Evasões",
+                                    borderColor: "#8f40cf",
+                                fill: true,
+                                fillColor: "rgba(191,63,63,0.67)"
+                            }
+                            ]
+                        },
+                        options: {
+
+                        }
+                    });
+                },
+                error: function (err) {
+                    divGrafico.innerHTML = '<div class="alert alert-info text-center">Nenhum dado encontrado</div>';
+                    noty({
+                        text: 'Falha carregar os exercícios mais utilizados',
+                        type: 'error',
+                        timeout: 2500,
+                        progressBar: true
+                    });
+                }
+            });
+        });
+
+
+        $('#ver').on('click', function (e) {
+            $('.limiter').addClass('blur');
+        })
+        $('.modal').on('hide.bs.modal', function (e) {
+            console.log('hide');
+            $('.limiter').removeClass('blur');
+        })
+    </script>
+}
+

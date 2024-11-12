@@ -1,0 +1,57 @@
+﻿@model IEnumerable<SiteSesc.Models.Atividade.AtividadeOnLine>
+@{
+    ViewBag.Title = "Validar Atividade";
+}
+
+<h2>Validar atividades</h2>
+
+<div id="cardBanners">
+    @if (Model.Any() && Model != null)
+    {
+        <table class="table table-hover">
+            <thead class="table-header">
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.NomeExibicao)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Ano)
+                    </th>
+                    <th>
+                        MODALIDADE
+                    </th>
+                    <th style="width: 180px">
+                        <span class="fa fa-gears"></span> GERENCIAMENTO
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr class='clickable-row' data-href='@Url.Action("DashboardAtividade", "AtividadeOnLine", new { id = item.Id })'>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.NomeExibicao)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Ano)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.SubArea.Nome)
+                        </td>
+                        <td class="text-center">
+                            <a href="@Url.Action("EditarAtividade","AtividadeOnLine", new { id = item.Id})" class="btn btn-manager" data-toggle="tooltip" title="Visualizar">
+                                <span class="fa fa-eye" style="color: dodgerblue"></span>
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <div class="alert alert-warning text-center" role="alert">
+            Nenhum registro encontrado!
+        </div>
+    }
+</div>

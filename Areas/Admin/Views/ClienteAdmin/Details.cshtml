@@ -1,0 +1,746 @@
+﻿@model SiteSesc.Models.SolicitacaoCadastroCliente
+@using SiteSesc.Models.ApiPagamento
+@{
+    var arquivos = ViewBag.Arquivos as List<ArquivoCadastroCliente>;
+    var msgRapidas = ViewBag.MsgRapidas as List<MensagemRapida>;
+    var historico = ViewBag.Historico as List<HstSolicitacao>;
+    var dirHst = "";
+    var titular = ViewBag.Titular as CLIENTELA;
+}
+<link rel="stylesheet" href="~/css/solicitacaocadastro/novocadastro.css" asp-append-version="true" />
+<link href="~/css/solicitacaocadastro/acompanhamento.css" rel="stylesheet" />
+<style>
+    #loading {
+        display: none; /* Esconda por padrão */
+        position: fixed;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 9999;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+</style>
+
+<div id="loading" class="loading-gif">
+    <img src="~/images/loading.gif" alt="Loading">
+</div>
+
+
+<div class="mt-4">
+    <div class="row">
+        <div class="col-md">
+            <p>@ViewBag.Validacao</p>
+            <h4>Solicitação de Cadastro de Cliente</h4>
+        </div>
+        <div class="col-md">
+            <h3 style="text-transform: uppercase; text-align: right!important; color: dodgerblue; font-style: italic; font-weight: bold">CLIENTE @Html.DisplayFor(model => model.TipoCategoria)</h3>
+            @if (Model.Cduotitul != null)
+            {
+                <h3 style="text-transform: uppercase; text-align: right!important; color: orange; font-style: italic; font-weight: bold">SOLICITAÇÃO DE DEPENDENTE</h3>
+            }
+        </div>
+    </div>
+    <div class="ctn-fluid fluid-end">
+       @*  @if (Model.IdStatus <= 4)
+        {
+            @if (Model.TipoCategoria != "renovacao")
+            { *@
+        @if (Model.Status != null && Model.Status.Id != 5) // Supondo que 'Id' é a propriedade que contém o valor 5
+        {
+            <div>
+                <a onclick="modalConfirmacao();" class="btn btn-outline-success button-rounded m-2">Validar</a>
+
+                </div>}
+           @*  } *@
+
+            <div>
+                <a class="btn btn-outline-danger button-rounded m-2" data-bs-toggle="modal" data-bs-target="#modalInvalidarCadastro">Adicionar interação</a>
+            </div>
+        @if (Model.Status != null && Model.Status.Id != 5) // Supondo que 'Id' é a propriedade que contém o valor 5
+        {
+            <div>
+                <a class="btn btn-outline-dark button-rounded m-2" data-bs-toggle="modal" data-bs-target="#modalConfirmaFinalizacao">Encerrar</a>
+            </div>
+        }
+       @*  } *@
+
+        <div>
+            <a class="btn btn-outline-primary button-rounded m-2" href="#" onclick="window.print();">Imprimir</a>
+        </div>
+    </div>
+    <hr />
+
+    <div class="row">
+        <div class="col-md-4">
+            @if (arquivos != null)
+            {
+                if (arquivos.Any(a => a.Tipo == "FotoPerfil"))
+                {
+                    <p>Foto de perfil</p>
+                    <img class="img-thumbnail w-300 border-radius-20" src="@arquivos.FirstOrDefault(a => a.Tipo == "FotoPerfil").Arquivo.CaminhoVirtualFormatado()" />
+                }
+            }
+            <p class="mt-5 mb-0">Arquivos enviados:</p>
+            <div class="ctn-fluid fluid-start">
+                @foreach (var arquivo in arquivos.Where(a => a.Tipo != "FotoPerfil"))
+                {
+                    <div>
+                        <input id="caminho-@arquivo.Arquivo.Id" hidden value="@arquivo.Arquivo.CaminhoVirtualFormatado()" />
+                        <img class="img-thumbnail" style="cursor: pointer" src="@arquivo.Arquivo.CaminhoVirtualFormatado()" onclick="imageZoom('@arquivo.Arquivo.Id')" />
+                        <br /><span style="font-size: 10px">@arquivo.Tipo</span>
+                    </div>
+                }
+            </div>
+        </div>
+        <div class="col-md">
+            @if (titular != null)
+            {
+                <h4><b>Dados do titular</b></h4>
+                <dl class="row">
+                    <dt class="col-sm-4">
+                        Nome:
+                    </dt>
+                    <dd class="col-sm-8">
+                        @titular.NMCLIENTE.Trim()
+                    </dd>
+                    <dt class="col-sm-4">
+                        CPF do titular:
+                    </dt>
+                    <dd class="col-sm-8">
+                        @titular.NUCPF.Trim()
+                    </dd>
+                </dl>
+                <hr />
+
+                <h4><b>Dados do dependente</b></h4>
+            }
+
+            <div class="row">
+                <dl class="col-md">
+                    <dt class="col-sm-12">
+                        @Html.DisplayNameFor(model => model.DataSolicitacao)
+                    </dt>
+                    <dd class="col-sm-12">
+                        @Html.DisplayFor(model => model.DataSolicitacao)
+                    </dd>
+                </dl>
+                <dl class="col-md">
+                    <dt class="col-sm-12">
+                        @Html.DisplayNameFor(model => model.Status)
+                    </dt>
+                    <dd class="col-sm-12">
+                        @Html.DisplayFor(model => model.Status.Nome)
+                    </dd>
+                </dl>
+            </div>
+
+
+            <div class="accordion" id="accordionExample">
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingOne">
+                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                            Dados básicos
+                        </button>
+                    </h2>
+                    <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                        <div class="accordion-body">
+                            <dl class="row">
+                                <dt class="col-sm-4">
+                                    @Html.DisplayNameFor(model => model.Nome)
+                                </dt>
+                                <dd class="col-sm-8">
+                                    @Html.DisplayFor(model => model.Nome)
+                                </dd>
+                                <dt class="col-sm-4">
+                                    @Html.DisplayNameFor(model => model.NomeSocial)
+                                </dt>
+                                <dd class="col-sm-8">
+                                    @Html.DisplayFor(model => model.NomeSocial)
+                                </dd>
+                                <dt class="col-sm-4">
+                                    @Html.DisplayNameFor(model => model.Sexo)
+                                </dt>
+                                <dd class="col-sm-8">
+                                    @Html.DisplayFor(model => model.Sexo.Nome)
+                                </dd>
+                                <dt class="col-sm-4">
+                                    @Html.DisplayNameFor(model => model.NomePai)
+                                </dt>
+                                <dd class="col-sm-8">
+                                    @Html.DisplayFor(model => model.NomePai)
+                                </dd>
+                                <dt class="col-sm-4">
+                                    @Html.DisplayNameFor(model => model.NomeMae)
+                                </dt>
+                                <dd class="col-sm-8">
+                                    @Html.DisplayFor(model => model.NomeMae)
+                                </dd>
+                                <dt class="col-sm-4">
+                                    @Html.DisplayNameFor(model => model.Naturalidade)
+                                </dt>
+                                <dd class="col-sm-8">
+                                    @Html.DisplayFor(model => model.Naturalidade)
+                                </dd>
+                                <dt class="col-sm-4">
+                                    @Html.DisplayNameFor(model => model.Nacionalidade)
+                                </dt>
+                                <dd class="col-sm-8">
+                                    @Html.DisplayFor(model => model.Nacionalidade)
+                                </dd>
+                                <dt class="col-sm-4">
+                                    @Html.DisplayNameFor(model => model.DataNascimento)
+                                </dt>
+                                <dd class="col-sm-8">
+                                    @Model.DataNascimento.ToShortDateString()
+                                </dd>
+                                <dt class="col-sm-4">
+                                    @Html.DisplayNameFor(model => model.Escolaridade)
+                                </dt>
+                                <dd class="col-sm-8">
+                                    @Html.DisplayFor(model => model.Escolaridade.Nome)
+                                </dd>
+                                @if (Model.Parentesco != null)
+                                {
+                                    <dt class="col-sm-4">
+                                        @Html.DisplayNameFor(model => model.Parentesco)
+                                    </dt>
+                                    <dd class="col-sm-8">
+                                        @Html.DisplayFor(model => model.Parentesco.Nome)
+                                    </dd>
+                                }
+                                <dt class="col-sm-4">
+                                    @Html.DisplayNameFor(model => model.EstadoCivil)
+                                </dt>
+                                <dd class="col-sm-8">
+                                    @Html.DisplayFor(model => model.EstadoCivil.Nome)
+                                </dd>
+                                <dt class="col-sm-4">
+                                    @Html.DisplayNameFor(model => model.IsDeficiente)
+                                </dt>
+                                <dd class="col-sm-8">
+                                    @Html.DisplayBoolAsText(Model.IsDeficiente)
+                                </dd>
+                                <dt class="col-sm-4">
+                                    @Html.DisplayNameFor(model => model.UltimaSerie)
+                                </dt>
+                                <dd class="col-sm-8">
+                                    @Html.DisplayFor(model => model.UltimaSerie)
+                                </dd>
+                                <dt class="col-sm-4">
+                                    @Html.DisplayNameFor(model => model.RendaIndividual)
+                                </dt>
+                                <dd class="col-sm-8">
+                                    @Model.RendaIndividual.ToString("C")
+                                </dd>
+                                <dt class="col-sm-4">
+                                    @Html.DisplayNameFor(model => model.RendaFamiliar)
+                                </dt>
+                                <dd class="col-sm-8">
+                                    @Model.RendaFamiliar.ToString("C")
+                                </dd>
+                                <dt class="col-sm-4">
+                                    @Html.DisplayNameFor(model => model.IsEstudante)
+                                </dt>
+                                <dd class="col-sm-8">
+                                    @Html.DisplayBoolAsText(Model.IsEstudante)
+                                </dd>
+                                <dt class="col-sm-4">
+                                    @Html.DisplayNameFor(model => model.IsDependente)
+                                </dt>
+                                <dd class="col-sm-8">
+                                    @Html.DisplayBoolAsText(Model.IsDependente)
+                                </dd>
+                                <dt class="col-sm-4">
+                                    @Html.DisplayNameFor(model => model.TelefonePrimario)
+                                </dt>
+                                <dd class="col-sm-8">
+                                    @Html.DisplayFor(model => model.TelefonePrimario)
+                                </dd>
+                                @if (Model.TelefoneSecundario != null)
+                                {
+                                    <dt class="col-sm-4">
+                                        @Html.DisplayNameFor(model => model.TelefoneSecundario)
+                                    </dt>
+                                    <dd class="col-sm-8">
+                                        @Html.DisplayFor(model => model.TelefoneSecundario)
+                                    </dd>
+                                }
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingTwo">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                            Documentação
+                        </button>
+                    </h2>
+                    <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+                        <div class="accordion-body">
+                            <dl class="row">
+                                <dt class="col-sm-4">
+                                    @Html.DisplayNameFor(model => model.Usuario.Cpf)
+                                </dt>
+                                <dd class="col-sm-8">
+                                    @Html.DisplayFor(model => model.Usuario.Cpf)
+                                </dd>
+                                <dt class="col-sm-4">
+                                    Documento de identificação
+                                </dt>
+                                <dd class="col-sm-8">
+                                    @Html.DisplayFor(model => model.NumeroDocumento)
+                                </dd>
+                                <dt class="col-sm-4">
+                                    @Html.DisplayNameFor(model => model.OrgaoEmissor)
+                                </dt>
+                                <dd class="col-sm-8">
+                                    @Html.DisplayFor(model => model.OrgaoEmissor)
+                                </dd>
+                                <dt class="col-sm-4">
+                                    @Html.DisplayNameFor(model => model.UF)
+                                </dt>
+                                <dd class="col-sm-8">
+                                    @Html.DisplayFor(model => model.UF)
+                                </dd>
+                                <dt class="col-sm-4">
+                                    @Html.DisplayNameFor(model => model.DataEmissaoDocumento)
+                                </dt>
+                                <dd class="col-sm-8">
+                                    @Model.DataEmissaoDocumento.ToShortDateString()
+                                </dd>
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingThree">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                            Endereço
+                        </button>
+                    </h2>
+                    <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
+                        <div class="accordion-body">
+                            <dl class="row">
+                                <dt class="col-sm-4">
+                                    @Html.DisplayNameFor(model => model.Logradouro)
+                                </dt>
+                                <dd class="col-sm-8">
+                                    @Html.DisplayFor(model => model.Logradouro)
+                                </dd>
+                                <dt class="col-sm-4">
+                                    @Html.DisplayNameFor(model => model.Cep)
+                                </dt>
+                                <dd class="col-sm-8">
+                                    @Html.DisplayFor(model => model.Cep)
+                                </dd>
+                                <dt class="col-sm-4">
+                                    @Html.DisplayNameFor(model => model.Cidade)
+                                </dt>
+                                <dd class="col-sm-8">
+                                    @Html.DisplayFor(model => model.Cidade)
+                                </dd>
+                                <dt class="col-sm-4">
+                                    @Html.DisplayNameFor(model => model.NumeroEndereco)
+                                </dt>
+                                <dd class="col-sm-8">
+                                    @Html.DisplayFor(model => model.NumeroEndereco)
+                                </dd>
+                                <dt class="col-sm-4">
+                                    @Html.DisplayNameFor(model => model.Complemento)
+                                </dt>
+                                <dd class="col-sm-8">
+                                    @Html.DisplayFor(model => model.Complemento)
+                                </dd>
+                                <dt class="col-sm-4">
+                                    @Html.DisplayNameFor(model => model.Bairro)
+                                </dt>
+                                <dd class="col-sm-8">
+                                    @Html.DisplayFor(model => model.Bairro)
+                                </dd>
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+                @if (Model.TipoCategoria == "Pleno" && Model.Cduotitul == null)
+                {
+
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingFour">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseThree">
+                                Informações profissionais
+                            </button>
+                        </h2>
+                        <div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
+                            <div class="accordion-body">
+                                <dl class="row">
+                                    <dt class="col-sm-4">
+                                        @Html.DisplayNameFor(model => model.SituacaoProfissional)
+                                    </dt>
+                                    <dd class="col-sm-8">
+                                        @Html.DisplayFor(model => model.SituacaoProfissional.Nome)
+                                    </dd>
+                                    <dt class="col-sm-4">
+                                        @Html.DisplayNameFor(model => model.CnpjEmpresa)
+                                    </dt>
+                                    <dd class="col-sm-8">
+                                        @Html.DisplayFor(model => model.CnpjEmpresa)
+                                    </dd>
+                                    <dt class="col-sm-4">
+                                        @Html.DisplayNameFor(model => model.RazaoSocial)
+                                    </dt>
+                                    <dd class="col-sm-8">
+                                        @Html.DisplayFor(model => model.RazaoSocial)
+                                    </dd>
+                                    <dt class="col-sm-4">
+                                        @Html.DisplayNameFor(model => model.Cargo)
+                                    </dt>
+                                    <dd class="col-sm-8">
+                                        @Html.DisplayFor(model => model.Cargo)
+                                    </dd>
+                                    <dt class="col-sm-4">
+                                        @Html.DisplayNameFor(model => model.NumeroCarteiraProssional)
+                                    </dt>
+                                    <dd class="col-sm-8">
+                                        @Html.DisplayFor(model => model.NumeroCarteiraProssional)
+                                    </dd>
+                                    <dt class="col-sm-4">
+                                        @Html.DisplayNameFor(model => model.SerieCtps)
+                                    </dt>
+                                    <dd class="col-sm-8">
+                                        @Html.DisplayFor(model => model.SerieCtps)
+                                    </dd>
+                                    <dt class="col-sm-4">
+                                        @Html.DisplayNameFor(model => model.PisPasep)
+                                    </dt>
+                                    <dd class="col-sm-8">
+                                        @Html.DisplayFor(model => model.PisPasep)
+                                    </dd>
+                                    <dt class="col-sm-4">
+                                        @Html.DisplayNameFor(model => model.DataAdmissao)
+                                    </dt>
+                                    <dd class="col-sm-8">
+                                        @Model.DataAdmissao.Value.ToShortDateString()
+                                    </dd>
+                                    @if (Model.DataDemissao != null)
+                                    {
+                                        <dt class="col-sm-4">
+                                            @Html.DisplayNameFor(model => model.DataDemissao)
+                                        </dt>
+                                        <dd class="col-sm-8">
+
+                                            @Model.DataDemissao.Value.ToShortDateString()
+                                        </dd>
+                                    }
+                                </dl>
+                            </div>
+                        </div>
+                    </div>
+
+                }
+
+            </div>
+        </div>
+    </div>
+
+
+    <div id="timeline" class="mt-5">
+        <h4 class="text-gray">Timeline da solicitação</h4>
+        <div class="card card-dados-cliente">
+            <div class="card-body">
+                <div class="col-md-12">
+                    @if (historico != null)
+                    {
+                        <ul class="sem-marcador">
+                            @foreach (var hst in historico)
+                            {
+                                <li>
+                                    <div class="container py-2">
+                                        <div class="row">
+                                            @if (hst.IsCliente)
+                                            {
+                                                <div class="col-auto text-center flex-column d-none d-sm-flex">
+                                                    <small class="m-2">
+                                                        @if (arquivos.Any())
+                                                        {
+                                                            <img src="@arquivos.FirstOrDefault(a => a.Tipo == "FotoPerfil").Arquivo.CaminhoVirtualFormatado()" class="img-avatar" />
+
+                                                        }
+                                                        <h6>Cliente</h6>
+                                                    </small>
+                                                </div>
+                                                <div class="col py-2 flex-container">
+                                                    <div class="ctn-fluid fluid-start">
+                                                        <div class="triangulo-para-esq"></div>
+                                                        <div class="card card-timeline card-esq">
+                                                            <div class="card-body">
+                                                                <h6 class="card-title">
+                                                                    @hst.Observacao
+                                                                </h6>
+                                                                <div class="float-right text-right font-italic font-size-small">
+                                                                    @hst.Usuario.Nome <br>em @hst.DataCadastro
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                            }
+                                            else
+                                            {
+                                                <div class="col py-2 flex-container">
+                                                    <div class="ctn-fluid fluid-start">
+                                                        <div class="card card-timeline card-dir">
+                                                            <div class="card-body">
+                                                                <h6 class="card-title">
+                                                                    @hst.Observacao
+                                                                </h6>
+                                                                <div class="float-right text-right font-italic font-size-small">
+                                                                    @hst.Usuario.Nome <br> em @hst.DataCadastro
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="triangulo-para-dir"></div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-auto text-center flex-column d-none d-sm-flex">
+                                                    <small class="m-2">
+                                                        <img src="~/images/static/logo-mini-alpha.png" class="img-avatar" />
+                                                        <h6>Atendente</h6>
+                                                    </small>
+                                                </div>
+                                            }
+                                        </div>
+                                    </div>
+                                </li>
+                            }
+                        </ul>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div>  
+    <a href="/admin/clientes/soliticacoes-cadastro">Voltar</a>
+
+
+
+</div>
+
+
+<div class="modal fade" id="confirmationModal" tabindex="-1" aria-labelledby="confirmationModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmationModalLabel">Confirmação</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Você realmente deseja confirmar o cadastro do cliente?
+            </div>
+            <div class="modal-footer">
+                <a type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</a>
+                @* <a href="@Url.Action("AddCliente","ClienteAdmin", new{id = Model.Id})" class="btn btn-success">Validar</a> *@
+                <a id="validateButton" class="btn btn-success">Validar</a>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="modalConfirmaFinalizacao" tabindex="-1" role="dialog" aria-labelledby="modalValidarCadastro-label">
+    <div class="modal-dialog " role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="modalConfirmaFinalizacao-label">Encerrar cadastro</h4>
+                <button type="button" class="close btn btn-danger" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <h3 class="text-center">Você realmente deseja encerrar a solicitação? <br /><br />Não será possível retomar a mesma.</h3>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-danger button-rounded" data-bs-dismiss="modal">Cancelar</button>
+                <a class="btn btn-outline-success button-rounded" asp-action="Finalizar" asp-controller="ClienteAdmin" asp-route-idSolicitacao="@Model.Id">Confirmar</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modalInvalidarCadastro" tabindex="-1" role="dialog" aria-labelledby="modalValidarCadastro-label">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Informe as alterações que o usuário deve realizar</h4>
+                <button type="button" class="close btn btn-danger" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>OBSERVAÇÃO</label>
+                    <textarea rows="3" class="form-control" id="observacao"></textarea>
+                    <button type="button" class="rounded-circle btn text-yellow" id="listarMensagensRapidas" onclick="mostraTabelaMensagem()">
+                        <i class="fa fa-bolt fa-2x" aria-hidden="true"></i>
+                    </button>
+                </div>
+                <div id="table-Messagem">
+                    <div class="form-group" id="divTableMensagem">
+
+                        @foreach (var item in msgRapidas)
+                        {
+                            <div class="card mt-1 cursor-pointer" style="border-radius: 0px">
+                                <div class="card-body">
+                                    <a onclick="selecionarMensagem(`@item.Descricao`)" class="text-black">@item.Descricao</a>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger button-rounded" data-bs-dismiss="modal">Cancelar</button>
+                <button id="btn-enviar" type="button" class="btn btn-success button-rounded" onclick="enviaCorrecao('@Model.Id')">Enviar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('#loading').hide();
+
+            document.getElementById('table-Messagem').style.display = 'none';
+
+        });
+        // document.addEventListener('DOMContentLoaded', function () {
+        //     var btnValidar = document.getElementById('btn-validar');
+        //     var confirmYes = document.getElementById('confirm-yes');
+        //     // var confirmationModal = new bootstrap.Modal(document.getElementById('confirmationModal'));
+
+        //     btnValidar.addEventListener('click', function (e) {
+        //         e.preventDefault(); // Evita o redirecionamento imediato
+        //         $('#confirmationModal').modal('show'); // Abre o modal
+        //     });
+
+        //     confirmYes.addEventListener('click', function () {
+        //         var url = "/admin/clientes/add/"+@Model.Id;
+        //         window.location.href = url; // Redireciona para a URL desejada
+        //     });
+        // });
+
+        document.getElementById('validateButton').addEventListener('click', async function (event) {
+            event.preventDefault();
+            console.log('Id: ' + '@Model.Id');
+            const url = '/admin/clientes/add/' + '@Model.Id';
+            var botao = document.getElementById('validateButton');
+            botao.innerHTML = "";
+            var imagem = document.createElement('img');
+            imagem.src = '../../../../images/static/loading.gif';
+            imagem.width = 40;
+            imagem.width = 40;
+            imagem.height = 40;
+            botao.appendChild(imagem);
+            botao.classList.add('disabled');
+            try {
+                const response = await fetch(url, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (!response.ok) {
+                    botao.innerHTML = "Enviar";
+                    botao.classList.remove('disabled');
+                    throw new Error('Network response was not ok');
+                }
+                console.log(response);
+
+                window.location.href = '/admin/clientes/soliticacoes-cadastro';
+
+            } catch (error) {
+                console.error('There was a problem with the fetch operation:', error);
+                botao.innerHTML = "Enviar";
+                botao.classList.remove('disabled');
+            }
+        });
+
+        function modalConfirmacao() {
+            $('#confirmationModal').modal('show'); // Abre o modal
+        }
+
+        function mostraTabelaMensagem() {
+            var display = document.getElementById('table-Messagem').style.display;
+            if (display == "none")
+                document.getElementById('table-Messagem').style.display = 'block';
+            else
+                document.getElementById('table-Messagem').style.display = 'none';
+        }
+
+        function selecionarMensagem(descricao) {
+            document.getElementById('observacao').value = descricao;
+            document.getElementById('table-Messagem').style.display = 'none';
+        }
+
+        // document.getElementById("btn-validar").addEventListener("click", function (event) {
+        //     $('#loading').show();
+        // });
+
+        function enviaCorrecao(Id) {
+
+            var botao = document.getElementById('btn-enviar');
+            botao.innerHTML = "";
+            var imagem = document.createElement('img');
+            imagem.src = '../../../../images/static/loading.gif';
+            imagem.width = 40;
+            imagem.width = 40;
+            imagem.height = 40;
+            botao.appendChild(imagem);
+            botao.classList.add('disabled');
+
+            $.ajax({
+                url: '@Url.Action("EnviaCorrecao", "ClienteAdmin")',
+                type: 'POST',
+                data: {
+                    Id: Id,
+                    msg: $('#observacao').val()
+                },
+                success: function (response) {
+                    if (response.code == 1) {
+                        $('#observacao').val('');
+                        $('#modalInvalidarCadastro').modal('hide');
+                        $('#timeline').load(location.href + ' #timeline>*',
+                            function () {
+                                $('[data-toggle="tooltip"]').tooltip();
+                            });
+                        iziToast.success({
+                            title: 'Sucesso',
+                            message: response.msg,
+                            theme: 'light',
+                            position: 'topRight',
+                        });
+                        botao.innerHTML = "Enviar";
+                        botao.classList.remove('disabled');
+                    }
+                    if (response.code == 0) {
+                        iziToast.error({
+                            title: 'Erro',
+                            message: response.msg,
+                            theme: 'light',
+                            position: 'topRight',
+                        });
+                    }
+                },
+                error: function (error) {
+                    console.error(error);
+                }
+            });
+        }
+    </script>
+}

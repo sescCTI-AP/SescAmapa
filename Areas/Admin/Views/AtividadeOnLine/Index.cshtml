@@ -1,0 +1,339 @@
+﻿@* @model IEnumerable<SiteSesc.Models.Atividade.AtividadeOnLine> *@
+@using SiteSesc.Models.ViewModel
+@model PaginatedListViewModel<SiteSesc.Models.Atividade.AtividadeOnLine>
+@{
+    var uops = ViewBag.Uop as List<UnidadeOperacional>;
+    int? idUop = ViewBag.IdUop;
+    var uopSelecionada = ViewBag.UopSelecionada as UnidadeOperacional;
+    string selecionado = "";
+}
+
+<link href="~/css/paginacao/paginacao.css" rel="stylesheet" />
+
+<style>
+    @@media only screen and (max-width: 991px){
+    .hidden1{
+            display: none;
+        }
+    }
+
+    @@media only screen and (max-width: 575px){
+        .hidden2{
+            display: none;
+        }
+
+        .icon-size {
+            font-size: 20px; /* Ajuste o tamanho conforme necessário */
+        }
+
+    }
+</style>
+
+<div class="row">
+    <div class="col-md"></div>
+    <div class="col-md"></div>
+    <div class="col-md">
+        <div style="text-align: right; padding-top: 15px">
+            <a onclick="definirTelaInicial('/admin/atividades')" id="btn-switch" class="btn btn-sm btn-outline-primary button-rounded btn-auto"><i class="fa-solid fa-home"></i> &nbsp;Definir como tela inicial</a>
+        </div>
+    </div>
+</div>
+
+@if (ViewBag.Inscrito == 1)
+{
+    <script>
+        Swal.fire({
+            title: 'Ops!',
+            text: 'Essa turma já está cadastrada em alguma Atividade Online.',
+            icon: 'warning',
+            confirmButtonText: 'OK'
+        });
+    </script>
+}
+else if (ViewBag.Inscrito == 2)
+{
+    <script>
+        Swal.fire({
+            title: 'Sucesso!',
+            text: 'Cadastro realizado com sucesso!',
+            icon: 'success',
+            confirmButtonText: 'OK'
+        });
+    </script>
+}
+else if (ViewBag.Inscrito == 3)
+{
+    <script>
+        Swal.fire({
+            title: 'Erro!',
+            text: 'Ocorreu um erro inesperado. Por favor, tente novamente mais tarde.',
+            icon: 'error',
+            confirmButtonText: 'OK'
+        });
+    </script>
+}
+
+
+
+<h2 class="mt-5">
+    Atividades 
+    <span>
+        <a asp-action="Create" class="fs-18">+ Novo</a>
+    </span>
+    @if (uopSelecionada != null)
+    {
+        <p><b>@uopSelecionada.Nome</b></p>
+    }
+</h2>
+
+<div class="row mb-30">
+    <div class="col-xl-8 col-lg-8 col-md-8">
+        <div class="mb-20">
+            <div class="section-area">
+                <form asp-action="Index" asp-controller="AtividadeOnLine">
+                    <select class="form-control" name="idUop" onchange="submit();">
+                        <option value="">Todas as unidades</option>
+                        @foreach (var item in uops)
+                        {
+                            <option value="@item.Id">@item.Nome</option>
+                        }
+                    </select>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<table class="table" id="table-result">
+    <thead>
+        <tr>
+            <th>
+                Nome de exibição
+            </th>
+            <th>
+                Data de Início
+            </th>
+            <th>
+                Data de término
+            </th>
+            <th class="hidden1">
+                Unidade Operacional
+            </th>
+            <th class="hidden1">
+                Data de cadastro
+            </th>
+            <th class="hidden1">
+                Usuário
+            </th>
+            <th></th>
+            <th></th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Items)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NomeExibicao) @if (!item.IsAtivo)
+                    {
+                        <span class="label-warning">Inativo</span>
+                    }
+                </td>
+                <td>
+                    @if (item.DataInicio != null)
+                    {
+                        <span>@item.DataInicio.Value.ToShortDateString()</span>
+                    }
+                </td>
+                <td>
+                    @if (item.DataFim != null)
+                    {
+                        <span>@item.DataFim.Value.ToShortDateString()</span>
+                    }
+                </td>
+                <td class="hidden1">
+                    @Html.DisplayFor(modelItem => item.UnidadeOperacional.Nome)
+                </td>
+                <td class="hidden1">
+                    @Html.DisplayFor(modelItem => item.DataCadastro)
+                </td>
+                <td class="hidden1">
+                    @Html.DisplayFor(modelItem => item.Usuario.Nome)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id" data-toggle="tooltip" title="Editar">
+                        <i class="btn fa-solid fa-edit icon-size"></i>
+                    </a>
+                </td>
+                <td>
+                    <a asp-controller="AtividadeOnLine" asp-action="Inscritos" asp-route-cdprograma="@item.Cdprograma"
+                       asp-route-nome="@item.NomeExibicao" asp-route-cdconfig="@item.Cdconfig"
+                       asp-route-sqocorrenc="@item.Sqocorrenc" class="btn btn-manager " data-toggle="tooltip"
+                       title="Inscritos">
+                        <i class="fa-solid fa-user-graduate icon-size"></i>
+                    </a>
+                </td>
+                <td>
+                    <a onclick="alterarStatus(@item.Id)" title="Excluir">
+                        <i class="btn btn-manager fa-solid fa-trash-can icon-size"></i>
+                    </a>
+                </td>
+            </tr>
+
+        }
+    </tbody>
+</table>
+
+<div class="pagination mb-5">
+
+
+    @if (Model.HasPreviousPage)
+    {
+        <a asp-action="Index" asp-route-pageNumber="1" asp-route-idUop="@idUop">Inicio</a>
+        <a asp-action="Index" asp-route-pageNumber="@(Model.PageIndex - 1)" asp-route-idUop="@idUop">Anterior</a>
+    }
+    
+    @for (var i = Model.PageIndex -2; i <= Model.PageIndex +2; i++)
+    {
+        if( (i >= 1) && (i <= Model.TotalPages) )
+        {
+            <a asp-action="Index" asp-route-pageNumber="@i" class="@(i == Model.PageIndex ? "active" : "")" asp-route-idUop="@idUop">@i</a>
+        }
+    }
+    
+    @if (Model.HasNextPage)
+    {
+        <a asp-action="Index" asp-route-pageNumber="@(Model.PageIndex + 1)" asp-route-idUop="@idUop">Próximo</a>
+        <a asp-action="Index" asp-route-pageNumber="@(Model.TotalPages)" asp-route-idUop="@idUop">Final</a>
+    }
+
+
+    @* 
+    @if (Model.HasPreviousPage)
+    {
+        <a asp-action="Index" asp-route-pageNumber="@(Model.PageIndex - 1)" asp-route-idUop="@idUop">Anterior</a>
+    }
+    @for (var i = 1; i <= Model.TotalPages; i++)
+    {
+        <a asp-action="Index" asp-route-pageNumber="@i" class="@(i == Model.PageIndex ? "active" : "")" asp-route-idUop="@idUop">@i</a>
+    }
+    @if (Model.HasNextPage)
+    {
+        <a asp-action="Index" asp-route-pageNumber="@(Model.PageIndex + 1)" asp-route-idUop="@idUop">Próximo</a>
+    } *@
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+@section Scripts {
+    <script>
+        function alterarStatus(id) {
+            iziToast.question({
+                timeout: 20000,
+                close: false,
+                overlay: true,
+                displayMode: 'once',
+                id: 'question',
+                zindex: 999,
+                title: 'Excluir',
+                message: 'Voce realmente deseja remover a atividade?',
+                position: 'center',
+                buttons: [
+                    ['<button><b>Confirmar</b></button>', function (instance, toast) {
+                        $.ajax({
+                            url: '/admin/atividades/remover-atividade/' + id,
+                            type: 'GET',
+                            dataType: "json",
+                            contentType: 'application/json; charset=utf-8',
+                            success: function (data) {
+                                if (data.code == 1) {
+                                    $('#table-result').load(location.href + ' #table-result>*');
+                                    iziToast.success({
+                                        title: 'SUCESSO!',
+                                        message: 'Atividade removida',
+                                        theme: 'light',
+                                        position: 'topRight',
+                                    });
+                                    instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
+                                } else {
+                                    iziToast.error({
+                                        title: 'Falha!',
+                                        message: 'Falha ao remover atividade',
+                                        theme: 'light',
+                                        position: 'topRight',
+                                    });
+                                }
+                            },
+                            error: function (err) {
+                                iziToast.error({
+                                    title: 'Falha!',
+                                    message: 'Falha ao remover atividade',
+                                    theme: 'light',
+                                    position: 'topRight',
+                                });
+                            }
+                        });
+
+
+                    }, true],
+                    ['<button>Cancelar</button>', function (instance, toast) {
+
+                        instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
+
+                    }],
+                ],
+                onClosing: function (instance, toast, closedBy) {
+                    console.info('Closing | closedBy: ' + closedBy);
+                },
+                onClosed: function (instance, toast, closedBy) {
+                    console.info('Closed | closedBy: ' + closedBy);
+                }
+            });
+
+        }
+
+
+        document.addEventListener('DOMContentLoaded', function () {
+            // Verifica se a URL contém ?Inscrito=1, ?Inscrito=2 ou ?Inscrito=3
+            const urlParams = new URLSearchParams(window.location.search);
+
+            // Caso Inscrito=1 (turma já cadastrada)
+            if (urlParams.has('Inscrito') && urlParams.get('Inscrito') === '1') {
+                Swal.fire({
+                    title: 'Ops!',
+                    text: 'Essa turma já está cadastrada em alguma Atividade Online.',
+                    icon: 'warning',
+                    confirmButtonText: 'OK'
+                });
+            }
+
+            // Caso Inscrito=2 (sucesso)
+            if (urlParams.has('Inscrito') && urlParams.get('Inscrito') === '2') {
+                Swal.fire({
+                    title: 'Sucesso!',
+                    text: 'Cadastro realizado com sucesso!',
+                    icon: 'success',
+                    confirmButtonText: 'OK'
+                });
+            }
+
+            // Caso Inscrito=3 (erro inesperado)
+            if (urlParams.has('Inscrito') && urlParams.get('Inscrito') === '3') {
+                Swal.fire({
+                    title: 'Erro!',
+                    text: 'Ocorreu um erro inesperado. Por favor, tente novamente mais tarde.',
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                });
+            }
+        });
+    
+
+
+       
+        
+    </script>
+}

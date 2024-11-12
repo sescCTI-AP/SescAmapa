@@ -1,0 +1,201 @@
+﻿@model SiteSesc.Models.UnidadeOperacional
+
+@{
+}
+
+<link href="~/js/croppie/croppie.min.css" rel="stylesheet" />
+<link href="~/css/summernote/summernote-bs4.css" rel="stylesheet" />
+
+<h2>Unidades</h2>
+<h4>Alterar</h4>
+<hr />
+<div class="row">
+    <div> 
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <div class="form-group">
+                <label asp-for="Nome" class="control-label"></label>
+                <input asp-for="Nome" class="form-control" />
+                <span asp-validation-for="Nome" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.Descricao)
+                @Html.TextAreaFor(model => model.Descricao, new { @class = "form-control", @row = 5 })
+                @Html.ValidationMessageFor(model => model.Descricao, "", new { @class = "text-danger" })
+            </div>
+            <div class="form-group">
+                <label asp-for="NomeCurto" class="control-label"> Nome Curto</label>
+                <input asp-for="NomeCurto" class="form-control" />
+                <span asp-validation-for="NomeCurto" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Endereco" class="control-label"></label>
+                <input asp-for="Endereco" class="form-control" />
+                <span asp-validation-for="Endereco" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Cduop" class="control-label">Cd. Unidade Operacional</label>
+                <input asp-for="Cduop" class="form-control" />
+                <span asp-validation-for="Cduop" class="text-danger"></span>
+            </div>
+            <input asp-for="DataCadastro" type="hidden" />
+            <input asp-for="DataAtualizacao" type="hidden" />
+            <input asp-for="IdUsuario" type="hidden" value="1" />
+            <input type="hidden" asp-for="NameRoute" class="form-control" placeholder="NameRoute" />
+            <div class="form-group form-check">
+                <input asp-for="IsAtivo" class="form-check-input" type="checkbox" />
+                <label asp-for="IsAtivo" class="form-check-label">Ativo</label>
+                <span asp-validation-for="IsAtivo" class="text-danger"></span>
+            </div>
+            <div class="form-group mt-5">
+                <a asp-action="Index" asp-controller="Unidade" class="btn btn-danger">Voltar</a>
+                <input type="submit" value="Salvar" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="p-3">
+    <a onclick="exibeCrop();" class="btn btn-secondary mb-3">Alterar foto</a>
+    @if (Model.Arquivo != null)
+    {
+        <img class="card-img-top p-0" src="@Model.Arquivo.CaminhoVirtualFormatado()" alt="Imagem" style="padding: 0 15px;">
+    }
+    <div id="div-crop-image" class="row mt-3">
+        <form asp-action="Anexar" method="post">
+            <input type="hidden" name="id" value="@Model.Id" />
+            <input type="hidden" name="imagemRecortada" id="imagemRecortada" />
+
+            <div class="form-group mb-3 crop-area">
+                <label for="upload" role="button" class="btn btn-info">Selecionar Imagem</label>
+                <input data-val="true" data-val-required="Arquivo" id="upload" name="upload" type="file" style="display: none" accept=".jpg, .jpeg, .png">
+                <button type="button" class="btn btn-success" id="btnCortarImagem" disabled>
+                    <span class="fa fa-scissors"></span> Cortar Imagem
+                </button>
+                <p class="text-primary mb-0 mt-2">Obs.: Selecione uma imagem, ajuste o enquadramento e depois clique em Cortar imagem.</p>
+                <p class="text-danger">Para melhor enquadramento utilizar imagens na resolução <b>1600 x 670px.</b></p>
+            </div>
+            <div class="row">
+                <div class="col-md-8 crop-area">
+                    <div id="croppingArea"></div>
+                </div>
+                <div class="col-md">
+                    <div id="resultCrop"></div>
+                    <div id="resultado" class="mt-3"></div>
+                    <input type="submit" value="Salvar imagem" class="btn btn-success" />
+
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script src="~/js/croppie/croppie.min.js"></script>
+    <script src="~/js/croppie/exif.min.js"></script>
+    <script src="~/js/banner/cropbanner.js"></script>
+    <script src="~/js/summernote/summernote-bs4.js"></script>
+    <script src="~/js/summernote/summernote-pt-br.js"></script>
+
+    <script>
+        $('#div-crop-image').hide();
+        $('#resultado').hide();
+
+
+        function exibeCrop() {
+            $('#div-crop-image').show();
+        }
+
+
+        $(document).ready(function () {
+            $('#Descricao').summernote({
+                fontStyle: {
+                    foreColor: 'black'
+                },
+                height: 600,
+                lang: 'pt-BR',
+                toolbar: [
+                    ['style', ['bold', 'italic', 'underline', 'clear']],
+                    ['font', ['strikethrough', 'superscript', 'subscript']],
+                    ['fontsize', ['fontsize']],
+                    ['color', ['color']],
+                    ['para', ['ul', 'ol', 'paragraph']],
+                    ['height', ['height']]
+                ]
+            });
+            $('#Descricao').summernote('foreColor', 'black');
+        });
+
+        $('.showPreviewImagemUpload').change(function () {
+            if (typeof (FileReader) !== 'undefined') {
+
+                var imageHolder = $('#image-holder');
+                console.log(divcrop);
+                imageHolder.empty();
+
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    $("<img />",
+                        {
+                            "src": e.target.result,
+                            "style": "height: 300px",
+                            "class": "thumb-image"
+                        }).appendTo(imageHolder);
+                }
+                imageHolder.show();
+                reader.readAsDataURL($(this)[0].files[0]);
+            } else {
+                alert("Este navegador nao suporta FileReader.");
+            }
+        });
+        function gerarSlug(tituloCurto) {
+            if (!tituloCurto) return '';
+
+            // Mapeamento de caracteres acentuados
+            const acentuados = {
+                'ã': 'a',
+                'á': 'a',
+                'à': 'a',
+                'â': 'a',
+                'ä': 'a',
+                'é': 'e',
+                'ê': 'e',
+                'í': 'i',
+                'ó': 'o',
+                'õ': 'o',
+                'ô': 'o',
+                'ö': 'o',
+                'ú': 'u',
+                'ü': 'u',
+                'ç': 'c',
+                // Adicione mais substituições se necessário
+            };
+
+            // Substitui caracteres acentuados
+            const tituloSemAcentos = tituloCurto.replace(/[ãáàâäéêíóõôöúüç]/g, (match) => acentuados[match]);
+
+            return tituloSemAcentos
+                .toLowerCase()
+                .replace(/\s+/g, '-')  // Substitui espaços por hífens
+                .replace(/[^\w\-]+/g, '') // Remove caracteres especiais
+                .replace(/\-\-+/g, '-') // Substitui múltiplos hífens por um único
+                .replace(/^-+/, '') // Remove hífens do início
+                .replace(/-+$/, ''); // Remove hífens do final
+        }
+
+
+        $(document).ready(function () {
+            $('#NomeCurto').on('input', function () {
+                const tituloCurto = $(this).val();
+                const slug = gerarSlug(tituloCurto);
+                $('#NameRoute').val(slug); // Atualiza o campo do slug
+            });
+        });
+    </script>
+}

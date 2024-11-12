@@ -1,0 +1,28 @@
+﻿@model IEnumerable<SiteSesc.Models.ApiPagamento.MatriculasCentral>
+
+@foreach (var matricula in Model)
+{
+    <div class="resume-item pb-0">
+        <h4>@matricula.progocorr.dsusuario</h4>
+        <ul>
+            <li>
+                <a href="#" class="nav-link scrollto p-0 text-black">
+                    <i class="fa fa-search"></i>
+                    <span>Detalhes</span>
+                </a>
+            </li>
+            <li>
+                <a href="#" class="nav-link scrollto p-0 text-black">
+                    <i class="fa fa-money"></i>
+                    <span>Mensalidades</span>
+                </a>
+            </li>
+            <li>
+                <a href="#" class="nav-link scrollto p-0 text-black">
+                    <i class="fa fa-paper"></i>
+                    <span>Ver termo de adesão</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+}

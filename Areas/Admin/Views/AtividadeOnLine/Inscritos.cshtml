@@ -1,0 +1,179 @@
+﻿@model List<SiteSesc.Models.ViewModel.InscritoSituacaoCobranca>
+@{
+    ViewBag.Title = "Atividades OnLine";
+
+}
+
+<h2><b>@ViewBag.NomeAtividade</b></h2>
+<h3>@ViewBag.UOP</h3>
+<h6>Data/Hora da visualização: @DateTime.Now</h6>
+@if (Model != null && Model.Any())
+{
+    <table class="table table-hover" id="tbAtividades">
+        <thead class="table-header">
+            <tr>
+                <th>
+                    NOME DO CLIENTE
+                </th>
+                <th>
+                    DATA DE NASCIMENTO
+                </th>
+                <th>
+                    HABILITAÇÃO
+                </th>
+                <th>
+                    CPF
+                </th>
+                <th width="150px">
+                    CONTATO
+                </th>
+                <th>
+                    DATA DA INSCRIÇÃO
+                </th>
+                <th>
+                    CATEGORIA
+                </th>
+                <th>
+                    ORIGEM
+                </th>
+                <th>
+                    PAGAMENTO
+                </th>
+                <th hidden>
+
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        <b>@item.cliente.NMCLIENTE</b> 
+                    </td>
+                    <td>
+                        @item.cliente.DTNASCIMEN.ToShortDateString()
+                    </td>
+                    <td class="text-center">
+                        @item.cliente.Matricula
+                    </td>
+                    <td class="text-center">
+                        @item.cliente.NUCPF
+                    </td>
+                    <th style="width: 100px !important">
+                        @if (item.contatos != null && item.contatos.Any())
+                        {
+                            <a class="label label-success" data-bs-toggle="modal" data-bs-target="#contatos-@item.cliente.NUCPF"><span class="fa fa-search"></span> Ver contatos</a>
+                        }
+                        else
+                        {
+                            <span class="label label-warning">Sem contatos</span>
+                        }
+                    </th>
+                    <td class="text-center">
+                        @item.dataInscricao.Value.ToShortDateString()
+                    </td>
+                    <td class="text-center" width="150px">
+                        @item.categoria.ToUpper()
+                    </td>
+                    <td>
+                        @switch (item.cdfonteinf)
+                        {
+                            case 6:
+                                <span style="color: dodgerblue">Internet</span>
+                                break;
+                            default:
+                                <span style="color: green">Balcão</span>
+                                break;
+                        }
+                    </td>
+                    <td class="text-center">
+                        @if (item.cdfonteinf == 6)
+                        {
+                            var dataInscricao = item.dataInscricao.Value;
+                            var agora = DateTime.Now;
+                            var prazo = agora - dataInscricao;
+
+                            if (prazo.TotalHours < 48)
+                            {
+                                <span>Aguardando pagamento</span>
+                            }
+                            else
+                            {
+                                <span>@item.situação</span>
+                            }
+                        }
+                        else
+                        {
+                            <span>@item.situação</span>
+                        }
+                    </td>
+                    <td>
+                        <div class="modal fade" id="contatos-@item.cliente.NUCPF" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">Contatos</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <input id="cpfFiltro" type="hidden" />
+                                        <table class="table">
+                                            <thead class="table-header">
+                                                <tr>
+                                                    <th>NOME DO CONTATO</th>
+                                                    <th>DDD</th>
+                                                    <th>CONTATO</th>
+                                                    <th></th>
+                                                </tr>
+                                            </thead>
+                                            @if (item.contatos != null && item.contatos.Any())
+                                            {
+                                                foreach (var contato in item.contatos)
+                                                {
+                                                    <tbody>
+                                                        <tr>
+                                                            @if (!String.IsNullOrEmpty(contato.nmpessoa))
+                                                            {
+                                                                <td >@contato.nmpessoa</td>
+                                                            }
+                                                            else
+                                                            {
+                                                                <td class="text-white-50">Não informado</td>
+                                                            }
+                                                            <td >@contato.nuddd</td>
+                                                            <td >@contato.dscontato</td>
+                                                            <td>
+                                                                @if (contato.stprincipal == 1)
+                                                                {
+                                                                    <span class="badge badge-light">Principal</span>
+                                                                }
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                }
+                                            }
+
+                                        </table>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </td>
+                </tr>
+
+
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <div class="alert alert-warning">
+        Não há alunos inscrito nesse evento
+    </div>
+}

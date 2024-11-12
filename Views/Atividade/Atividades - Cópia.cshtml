@@ -1,0 +1,102 @@
+﻿@model List<SiteSesc.Models.ModelPartialView.CursoItem>
+@{
+    var unidades = ViewBag.Unidades as List<UnidadeOperacional>;
+    var listaAreas = ViewBag.Areas as List<Area>;
+
+}
+<div class="container mt-5">
+    @if (Model.Any())
+    {
+        <div class="row">
+            <div class="col-xl-12">
+                <div class="course-section-area text-center">
+                    <div class="section-area section-area-top">
+                        <h2 class="section-title mb-20">Atividades</h2>
+                        <div class="row">
+                            <div class="col-md"></div>
+                            <div class="col-md">
+                                <select id="select-atv-uop" class="form-control mb-3 text-center" style="border-radius: 50px; width: 100%" onchange="atividadesPorUop()">
+                                    <option>Selecione uma unidade</option>
+                                    @foreach (var item in unidades)
+                                    {
+                                        <option class="atividade-unidade-option" value="@item.Cduop">@item.Nome.ToLower()</option>
+                                    }
+                                </select>
+                            </div>
+                            <div class="col-md"></div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-xl-12">
+                <div class="course-tab">
+                    <ul class="nav nav-pills" id="pills-tab" role="tablist">
+                        @if (listaAreas != null)
+                        {
+                            foreach (var area in listaAreas)
+                            {
+                                <li class="nav-item" role="presentation" data-category="category-@area.Id">
+                                    <a asp-action="Atividades" asp-controller="Atividade" asp-route-idArea="@area.Id" class="nav-link " id="pills-@area.Id-tab" role="tab" aria-controls="pills-@area.Id" aria-selected="false">@area.Nome</a>
+                                </li>
+                            }
+                        }
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="course-inner">
+            <div class="tab-content" id="pills-tabContent">
+                <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab" tabindex="0">
+                    <div class="row">
+                        <div id="atividadesContainer" class="row">
+
+                            @foreach (var item in Model)
+                            {
+                                <div class="col-xxl-3 col-lg-4 col-md-6 card-pill" data-category="category-${atividade.idCategory}">
+                                    <div class="course-item mb-30">
+                                        <div class="course-img">
+                                            <img src="@item.CourseImage" alt="">
+                                        </div>
+                                        <div class="course-content">
+                                            <div class="course-content-top">
+                                                <div class="course-top-title">
+                                                    <h6>@item.CourseCategory</h6>
+                                                </div>
+                                            </div>
+                                            <h5 class="course-content-title"><a href="/atividade/detalhes/${atividade.cdElement}">@item.CourseTitle</a></h5>
+                                            <div class="course-content-bottom">
+                                                <div class="course-bottom-info">
+                                                    <span>@item.CourseLocation</span>
+                                                </div>
+                                                <div class="course-bottom-price">
+                                                    <label>A partir de</label><span>R$ @item.CoursePrice</span>
+                                                </div>
+                                            </div>
+                                            <a href="/atividade/detalhes/@item.CdElement" class="theme-btn course-btn">Clique aqui</a>
+                                            <div class="course-hover-cart-btn">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+
+
+    }
+</div>
+
+
+@* @section Scripts{
+    <script src="~/js/atividade/searchatividade.js"></script>
+} *@

@@ -1,0 +1,175 @@
+@inject Microsoft.Extensions.Configuration.IConfiguration Configuration
+@using System.Web
+@using SiteSesc.Repositories;
+
+<!DOCTYPE html>
+<html lang="pt-br" xml:lang="pt-br">
+@{
+    var request = this.ViewContext.HttpContext.Request;
+    var urlAtual = $"{request.Scheme}://{request.Host}{request.Path}{request.QueryString}";
+    var caminhoImagem = "";
+    string caminhoDescricao ="";
+    
+    
+    string[] words = urlAtual.Split('/');
+    int cont = @words.Length - 1;    
+    if(this.ViewBag.AtvTituloUrl != null){
+       words[cont] = this.ViewBag.AtvTituloUrl;        
+       caminhoImagem = this.ViewBag.AtvCaminhoVirtual;
+       int size = this.ViewBag.AtvTextoUrl.Length;
+       caminhoDescricao = this.ViewBag.AtvTextoUrl.Replace("&nbsp;", " ");
+       caminhoDescricao = caminhoDescricao.Substring(0, (caminhoDescricao.Length < 150 ? caminhoDescricao.Length : 150));
+
+    }
+    else if(this.ViewBag.nomeLicitacao != null){
+       words[cont] = "Licitação Nº " + this.ViewBag.nomeLicitacao ;               
+    }
+    else if(this.ViewBag.nomeProcessoSeletivo != null){
+        words[cont] = "Processo Seletivo Nº " + this.ViewBag.nomeProcessoSeletivo ;  
+    }
+    else if(this.ViewBag.nomeEdital != null){
+        words[cont] = "Edital de Credenciamento Nº " + this.ViewBag.nomeEdital ;  
+    }
+    else if (this.ViewBag.ProgTitulo != null)
+    {
+        words[cont] = this.ViewBag.ProgTitulo;
+    }
+} 
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="theme-color" content="#004c99">
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+        <title>Cinema - Sesc Unidade</title>
+
+        <link rel="stylesheet" href="~/css/Cinema/style.css" />
+        <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+        <link async src="https://code.jquery.com/jquery-3.7.1.min.js">
+
+
+        @{
+            string tituloHeader ="";
+            string descricaoHeader ="";
+            if (@words[@cont] == "")
+            {
+                tituloHeader = "Sesc no Pará";
+                descricaoHeader = "O Sesc proporciona Lazer, Saúde, Educação, Cultura e Assistencia ao comerciário e seus dependentes.";
+            }
+            else
+            if (@words[@cont] == "cinema")
+            {
+                tituloHeader = "Cinema - Sesc | PA";
+                descricaoHeader = "Esporte e Lazer.";
+            }
+            else
+            {
+                string primeiraLetraMaiuscula = char.ToUpper(words[cont][0]) + words[cont].Substring(1);
+                tituloHeader = primeiraLetraMaiuscula + " - Sesc | PA";
+                descricaoHeader = caminhoDescricao;
+            }
+        }
+        <title>@tituloHeader</title>
+        <meta name="description" content="@descricaoHeader" />
+        @* GERAL *@
+        <meta property="og:locale" content="pt_BR">
+        <meta property="og:title" content="@tituloHeader" />
+        <meta property="og:description" content="@descricaoHeader" />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="@urlAtual" />
+        <meta property="og:site_name" content="@tituloHeader" />
+        <meta property="og:image" content="@caminhoImagem" />
+        @* X - Twitter *@
+        <meta name="twitter:url" content="@urlAtual" />
+        <meta name="twitter:title" content="@tituloHeader" />
+        <meta name="twitter:description" content="@descricaoHeader" />
+        <meta name="twitter:image" content="@caminhoImagem" />
+        <meta name="twitter:card" content="summary">
+
+    </head>
+    <body>
+        
+        <header>
+            <button class="contentHeaderLogo" role="button" onclick="location.href='/cinema'" 
+                        aria-describedby="prosseguir para finalizaçao do pedido">
+                <div class="logoImg1">
+                    <img src="~/images/static/logo-sesc-branco-x.webp">
+                </div>
+                <div class="logoImg2">
+                    <span>|</span>
+                    <img src="~/images/static/logo-sesc-branco-x.webp">
+                    <p>Pará</p>
+                </div>
+            </button>
+            <div class="contentHeaderMenu">
+                <button class="opMenu" onclick="location.href='https://sesc-pa.com.br/login'">
+                    Fazer Login
+                </button>
+
+                <button class="opMenu" onclick="ativarAside()">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" fill="currentColor" class="bi bi-list" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5"/>
+                    </svg>
+                </button>
+            </div>
+            
+            
+        </header>
+
+        <aside id="menuAside">
+            <nav>
+                <div class="areaFechar">
+                    <button alt="open/close button" class="botaoFechar" onclick="ativarAside()">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
+                        <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
+                        </svg>
+                    </button>
+                </div>
+
+                <div class="logoImgMenu">
+                    <img src="~/images/static/logo-sesc-branco-x.webp">
+                </div>
+                
+                <div class="perfil">
+                    <div class="areaImagem"><img src="image/imagemperfil.jpg" /></div>
+                    <h3 align="center">Mariano Gomes</h3>
+                </div>
+
+                <ul class="listaMenu">
+                    <li><a href="/">Meus Ingresso</a></li>
+                    <li><a href="#">Voltar ao Portal Sesc</a></li>
+                    <li><a href="#">Espaço do Cliente</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <main>
+
+            <h1 align="center">Cinema - Sesc Ver-o-Peso</h1>
+            <hr>
+
+
+            <article>
+                @RenderBody()
+            </article>
+
+
+        </main>
+
+        <footer>
+            <p>Copyright © 2024 Serviço Social do Comércio AR/PA</p>
+        </footer>
+
+    </body>
+</html>
+
+
+<script type="text/javascript">
+    function ativarAside(){
+        elemento = document.getElementById('menuAside')
+        elemento.classList.toggle("exibirMenuAside");
+        elemento.style.transition=" all 0.5s ease" 
+        elemento.style.display = elemento.style.display === 'block' ? 'none' : 'block';
+    }
+</script>
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script type="text/javascript" src="~/js/Cinema/scriptCinema.js" ></script>

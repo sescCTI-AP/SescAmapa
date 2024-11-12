@@ -1,0 +1,102 @@
+﻿@model Dictionary<string, string>
+
+
+@{
+    Layout = "~/Views/Shared/_Empty.cshtml";
+
+}
+
+@* <h2>Errors</h2>
+
+<ul>
+    @foreach (var error in Model)
+    {
+        <li>@error.Key: @error.Value</li>
+    }
+</ul>
+ *@
+<style>
+    body{
+        background-color: aliceblue
+    }
+    .container-center {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        /* height: 80vh; */
+    }
+
+    .card {
+        max-width: auto;
+        height: 400px;
+        margin: 10px;
+        border: 1px solid black;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 20px;
+        padding: 20px
+    }
+
+
+    .bg-yellow {
+        background-color: #f7c305;
+        border: none
+    }
+
+    .bg-blue {
+        background-color: dodgerblue;
+        color: white;
+        border: none
+    }
+
+    .img-categoria {
+        width: 150px;
+        margin-bottom: 20px
+    }
+
+        .img-categoria:hover {
+            width: 200px
+        }
+    .logo-center{
+        margin-top: 30px
+    }
+</style>
+
+<p>@ViewBag.Msg</p>
+<div class="container text-center">
+    <img src="~/images/static/logo-sesc.webp" style="width: 200px" class="mb-3 mt-5" />
+    <h4 class="mt-5">Escolha uma das categorias abaixo conforme o seu perfil</h4>
+    <div class="mt-5 container-center">
+        <div class="row">
+            <div class="col-md-6 col-xs-12">
+                <a href="@Url.Action("Create", "SolicitacaoCadastroCliente", new {categoria = 2})">
+                    <div class="card  bg-blue text-center">
+                        <div class="card-body">
+                            <img src="~/images/static/avatar-de-perfil.png" class="img-categoria" />
+                            <h4 class="text-white">Público em geral</h4>
+                            <span>Categoria destinada às pessoas que não possui vínculo empregatício no ramo de bens, serviços e turismo</span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-md-6 col-xs-12">
+                <a href="@Url.Action("Create", "SolicitacaoCadastroCliente", new {categoria = 0})">
+                    <div class="card  bg-yellow text-center">
+                        <div class="card-body">
+                            <img src="~/images/static/entregadora.png" class="img-categoria" />
+                            <h4>Trabalhador do comércio</h4>
+                            <span>Categoria destinada às pessoas que possuem vínculo empregatício no ramo de bens, serviços e  turismo</span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+<div class="container text-center mt-5">
+    <a href="@Url.Action("Index", "Home")" >Voltar</a><br />
+
+</div>

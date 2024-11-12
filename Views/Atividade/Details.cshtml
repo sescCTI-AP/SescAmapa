@@ -1,0 +1,332 @@
+﻿@model SiteSesc.Models.ViewModel.AtividadeViewModel
+@using SiteSesc.Services
+@using SiteSesc.Models.ApiPagamento
+@using Microsoft.AspNetCore.Http;
+@using Microsoft.AspNetCore.Mvc;
+@using System.Text
+@using System;
+@using System.Net;
+
+@{
+    var clientes = ViewBag.Clientes as List<ClientelaViewModel>;
+    var usuario = ViewBag.Usuario as ClientelaViewModel;
+    var urlResposta = Context.Request.Path;
+
+}
+
+<style>
+    .padronizar-share-icon{
+        cursor: pointer;
+    }
+
+    .padronizar-share-icon a i{
+        color:gray
+    }
+    
+    .padronizar-share-icon:hover a i{
+        color:white
+    }
+</style>
+
+<link href="~/css/compra.css" rel="stylesheet" />
+
+
+<section class="course_details-area pb-60">
+    <div class="container">
+        <div class="course_details-img">
+            @*<iframe width="100%" height="600" src="https://www.youtube.com/embed/qiGRMJrMJN4?&autoplay=1" title="Academia" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"></iframe>*@
+            <img src="@Model.Imagem" alt="@Model.NomeExibicao" loading="lazy" width="100%" style="border-radius: 30px">
+        </div>
+        <div class="row">
+            <div class="col-xl-8 col-lg-8">
+                <div class="course_details-wrap mb-55">
+                    <div class="course_details-top mb-60">
+                        <h3 class="course_details-title">@Model.NomeExibicao</h3>
+                        <div class="course_details-meta">
+                                
+                                <div class="course-distribuicao">
+                                    <div class="course_details-author">
+                                        <div class="course_details-author-info">
+                                            <span>Unidade</span>
+                                            <h5><a href="team.html">@Model.Uop</a></h5>
+                                        </div>
+                                    </div>
+
+                                    <div class="course_details-category">
+                                        <span>Categoria</span>
+                                        <h5><a href="#">@Model.SubArea</a></h5>
+                                    </div>
+                                </div>
+
+                                <div class="course-distribuicao">
+                                    <div class="course_details-rating">
+                                        @if (Model.NumeroVagasOcupadas >= Model.NumeroVagas)
+                                        {
+                                            <span class="badge bg-danger text-white">Vagas esgotadas</span>
+                                        }
+                                        else if (Util.PoucasVagas(Model.NumeroVagas, Model.NumeroVagasOcupadas))
+                                        {
+                                            <span class="badge bg-warning">Poucas vagas</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-success text-white">Vagas disponíveis</span>
+                                        }
+                                    </div>
+
+                                    <div class="course_details-category">
+                                        <div class="footer-social">
+                                            <span>Compartilhe essa atividade</span>
+                                            @{
+                                                string textoConcat = "https://sesc-pa.com.br"; 
+                                                string[] words = ViewBag.CurrentUrl.Split('/');
+                                                for (int i = 3; i < words.Length; i++)
+                                                {
+                                                    textoConcat = textoConcat +"/"+ Encoding.UTF8.GetString(Encoding.Default.GetBytes(@words[i]));
+                                                }
+                                            }
+                                            <ul>
+                                                <!--<li><a href="#"><i class="fa-brands fa-x-twitter"></i></a></li>-->
+                                                <li class="padronizar-share-icon">
+                                                    <a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=@textoConcat">
+                                                    <i class="fa-brands fa-facebook-f"></i>
+                                                    </a>
+                                                </li>
+                                                <li class="padronizar-share-icon">
+                                                    <a target="_blank" href="https://www.linkedin.com/shareArticle?mini=true&url=@textoConcat">
+                                                        <i class="fa-brands fa-linkedin-in"></i>
+                                                    </a>
+                                                </li>
+                                                <li class="padronizar-share-icon">
+                                                    <a target="_blank" href="https://api.whatsapp.com/send?text=@textoConcat" >
+                                                        <i class="fa-brands fa-whatsapp"></i>
+                                                    </a>
+                                                </li>
+                                                <li class="padronizar-share-icon">
+                                                    <a onclick="share()">
+                                                        <i class="fa fa-share" aria-hidden="true"></i>
+                                                    </a>
+                                                </li>
+                                            </ul>
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                        </div>
+                    </div>
+                    <div>
+                        <div class="course_details-content">
+                            @Html.Raw(Model.Descricao)
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="col-xl-4 col-lg-4">
+                <div class="course_details-sidebar mb-60">
+
+                    @if (ViewBag.Logado ?? false)
+                    {
+                        <input id="cpfselecionado" value="@usuario.NUCPF" hidden />
+                        <input id="cdelement" value="@Model.Cdelement" hidden />
+                       
+                        <div class="container-usuarios">
+                            <h5 class="text-center">Selecione um cliente</h5>
+                            
+                            @if (clientes?.Any() == true)
+                            {
+                                foreach (var dep in clientes)
+                                {
+                                    <div class="text-center isSelectable" id="swiper-@dep.NUCPF">
+                                        <div class="item-dependente" onclick="selectUser('@dep.NUCPF')" id="@dep.NUCPF">
+                                            @if (dep.FotoCliente == null)
+                                            {
+                                                <img class="imagem-circular" src="~/images/static/not-img.png" alt="Imagem não encontrada">
+
+                                            }
+                                            else
+                                            {
+                                                <img class="imagem-circular" src="@dep.FotoCliente" alt="Imagem - @dep.NomeAbrev">
+
+                                            }
+                                            <span class="legenda">@dep.NomeAbrev</span>
+                                        </div>
+                                    </div>
+                                }
+                            }
+
+                        </div>
+
+                        <hr />
+                    }
+
+                    <div class="course_details-price">
+                        @if (ViewBag.SemValor != null)
+                        {
+                            <h5 class="alert alert-warning">@ViewBag.SemValor</h5>
+                        }
+                        else if (ViewBag.Logado ?? false)
+                        {
+                            <h5>Valor para "Categoria"</h5>
+                            <h2>R$ @usuario.VLPARCELA</h2>
+                        }
+                        else
+                        {
+                            <h5>A partir de</h5>
+                            <h2>R$ @Model.Valores.Min(va => va.vlparcela)</h2>
+                        }
+                    </div>
+                    <div class="course_details-list">
+                        <ul>
+                             @if (Model.Hrinicio != null)
+                            {
+                                @*<li>
+                                     <span><i class="fa-solid fa-clock"></i>Horário</span>
+                                    <span>@Model.Hrinicio h às @Model.Hrfim h</span>
+                            </li>*@
+                            }  
+
+                            <li>
+                                <span><i class="fa-solid fa-calendar-days"></i>Início</span>
+                                @if (Model.DataInicioAtividade?.Date <= DateTime.Now.Date)
+                                {
+
+                                    <span> &nbsp; Imediato</span>
+                                }
+                                else
+                                {
+                                    <span>@Model.DataInicioAtividade?.ToShortDateString()</span>
+                                }
+                            </li>
+                            @if (Model.DescontoPontualidade)
+                            {
+                                <li>
+                                    <span><i class="fa-solid fa-percent"></i>Desconto de pontualidade*</span>
+                                    <span>5%</span>
+                                </li>
+                            }
+                        </ul>
+                        <div class="course_details-sidebar-btn">
+                            @if (ViewBag.Vencido == "1")
+                            {
+                                <p class="alert alert-warning">Não é possível prosseguir com a inscrição no momento. Procure a central de atendimento para mais detalhes.</p>
+
+                            }
+                            else
+                            {
+                                @if (ViewBag.SemValor == null)
+                                {
+                                    if (ViewBag.Logado ?? false)
+                                    {
+                                        @if(Model.NumeroVagasOcupadas < Model.NumeroVagas){
+
+                                        <a id="abrirModal" class="course-btn theme-btn theme-btn-big">INSCREVER AGORA!</a>
+                                        }
+                                        else
+                                        {
+                                            <a class="course-btn theme-btn theme-btn-big" style="background-color: red; color: white;">VAGAS ESGOTADAS!</a>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <a class="course-btn theme-btn theme-btn-big" href="@Url.Action("Login", "Usuario", new{cdelement = Model.Cdelement})">
+                                            Acessar
+                                        </a>
+                                    }
+                                }
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<div id="modal-termo" class="modal">
+    <div class="modal-content">
+        <span class="fechar">&times;</span>
+        <div id="conteudoModal"></div>
+    </div>
+</div>
+
+
+<script>
+
+
+    function share(){
+        if (navigator.share !== undefined) {
+            navigator.share({
+                title: 'Sesc no Pará',
+                text: "@WebUtility.HtmlDecode(Model.NomeExibicao)",
+                url: "@textoConcat",
+            })
+            .then()
+            .catch((error) => console.log('Error sharing', error));
+        }
+    }
+
+    function selectUser(cpf) {
+        $('#cpfselecionado').val(cpf);
+        var elementosSelecionaveis = document.querySelectorAll('.isSelectable');
+        elementosSelecionaveis.forEach(function (elemento) {
+            elemento.style.backgroundColor = '';
+        });
+
+        var ele = document.getElementById('swiper-'+cpf);
+        ele.style.backgroundColor = 'lightgrey';
+        ele.style.borderRadius = '10px';
+
+
+
+        // var elementoCPF = document.getElementById(cpf);
+        // console.log(elementoCPF);
+        // elementoCPF.style.backgroundColor = 'lightgrey';
+        // console.log($('#cpfselecionado').val());
+    }
+
+    document.getElementById('abrirModal').addEventListener('click', function () {
+        var botao = document.getElementById('abrirModal');
+        botao.innerHTML = "";
+        var imagem = document.createElement('img');
+        imagem.src = '../../images/static/loading.gif';
+        imagem.width = 40;
+        imagem.width = 40;
+        imagem.height = 40;
+        botao.appendChild(imagem);
+
+        botao.classList.add('disabled');
+
+
+        var cdelement = document.getElementById('cdelement').value;
+        var cpfCliente = document.getElementById('cpfselecionado').value;
+
+        fetch('/atividade/finalizar-compra/' + cdelement + '/' + cpfCliente)
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('conteudoModal').innerHTML = data;
+                document.querySelector('.modal').style.display = 'block';
+                botao.innerHTML = "INSCREVER AGORA!"
+                botao.classList.remove('disabled');
+
+            })
+            .catch(error => console.error('Erro ao carregar a partial view:', error));
+    });
+
+    document.querySelector('.fechar').addEventListener('click', function () {
+        document.querySelector('.modal').style.display = 'none';
+    });
+
+
+    function habilitaCadastro() {
+        var checked = $('#aceita-termo');
+        if (checked[0].checked == true) {
+            $("#btn-confirmar").attr("disabled", false);
+        } else {
+            $("#btn-confirmar").attr("disabled", true);
+        }
+    }
+
+</script>

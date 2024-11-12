@@ -1,0 +1,74 @@
+﻿@model SiteSesc.Models.ProcessoSeletivo.psl_processoSeletivo
+@{
+    ViewBag.Title = "Processo Seletivo";
+}
+
+
+<div class="container mt-5 mb-4">
+    <h4>Processo Seletivo Nº. @Model.NumeroProcessoSeletivo</h4>
+    @if (Model.DataAberturaCurriculo != null && Model.DataFimCurriculo != null && Model.psl_cargoProcessoSeletivo != null)
+    {
+        if (Model.IdStatusProcessoSeletivo == 1 && DateTime.Now >= Model.DataAberturaCurriculo && DateTime.Now <= Model.DataFimCurriculo && Model.psl_cargoProcessoSeletivo.Any())
+        {
+            <div class="col-md text-right">
+                <a class="btn btn-primary" style="border-radius: 0px" asp-action="Cargos" asp-controller="ProcessoSeletivo" asp-route-num="@Model.NumeroProcessoSeletivo.Replace("/", "-")">Enviar documentação</a>
+            </div>
+        }
+    }
+    <p style="font-style: italic">@Model.Descricao</p>
+    <p class="mb-0 mt-5">
+        Cargos: @if (Model.psl_cargoProcessoSeletivo != null)
+        {
+            foreach (var (cargo, index) in Model.psl_cargoProcessoSeletivo.Select((valor, indice) => (valor, indice)))
+            {
+                <span><b>@cargo.Nome</b></span>
+                if (index < Model.psl_cargoProcessoSeletivo.Count() - 1)
+                {
+                    <span>,</span>
+                }
+            }
+        }
+    </p>
+    <p class="mb-0">
+        Áreas: @if (Model.psl_areasProcessoSeletivo != null)
+        {
+            foreach (var (area, index) in Model.psl_areasProcessoSeletivo.Select((valor, indice) => (valor, indice)))
+            {
+                <span><b>@area.Area.Nome</b></span>
+                if (index < Model.psl_areasProcessoSeletivo.Count() - 1)
+                {
+                    <span>,</span>
+                }
+            }
+        }
+    </p>
+    <p class="mb-0">
+        Cidades: @if (Model.psl_cidadesProcessoSeletivo != null)
+        {
+            foreach (var (cidade, index) in Model.psl_cidadesProcessoSeletivo.Select((valor, indice) => (valor, indice)))
+            {
+                <span><b>@cidade.Cidade.Nome</b></span>
+                if (index < Model.psl_cidadesProcessoSeletivo.Count() - 1)
+                {
+                    <span>,</span>
+                }
+            }
+        }
+    </p>
+    <p class="mb-0">
+        Data de abertura: <b>@Model.DataPublicacao.ToShortDateString()</b>
+    </p>
+    <p class="mb-0">Situação: <b>@Model.psl_statusProcessoSeletivo.Descricao</b></p>
+    <div class="mt-3">
+        <span>Arquivos:</span>
+        @if (Model.psl_arquivosProcessoSeletivo?.Any() == true)
+        {
+            <ul>
+                @foreach (var arquivo in Model.psl_arquivosProcessoSeletivo)
+                {
+                    <li><a target="_blank" href="@arquivo.Arquivo.CaminhoVirtualFormatado()" style="color: dodgerblue"><b>- @arquivo.Arquivo.NomeArquivo</b></a></li>
+                }
+            </ul>
+        }
+    </div>
+</div>

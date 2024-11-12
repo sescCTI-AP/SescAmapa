@@ -1,0 +1,91 @@
+﻿canvas{
+    width: auto !important
+
+}
+[type="checkbox"] {
+    display: none;
+}
+
+.simple-tree-table-icon {
+    color: black !important
+}
+
+.filtro-uop {
+    background-color: transparent;
+    border: 1px solid white;
+    color: white;
+    margin-bottom: 5px
+}
+
+.input-selecionado {
+    background-color: #e3e3e3 !important;
+    color: dodgerblue !important
+}
+
+.btn-filtro {
+    background-color: dodgerblue !important;
+    border-radius: 0px;
+    border: 0px !important
+}
+
+.btn-filtro-geral {
+    background-color: transparent !important;
+    border-radius: 0px;
+    border: 1px solid dodgerblue !important;
+    color: dodgerblue
+}
+
+
+.card {
+    border: 0px !important;
+    border-radius: 0px !important
+}
+
+.buttons-excel {
+    border: 0px !important;
+    background-color: transparent !important;
+    padding: 5px !important;
+    margin-left: 10px !important;
+    color: white !important;
+    background-size: 35px 35px;
+    background-image: url("../../img/excel.png") !important;
+    height: 35px;
+    width: 35px;
+}
+
+    .buttons-excel > span {
+        display: none !important
+    }
+
+.circulo {
+    width: 70px;
+    height: 70px;
+    border-radius: 35px;
+    opacity: 0.3;
+    background-color: gray;
+    margin-top: 5px;
+    position: relative;
+}
+
+.bg-red {
+    background-color: red
+}
+
+.no-opacity {
+    opacity: 1 !important
+}
+
+.square-semaforo {
+    background-color: black;
+    width: 90px;
+    height: 245px;
+    padding: 10px;
+    border-radius: 45px
+}
+
+.center-filho {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}

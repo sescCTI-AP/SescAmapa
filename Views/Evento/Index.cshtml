@@ -1,0 +1,103 @@
+﻿@inject Microsoft.Extensions.Configuration.IConfiguration Configuration
+@model List<SiteSesc.Models.ModelPartialView.EventoCard>
+@{
+    var listaAreas = ViewBag.Areas as List<Area>;
+}
+
+<style>
+
+    .areaTitulo{
+        background: url("../images/programacao.webp") center no-repeat;
+        background-size: cover;
+        color: white;
+        min-height: 200px;
+        width: calc(100% - 2rem);
+        overflow: hidden;
+        padding: 0 1rem;
+        margin: 1rem;
+        border-radius: 0.5rem ;
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+    }
+
+    .areaTitulo h2{
+        color: white;
+        text-shadow: 0 0 50px black;
+        font-size: clamp(30px, 30px + 1vw, 46px)
+    }
+
+    #pills-tab{
+        background: #EFEFEF;
+    }
+
+    .textoComplementar {
+        font-size: 1.4rem;
+        padding: 1rem;
+    }
+
+</style>
+
+
+<section class="mt-5">
+    <div class="container">
+        <section class="course-area">
+            <div class="container-fluid container-custom-1 p-0">
+
+                    <div class="areaTitulo">
+                        <h2>
+                            Programação
+                        </h2>
+                    </div>
+
+                    <p class="textoComplementar">Veja as programações das nossas unidades.</p>
+
+                    <div class="container">
+                                                
+                        <div class="row">
+                            <div class="col-xl-12">
+                                <div class="course-tab">
+                                    <ul class="nav nav-pills" id="pills-tab" role="tablist">
+                                        <li class="nav-item" role="presentation">
+                                            <button class="nav-link active" id="pills-home-tab" data-bs-toggle="pill" data-bs-target="#pills-home" type="button" role="tab" aria-controls="pills-home" aria-selected="true">
+                                                Ver todas
+                                            </button>
+                                        </li>
+
+                                        @if (listaAreas != null)
+                                        {
+                                            foreach (var area in listaAreas)
+                                            {
+                                                <li class="nav-item" role="presentation">
+                                                    <button class="nav-link" id="pills-@area.Id-tab" data-bs-toggle="pill" data-bs-target="#pills-@area.Id" type="button" role="tab" aria-controls="pills-@area.Id" aria-selected="false">@area.Nome</button>
+                                                </li>
+                                            }
+                                        }
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="course-inner">
+                            <div class="tab-content" id="pills-tabContent">
+                                <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab" tabindex="0">
+                                    @*<div class="row"> *@
+                                    <div class="programacao-Container">
+                                        @if (Model != null)
+                                        {
+                                            foreach (var evento in Model)
+                                            {
+                                                @await Html.PartialAsync("PartialView/_PartialViewEventoCard", evento)
+                                            }
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+            </div>
+        </section>
+
+    </div>
+</section>

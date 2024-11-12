@@ -1,0 +1,85 @@
+﻿@model SiteSesc.Models.UnidadeOperacional
+@using SiteSesc.Models.ModelPartialView;
+
+@{
+    var listaNoticias = ViewBag.ListNoticias as List<NoticiaCard>;
+
+}
+<style>
+    .btn-outline {
+        border: 1px solid gray;
+        padding: 5px;
+        border-radius: 6px;
+    }
+
+    .btn-outline:hover {
+            background-color: gray;
+            color: white;
+     }
+
+    .pb-40 {
+        color: white;
+    }
+</style>
+<div class="container mt-5">
+    <h2>@Model.NomeCurto</h2>
+</div>
+
+<section class="course_details-area pb-60">
+    <div class="container">
+        <div class="course_details-img">
+            @if (Model.Arquivo != null)
+            {
+                <img src="@Model.Arquivo.CaminhoVirtualFormatado()" class="mb-4" alt="" width="100%" style="border-radius: 30px">
+            }
+        </div>
+    </div>
+</section>
+
+<section class="container">      
+    @Html.Raw(Model.Descricao)
+</section>
+
+
+<section class="event-area">
+    <div class="event-wrap pt-120 pb-40">
+        <div class="container">
+            <div class="row align-items-center mb-30">
+                <div class="col-xl-8 col-lg-8 col-md-8">
+                    <div class="event-section-area mb-20">
+                        <div class="section-area">
+                            <span class="section-subtitle">Notícias @Model.NomeCurto</span>
+                            <h2 class="section-title mb-0">Últimas Notícias</h2>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-4 col-lg-4 col-md-4">
+                    <div class="event-navigation mb-30">
+                        <div class="event-prev">
+                            <i class="fa-solid fa-arrow-left"></i>
+                        </div>
+                        <div class="event-next">
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="event-active swiper pb-80">
+                <div class="swiper-wrapper">
+                    @if (listaNoticias != null)
+                    {
+                        foreach (var noticia in listaNoticias)
+                        {
+                            <div class="swiper-slide">
+                                @await Html.PartialAsync("PartialView/_PartialViewNoticiaCard2", noticia)
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+

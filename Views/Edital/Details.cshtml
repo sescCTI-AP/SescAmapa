@@ -1,0 +1,36 @@
+﻿@model SiteSesc.Models.Edital.edt_edital
+@{
+    ViewBag.Title = "Editais";
+}
+
+
+<div class="container mt-5 mb-4">
+
+    <h4>Edital Nº. @Model.NumeroEdital</h4>
+    <h6>@Model.Objeto</h6>
+    <p style="font-style: italic">@Model.Descricao</p>
+    <p class="mb-0 mt-5">
+
+
+
+                <div class="col-md text-right">
+                    <a class="btn btn-primary" style="border-radius: 0px" asp-action="CargosEdital" asp-controller="Edital" asp-route-num="@Model.NumeroEdital.Replace("/", "-")">Acessar Edital</a>
+                </div>
+  
+        Data de abertura: <b>@Model.DataReuniao.ToShortDateString()</b>
+    </p>
+
+    <p class="mb-0">Situação: <b>@Model.edt_statusEdital.Descricao</b></p>
+    <div class="mt-3">
+        <span>Arquivos:</span>
+        @if (Model.edt_arquivosEdital?.Any() == true)
+        {
+            <ul>
+                @foreach (var arquivo in Model.edt_arquivosEdital)
+                {
+                    <li><a target="_blank" href="@arquivo.Arquivo.CaminhoVirtualFormatado()" style="color: dodgerblue"><b>- @arquivo.Arquivo.NomeArquivo</b></a></li>
+                }
+            </ul>
+        }
+    </div>
+</div>

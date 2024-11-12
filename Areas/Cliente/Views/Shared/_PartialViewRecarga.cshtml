@@ -1,0 +1,165 @@
+﻿@model SiteSesc.Models.ApiPagamento.ClienteCentral
+@using SiteSesc.Models.ApiPagamento
+
+<style>
+    .btn-close {
+        padding: 1em 1em !important;
+    }
+
+    .inline {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .textoAtencao{
+        color: #800000;
+    }
+
+    .card-body{
+        padding: 1rem 0.5rem 0rem 0.5rem !important;
+    }
+
+    .nomeCliente {
+        text-transform: capitalize;
+        font-size: clamp(16px, calc(16px + 1vw) , 22px);
+    }
+    .formaDePagamentoPix:hover .card {background: rgba(1,189,175,0.1);}
+    .formaDePagamentoPix:hover *{color: #01bdaf;}
+
+    .formaDePagamentoCartao:hover .card {background: rgba(189,1,1,0.1);}
+    .formaDePagamentoCartao:hover *{color: #bd0101;
+    }
+
+</style>
+
+<div id="modal-recarga" class="modal fade" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Recarga do seu Cartão Sesc</h3>
+                <a type="button" class="btn-close close" data-bs-dismiss="modal" aria-label="Fechar"></a>
+            </div>
+            <div class="modal-body text-center">
+                <div id="dados-beneficiario-recarga" class="mt-3">
+
+                    <img src="~/images/static/logo-sesc.webp" width="100"/>
+                    <p class="mt-3 mb-0"><b>Dados do beneficiário</b></p>
+
+                    @* <a href="" class="btn-rounded bg-transaparent pt-0 pb-0 pl-2 pr-2 font-size-12">Trocar beneficiário</a> *@
+
+                    <p class="mt-2 mb-0"><span class="font-weight nomeCliente">@Model.Nmcliente.ToLower()</span></p>
+                    <p class="m-0">Credencial Sesc: <span>@Model.Credencial</span></p>
+                    @* <p class="m-0">CPF: <span id="cpf-recarga"></span></p> *@
+                </div>
+
+
+                    <p class="mt-3 textoAtencao"><strong>ATENÇÃO:</strong> a recarga do seu cartão é para uso exclusivo em restaurantes e lanchonetes do Sesc
+                    , não deve ser usada para inscrições em nossas atividades. Em caso de dúvidas fale conosco através dos <a href="https://sesc-pa.com.br/fale-conosco">nossos canais</a>.</p>
+
+
+                <div id="div-escolha-metodo">
+                    <p class="mt-3">Escolha uma forma de pagamento:</p>
+                    <div class="row" style="justify-content: center;">
+                        <div class="col-md-4 formaDePagamentoPix">
+                            <a onclick="carregaPix();">
+                                <div class="card mb-3">
+                                    <div class="card-body">
+                                        <i class="fa-brands fa-pix font-size-48 icon-gray"></i>
+                                        <p>Pix</p>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-md-4 formaDePagamentoCartao">
+                            <a onclick="carregaCartao()">
+                                <div class="card mb-3">
+                                    <div class="card-body">
+                                        <i class="bx bxs-credit-card-alt font-size-48 icon-gray"></i>
+                                        <p>Cartão de crédito</p>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div id="div-pix" style="display: none;">
+                    <div class="form-pix" id="form-pix-@Model.Numcartao">
+                        <div class="mt-5 inline">
+                            <span class="font-size-48">R$</span><input type="text" class="form-control font-size-48 moneyInput" id="valor-regarga" name="valorRecarga" placeholder="Digite um valor" />
+                        </div>
+                        <input hidden name="dados.IDCLASSE" value="CART" />
+                        <input hidden name="dados.CDUOP" value="@Model.Cduop" />
+                        <input hidden name="dados.SQMATRIC" value="@Model.Sqmatric" />
+                        <input hidden name="dados.CPF" value="@Model.Nucpf" />
+                        <input hidden name="dados.CDELEMENT" value="@Model.Numcartao" />
+                        <input hidden name="dados.SQCOBRANCA" value="0" />
+                        <button class="btn-rounded bg-transaparent mt-3" onclick="onModalClose()">Cancelar</button>
+                        <button class="btn-rounded bg-blue mt-3" onclick="geraPix('form-pix-@Model.Numcartao')">
+                            Gerar PIX <i class="fa-brands fa-pix"></i>
+                        </button>
+                    </div>
+                </div>
+                <div id="div-cartao" style="display: none">
+                    @await Html.PartialAsync("PartialView/_PartialViewCartaoCredito", new DadosCobranca { CPF = Model.Nucpf, CDUOP = Model.Cduop, SQMATRIC = Model.Sqmatric, IDCLASSE = "CART", CDELEMENT = Model.Numcartao.ToString(), SQCOBRANCA = 0})
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    window.onload = function () {
+        $('.moneyInput').maskMoney({ allowNegative: false, thousands: '.', decimal: ',', affixesStay: false });
+        mascaraCPF('@Model.Nucpf');
+    }
+
+    function mascaraCPF(cpf) {
+        if (cpf.length !== 11) {
+            console.error('O CPF deve conter 11 dígitos.');
+            return;
+        }
+        $('#cpf-recarga').text(cpf.replace(/(\d{3})\d{5}(\d{3})/, '$1*****$2'));
+    }
+
+    document.getElementsByClassName('close')[0].onclick = function () {
+        var modal = document.getElementById('modal-recarga');
+        onModalClose();
+    };
+
+    window.onclick = function (event) {
+        var modal = document.getElementById('modal-recarga');
+        if (event.target == modal) {
+            onModalClose();
+        }
+    };
+
+    function onModalClose() {
+        $('#div-escolha-metodo').show();
+        $('#div-pix').hide();
+        $('#div-cartao').hide();
+        $('#moneyInput').val('');
+        $('#titular').val('');
+        $('#cpf-cartao').val('');
+        $('#numero-cartao').val('');
+        $('#security-code').val('');
+        $('#data-expiracao-recarga').val('');
+    }
+
+    function carregaPix() {
+        $('#div-escolha-metodo').hide();
+        $('#div-pix').show();
+    }
+
+    function carregaCartao() {
+        $('#div-escolha-metodo').hide();
+        $('#div-cartao').show();
+    }
+
+    document.getElementById('numero-cartao').addEventListener('input', function () {
+        var numero = this.value;
+        var bandeira = detectaBandeira(numero);
+        console.log(bandeira);  // Log a bandeira no console para fins de demonstração
+    });
+</script>

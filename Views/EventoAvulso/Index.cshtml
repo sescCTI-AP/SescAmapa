@@ -1,0 +1,242 @@
+﻿@model List<SiteSesc.Models.EventoExterno.EventoAvulso>
+@{
+    Layout = "../Shared/_Event.cshtml";
+    ViewBag.Title = "Eventos";
+    var cidades = ViewBag.Cidades as SelectList;
+    
+}
+
+<style>
+
+    .copyright-text {
+        position: fixed; /* Fixa o texto na tela */
+        bottom: 0; /* Alinha o texto na parte inferior */
+        left: 50%; /* Move para o centro da tela */
+        transform: translateX(-50%); /* Centraliza o texto horizontalmente */
+        text-align: center; /* Alinha o texto centralizado */
+        color: white; /* Define a cor do texto como branco */
+        z-index: 1000; /* Garante que o texto esteja acima de outros elementos */
+        padding: 10px; /* Adiciona um pouco de espaçamento ao redor do texto */
+        background-color: rgba(0, 0, 0, 0.1); /* Adiciona um fundo transparente escuro (opcional) */
+        width: 100%; /* Faz com que o texto ocupe toda a largura da tela */
+        border-top-left-radius: 10px; /* Arredonda o canto inferior esquerdo */
+        border-top-right-radius: 10px; /* Arredonda o canto inferior direito */
+    }
+
+    /* Container da imagem de fundo */
+    .background-image-container {
+        position: fixed; /* Fixa a imagem no topo */
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 400px; /* Define a altura da imagem */
+        z-index: -1; /* Coloca a imagem atrás de outros elementos */
+        overflow: hidden; /* Garante que o conteúdo não vaze para fora */
+        border-bottom-left-radius: 10px; /* Arredonda o canto inferior esquerdo */
+        border-bottom-right-radius: 10px; /* Arredonda o canto inferior direito */
+    }
+
+        /* A imagem de fundo */
+        .background-image-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* Faz com que a imagem se ajuste ao container */
+            filter: brightness(0.7); /* Escurece a imagem para um tom mais sombrio */
+        }
+
+        /* Overlay para escurecer a imagem */
+        .background-image-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.4); /* Escurece a imagem com opacidade de 0.4 */
+            z-index: 1; /* Permite que o overlay fique por cima da imagem */
+            border-bottom-left-radius: 10px; /* Arredonda o canto inferior esquerdo */
+            border-bottom-right-radius: 10px; /* Arredonda o canto inferior direito */
+        }
+
+    /* Ajuste para o conteúdo sobre a imagem */
+    #conteudo {
+        z-index: 99;
+        position: relative; /* Garante que o conteúdo fique por cima da imagem */
+        margin-top: 400px; /* Dá um espaçamento para que o conteúdo não sobreponha a imagem */
+    }
+
+
+    /* Estilos para posicionar o ícone no canto superior esquerdo */
+    .menu-icon {
+        position: fixed;
+        top: 10px;
+        left: 10px;
+        z-index: 1000; /* Garantir que o ícone esteja acima de outros elementos */
+    }
+
+    #conteudo {
+        z-index: 99;
+        position: absolute;
+        top: 0;
+        width: auto !important;
+    }
+
+    .card {
+        
+        transition: transform 0.2s, box-shadow 0.2s;
+        border-radius: 10px;
+        border: none; /* Remove borda padrão */
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        background-color: #f9f9f9; /* Cor de fundo suave */
+    }
+
+        .card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+        }
+
+    .card-title {
+        font-size: 1.25rem; /* Tamanho maior para o título */
+        margin-bottom: 0.5rem;
+        text-align: left;
+    }
+
+    .card-subtitle {
+        font-size: 1rem; /* Tamanho para a localização */
+        color: #6c757d; /* Cor mais suave */
+        text-align: left;
+    }
+
+    .card-text {
+        font-size: 0.9rem; /* Tamanho padrão para textos */
+        margin: 0.3rem 0; /* Margem entre os textos */
+        text-align: left;
+    }
+
+    .text-success {
+        font-weight: bold;
+        font-size: 1rem; /* Tamanho para gratuito */
+    }
+
+    .text-danger {
+        font-weight: bold;
+        font-size: 1rem; /* Tamanho para valor */
+    }
+
+    
+    @@media (max-width:991px) {
+        .containerCard {
+            width: 50%;
+        }
+    }
+
+    @@media (max-width:480px) {
+        .containerCard {
+            width: 100%;
+        }
+    }
+
+        
+</style>
+
+<div class="background-image-container">
+    <img src="/images/programacao.webp" alt="Imagem de fundo do evento" />
+</div>
+
+<a href="@Url.Action("Index", "Home")" class="menu-icon">
+    <svg xmlns="http://www.w3.org/2000/svg" width="54" height="54" style="fill: #ffffff;" class="bi bi-arrow-bar-left" viewBox="0 0 16 16">
+        <path fill-rule="evenodd" d="M12.5 15a.5.5 0 0 1-.5-.5v-13a.5.5 0 0 1 1 0v13a.5.5 0 0 1-.5.5M10 8a.5.5 0 0 1-.5.5H3.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L3.707 7.5H9.5a.5.5 0 0 1 .5.5" />
+    </svg>
+</a>
+<h1 class="mt-5 mb-0 text-white font-anton">Nossos Eventos</h1>
+
+<div class="row mt-4">
+    <div class="col-md">
+        <div class="text-center">
+            @if (!Model.Any())
+            {
+                <div class="alert alert-warning text-center mt-5">
+                    <h1>Nenhum evento disponível</h1>
+                </div>
+            }
+            else
+            {
+                
+                <form id="selecionar-evento" method="post">
+                    <div class="row">
+                        @for (int i = 0; i < Model.Count(); i++)
+                        {
+                            var cidadeNome = cidades.FirstOrDefault(c => c.Value == Model[i].Unidade.ToString())?.Text;
+                            <div class="col-md-3 mb-4 containerCard">
+                                <div class="card h-100" onclick="selectEvent('@Model[i].Id')" style="cursor: pointer;">
+                                    <div class="card-body text-center">
+                                        <h5 class="card-title">@Model[i].NomeEvento</h5>
+                                        <h6 class="card-text">Unidade: @cidadeNome</h6>
+                                        <h6 class="card-subtitle mb-2 text-muted">Cidade: @Model[i].LocalEvento</h6>
+                                        <h6 class="card-text">Data do Evento: @Model[i].DataEvento.ToString("dd/MM/yyyy")</h6>
+                                        <h6 class="card-subtitle mb-2 text-muted">&nbsp</h6>
+                                        
+
+                                        @if (Model[i].IsGratuito && Model[i].Doacao == "-")
+                                        {
+                                            <p class="text-success font-bold">Gratuito</p>
+                                        }
+                                        else if (Model[i].IsGratuito && Model[i].Doacao != "-")
+                                        {
+                                            <p class="text-success font-weight-bold">Doação Solidária</p>
+                                        }
+                                        else {
+                                            <p class="text-danger font-weight-bold">Evento Pago</p>
+                                        }                                       
+                                                                              
+                                        @if(Model[i].Doacao != "-"){
+                                            <p class="alert alert-danger text-center">@Model[i].Doacao</p>
+                                        }
+                                        else if (Model[i].Valor != 0)
+                                        {
+                                             <p class="alert alert-danger text-center">Investimento: R$ @Model[i].Valor.ToString("F2")</p>
+                                        }
+
+                                        else {
+                                               <p>&nbsp;</p>}
+                                               
+
+                                    </div>                                  
+                                </div>
+                            </div>
+
+                            @if ((i + 1) % 4 == 0)
+                            {
+                                <div class="w-100"></div> <!-- Cria uma quebra de linha após cada 4 cards -->
+                            }
+                        }
+                    </div>
+                    <h3 class="mb-4 text-white font-anton">Clique em um card e veja mais detalhes</h3>
+                </form>
+            }
+        </div>
+
+    </div>
+
+</div>
+<div class="copyright-text">
+    <p>Copyright © 2024 Serviço Social do Comércio AR/Pará</p>
+</div>
+
+@section Scripts{
+<script>
+    function selectEvent(idevento) {
+        $.LoadingOverlay("show", {
+            text: "Aguarde um momento...",
+        });
+
+        // Atualiza a URL com o ID do evento e envia o formulário
+        var url = "eventos/inscricao/" + idevento;
+        $("#selecionar-evento").attr("action", url);
+
+        // Submete o formulário
+        $("#selecionar-evento").submit();
+    }
+
+</script>
+}

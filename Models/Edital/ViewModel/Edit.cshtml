@@ -1,0 +1,786 @@
+﻿@model SiteSesc.Models.ProcessoSeletivo.psl_processoSeletivo
+@using SiteSesc.Models.ProcessoSeletivo
+@{
+    ViewBag.Title = "Editar Processo Seletivo";
+    var areas = ViewBag.Areas as List<Area>;
+    var cidades = ViewBag.Cidades as List<Cidade>;
+    var cargos = ViewBag.Cargos as List<psl_cargoProcessoSeletivo>;
+    TempData["Message"] = 0;
+}
+<style>
+    .checkbox.checkbox-success input[type=checkbox]:checked + label:before {
+        content: "" !important;
+        color: transparent !important;
+        background-color: dodgerblue !important;
+    }
+</style>
+<div>
+
+    <h4>Editar Processo Seletivo</h4>
+    <hr />
+    <div>
+        @if (!string.IsNullOrEmpty(ViewBag.Validacao))
+        {
+            <p class="text-danger">@ViewBag.Validacao</p>
+        }
+        @using (Html.BeginForm("Edit", "ProcessoSeletivo", FormMethod.Post, new { enctype = "multipart/form-data" }))
+        {
+            @Html.AntiForgeryToken()
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            @Html.HiddenFor(model => model.Id)
+            @Html.HiddenFor(model => model.Cargo)
+            @Html.HiddenFor(model => model.DataPublicacao)
+
+            <div class="form-group" style="margin-bottom: 0">
+                <div class="row">
+                    <div class="col-md">
+                        <a href="@Url.Action("Index")" class="btn btn-light" style="width: 100%">Voltar </a>
+
+                    </div>
+                    <div class="col-md">
+                        <input type="submit" value="Salvar" class="btn btn-success" style="width: 100%" />
+
+                    </div>
+                </div>
+
+
+            </div>
+            <div class="form-group mt-5">
+                <div class="row">
+                    <div class="col">
+                        @Html.LabelFor(model => model.NumeroProcessoSeletivo, new { @class = "fs-12" })
+                        @Html.EditorFor(model => model.NumeroProcessoSeletivo, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.NumeroProcessoSeletivo, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="col">
+                        @Html.LabelFor(model => model.Curso, new { @class = "fs-12" })
+                        @Html.EditorFor(model => model.Curso, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Curso, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+            <div class="form-group mt-3">
+                <div class="row">
+                    <div class="col">
+                        @Html.LabelFor(model => model.psl_tipoProcessoSeletivo, new { @class = "fs-12" })
+                        @Html.DropDownList("IdTipoProcessoSeletivo", null, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.IdTipoProcessoSeletivo, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="col">
+                        @Html.LabelFor(model => model.psl_statusProcessoSeletivo, new { @class = "fs-12" })
+                        @Html.DropDownList("IdStatusProcessoSeletivo", null, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.IdStatusProcessoSeletivo, "", new { @class = "text-danger" })
+                    </div>
+                    @*<div class="col">
+                @Html.LabelFor(model => model.DataPublicacao)
+                @Html.EditorFor(model => model.DataPublicacao, new { htmlAttributes = new { @class = "form-control datetimepicker-input" } })
+                @Html.ValidationMessageFor(model => model.DataPublicacao, "", new { @class = "text-danger" })
+                </div>*@
+                    @Html.HiddenFor(model => model.DataPublicacao)
+                </div>
+            </div>
+
+            <div class="form-group mt-3">
+                @Html.LabelFor(model => model.Descricao, new { @class = "fs-12" })
+                @Html.EditorFor(model => model.Descricao, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Descricao, "", new { @class = "text-danger" })
+            </div>
+            <div class="form-group mt-3">
+                <div class="row">
+                    <div class="col">
+                        @Html.LabelFor(model => model.DataAberturaCurriculo, new { @class = "fs-12" })
+                        @Html.EditorFor(model => model.DataAberturaCurriculo, new { htmlAttributes = new { @class = "form-control datetimepicker-input", type = "text", autocomplete = "off", data_val = "false" } })
+                        @Html.ValidationMessageFor(model => model.DataAberturaCurriculo, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="col">
+                        @Html.LabelFor(model => model.DataFimCurriculo, new { @class = "fs-12" })
+                        @Html.EditorFor(model => model.DataFimCurriculo, new { htmlAttributes = new { @class = "form-control datetimepicker-input", type = "text", autocomplete = "off", data_val = "false" } })
+                        @Html.ValidationMessageFor(model => model.DataFimCurriculo, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mt-4">
+                <div class="col-md">
+                    @if (areas.Any())
+                    {
+                        <div class="form-group">
+                            <label style="font-weight: bold">Áreas</label> <br />
+                            @foreach (var area in areas)
+                            {
+                                <div class="checkbox checkbox-inline checkbox-success">
+                                    <input id="item-@area.Id" name="checkboxAreas" type="checkbox" value="@area.Id">
+                                    <label for="item-@area.Id">@area.Nome</label>
+                                </div>
+                            }
+                        </div>
+                        if (Model.psl_areasProcessoSeletivo.Any())
+                        {
+                            <input type="hidden" id="idAreasSelecionadas" name="idAreasSelecionadas" value="@string.Join(",", Model.psl_areasProcessoSeletivo.Select(i => i.Area.Id))" />
+                        }
+                        else
+                        {
+                            <input type="hidden" id="idAreasSelecionadas" name="idAreasSelecionadas" />
+                        }
+                    }
+                </div>
+                <div class="col-md">
+                    @if (cidades.Any())
+                    {
+                        <div class="form-group">
+                            <label style="font-weight: bold">Cidades</label> <br />
+                            @foreach (var cidade in cidades)
+                            {
+                                <div class="checkbox checkbox-inline checkbox-success">
+                                    <input id="cidadeItem-@cidade.Id" name="checkboxCidades" type="checkbox" value="@cidade.Id">
+                                    <label for="cidadeItem-@cidade.Id">@cidade.Nome</label>
+                                </div>
+                            }
+                        </div>
+                        if (Model.psl_cidadesProcessoSeletivo.Any())
+                        {
+                            <input type="hidden" id="idCidadesSelecionadas" name="idCidadesSelecionadas" value="@string.Join(",", Model.psl_cidadesProcessoSeletivo.Select(i => i.Cidade.Id))" />
+                        }
+                        else
+                        {
+                            <input type="hidden" id="idCidadesSelecionadas" name="idCidadesSelecionadas" />
+                        }
+                    }
+                </div>
+            </div>
+
+
+            <div class="mt-5">
+                <h5>Cargos</h5>
+                <div>
+                    <table class="table table-hover table-light" id="cargos">
+
+                        <a style="color: dodgerblue; cursor: pointer" data-bs-toggle="modal" data-bs-target="#modalAddCargo">+ Adicionar cargo</a>
+                        <tr class="text-center table-dark">
+                            <th>
+                                Cargo
+                            </th>
+                            <th>
+                                Cidade
+                            </th>
+                            <th>
+                                Limite de currículos
+                            </th>
+                            <th>
+                                Doc. Experiência
+                            </th>
+                            <th>
+                                Doc. Formação
+                            </th>
+                            <th></th>
+                        </tr>
+                        @if (cargos != null && cargos.Any())
+                        {
+                            foreach (var item in cargos)
+                            {
+                                <tr class="text-center">
+                                    <td>
+                                        @item.Nome
+                                    </td>
+                                    <td>
+                                        @item.Cidade.Nome
+                                    </td>
+                                    <td>
+                                        @item.VagasCurriculo
+                                    </td>
+                                    <td>
+                                        @if (item.HasDocExperiencia == true)
+                                        {
+                                            <span>Sim</span>
+                                        }
+                                        else
+                                        {
+                                            <span>Não</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (item.HasDocFormacao == true)
+                                        {
+                                            <span>Sim</span>
+                                        }
+                                        else
+                                        {
+                                            <span>Não</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        <a onclick="editarCargo('@item.Id','@item.Nome','@item.IdCidade','@item.VagasCurriculo', '@item.HasDocExperiencia', '@item.HasDocFormacao');">
+                                            <i class="fa-solid fa-edit"></i>
+                                        </a>
+                                        &nbsp;
+                                        <a onclick="deletarCargo('@item.Id');"><i class="fa-solid fa-trash-can"></i></a>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </table>
+                </div>
+            </div>
+
+        }
+    </div>
+</div>
+
+<div class="modal fade" id="modalEditCargo" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Editar cargo</h5>
+                <button type="button" class="btn btn-light" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="formCargo">
+                    <div class="form-group">
+                        <input type="hidden" id="idCargo" />
+                    </div>
+                    <div class="form-group">
+                        <label for="Nome" class="fs-12">Nome do cargo</label><br />
+                        <input id="Nome" name="Nome" class="input-login mb-3" />
+                    </div>
+                    <div class="form-group">
+                        <label for="Vagas">Vagas para currículo</label><br />
+                        <input id="Vagas" name="Vagas" class="input-login mb-3" type="number" />
+                    </div>
+
+                    <label for="Cidade">Cidade</label><br />
+
+                    <select class="input-login mb-3" id="Cidade">
+                        @foreach (var item in cidades)
+                        {
+                            <option style="color: black" value="@item.Id">@item.Nome</option>
+                        }
+                    </select>
+                    <div class="row">
+                        <div class="col-md">
+                            <div class="checkbox checkbox-inline checkbox-success">
+                                <input id="hasDocExperiencia" name="checkboxExperiencia" type="checkbox">
+                                <label for="hasDocExperiencia"><b>Documento de Experiência</b></label>
+                            </div>
+                            <div class="checkbox checkbox-inline checkbox-success">
+                                <input id="hasDocFormacao" name="checkboxFormacao" type="checkbox">
+                                <label for="hasDocFormacao"><b>Diploma ou certificado de formação</b></label>
+                            </div>
+                        </div>
+
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" onclick="postEditCargo();">Confirmar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modalAddCargo" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Adicionar cargo</h5>
+                <button type="button" class="btn btn-light" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="formCargo">
+                    <input type="hidden" id="idCargoAdd" />
+
+                    <div class="form-group">
+                        <input type="hidden" id="idCargo" />
+                    </div>
+                    <div class="form-group">
+                        <label for="NomeAdd" class="fs-12">Nome do cargo</label><br />
+                        <input id="NomeAdd" name="NomeAdd" class="form-control mb-3" />
+                    </div>
+                    <div class="form-group">
+                        <label for="VagasAdd" class="fs-12">Vagas para currículo</label><br />
+                        <input id="VagasAdd" name="VagasAdd" class="form-control mb-3" type="number" />
+                    </div>
+
+
+
+
+                    @* <label for="NomeAdd">Nome do cargo</label><i class="fas fa-level-down-alt ml-1"></i>
+                    <input id="NomeAdd" name="NomeAdd" class="input-login mb-3" />
+                    <label for="VagasAdd">Vagas para currículo</label><i class="fas fa-level-down-alt ml-1"></i>
+                    <input id="VagasAdd" name="VagasAdd" class="input-login mb-3" type="number" /> *@
+
+                    <label for="CidadeAdd" class="fs-12">Cidade</label><br />
+                    <select class="input-login mb-3 form-control" id="CidadeAdd">
+                        @foreach (var item in cidades)
+                        {
+                            <option style="color: black" value="@item.Id">@item.Nome</option>
+                        }
+                    </select>
+
+                    <div class="row">
+                        <div class="col-md">
+                            <div class="checkbox checkbox-inline checkbox-success">
+                                <input id="addDocExperiencia" name="checkboxAddExperiencia" type="checkbox">
+                                <label for="addDocExperiencia"><b>Documento de Experiência</b></label>
+                            </div>
+                            <div class="checkbox checkbox-inline checkbox-success">
+                                <input id="addDocFormacao" name="checkboxAddFormacao" type="checkbox">
+                                <label for="addDocFormacao"><b>Diploma ou certificado de formação</b></label>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" onclick="postAddCargo();">Confirmar</button>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts
+{
+    <script src="~/js/3th/jquery.maskMoney.min.js"></script>
+    <script>
+        $(document).ready(function () {
+
+            $('#DataAberturaCurriculo').val(`@Model.DataAberturaCurriculo`)
+            $('#DataFimCurriculo').val(`@Model.DataFimCurriculo`)
+
+            if (@TempData["Message"] == 1) {
+                swal({
+                    title: "Atenção!",
+                    text: `Alterações realizadas com sucesso!`,
+                    icon: `success`,
+                    button: "Ok",
+                });
+            } else if (@TempData["Message"] == 2) {
+                swal({
+                    title: "Atenção!",
+                    text: `Erro ao realizar as alterações!`,
+                    icon: `danger`,
+                    button: "Ok",
+                });
+            }
+
+            $('#DataPublicacao').attr('data-toggle', 'datetimepicker');
+            $('#DataPublicacao').attr('data-target', '#DataPublicacao');
+            $('#DataPublicacao').datetimepicker({
+                format: 'L',
+                date: moment('@Model.DataPublicacao.ToShortDateString()', 'DD/MM/YYYY HH:mm').toDate()
+            });
+
+
+
+            $('#DataAberturaCurriculo').attr('data-toggle', 'datetimepicker');
+            $('#DataAberturaCurriculo').attr('data-target', '#DataAberturaCurriculo');
+            const dataAbertura = $('#DataAberturaCurriculo').val();
+            if (dataAbertura != '' && dataAbertura != undefined) {
+                $('#DataAberturaCurriculo').datetimepicker({
+                    sideBySide: true,
+                    date: moment(dataAbertura, 'DD/MM/YYYY HH:mm').toDate()
+                });
+            } else {
+                $('#DataAberturaCurriculo').datetimepicker({
+                    sideBySide: true
+                });
+            }
+
+            $('#DataFimCurriculo').attr('data-toggle', 'datetimepicker');
+            $('#DataFimCurriculo').attr('data-target', '#DataFimCurriculo');
+            const dataFim = $('#DataFimCurriculo').val();
+            if (dataFim != '' && dataFim != undefined) {
+                $('#DataFimCurriculo').datetimepicker({
+                    sideBySide: true,
+                    date: moment(dataFim, 'DD/MM/YYYY HH:mm').toDate()
+                });
+            } else {
+                $('#DataFimCurriculo').datetimepicker({
+                    sideBySide: true
+                });
+            }
+
+            $('#NumeroProcessoSeletivo').mask('99/9999');
+            loadAreas();
+            loadCidades();
+        });
+
+        const areasSelecionados = [];
+        const inputAreasSelecionados = document.querySelector('#idAreasSelecionadas');
+        const checkesAreas = document.querySelectorAll('input[name=checkboxAreas]');
+
+        $('input[name=checkboxAreas]').change(function () {
+            if ($(this)[0].checked) {
+                areasSelecionados.push($(this).val());
+            } else {
+                const index = areasSelecionados.indexOf($(this).val());
+                areasSelecionados.splice(index, 1);
+            }
+            inputAreasSelecionados.value = areasSelecionados;
+        });
+
+        function loadAreas() {
+            inputAreasSelecionados.value.split(',').forEach(item => {
+                if (item != '') {
+                    checkesAreas.forEach(input => {
+                        if (input.value === item) {
+                            input.checked = true;
+                        }
+                    });
+                    areasSelecionados.push(item);
+                }
+            });
+        }
+
+        const cidadesSelecionados = [];
+        const inputCidadesSelecionados = document.querySelector('#idCidadesSelecionadas');
+        const checkesCidades = document.querySelectorAll('input[name=checkboxCidades]');
+
+        $('input[name=checkboxCidades]').change(function () {
+            if ($(this)[0].checked) {
+                cidadesSelecionados.push($(this).val());
+            } else {
+                const index = cidadesSelecionados.indexOf($(this).val());
+                cidadesSelecionados.splice(index, 1);
+            }
+            inputCidadesSelecionados.value = cidadesSelecionados;
+        });
+
+        function loadCidades() {
+            inputCidadesSelecionados.value.split(',').forEach(cidadeItem => {
+                if (cidadeItem != '') {
+                    checkesCidades.forEach(input => {
+                        if (input.value === cidadeItem) {
+                            input.checked = true;
+                        }
+                    });
+                    cidadesSelecionados.push(cidadeItem);
+                }
+            });
+        }
+
+
+        function addCargo(id) {
+            $('#modalAddCargo').modal('show');
+        }
+
+        function editarCargo(id, nome, cidade, vagas, experiencia, formacao) {
+            $('#idCargo').val(id);
+            $('#Nome').val(nome);
+            $('#Cidade').val(cidade);
+            $('#Vagas').val(vagas);
+            if (experiencia === 'True') {
+                document.getElementById('hasDocExperiencia').checked = true;
+            }
+            else {
+                document.getElementById('hasDocExperiencia').checked = false;
+            }
+            if (formacao === 'True') {
+                document.getElementById('hasDocFormacao').checked = true;
+            } else {
+                document.getElementById('hasDocFormacao').checked = false;
+            }
+            $('#modalEditCargo').modal('show');
+        }
+
+        function postAddCargo() {
+            $('#modalAddCargo').modal('hide');
+            var idCargoAdd = $('#idCargoAdd').val();
+            var nomeAdd = $('#NomeAdd').val();
+            var cidadeAdd = $('#CidadeAdd').val();
+            var vagasAdd = $('#VagasAdd').val();
+            var docExperiencia = document.getElementById('addDocExperiencia').checked;
+            var docFormacao = document.getElementById('addDocFormacao').checked;
+
+            var cargoUpdate = [];
+
+            cargoUpdate.push({
+                Id: idCargoAdd == "" ? 0 : parseInt(idCargo),
+                Nome: nomeAdd,
+                VagasCurriculo: parseInt(vagasAdd),
+                IdCidade: parseInt(cidadeAdd),
+                IdProcessoSeletivo: parseInt('@Model.Id'),
+                HasDocExperiencia: docExperiencia,
+                HasDocFormacao: docFormacao
+            });
+
+            iziToast.question({
+                timeout: 20000,
+                close: false,
+                overlay: true,
+                displayMode: 'once',
+                id: 'question',
+                zindex: 999,
+                title: 'Excluir',
+                message: 'Voce esta certo disso?',
+                position: 'center',
+                buttons: [
+                    ['<button><b>Confirmar</b></button>', function (instance, toast) {
+                        console.log(cargoUpdate);
+                        $.ajax({
+                            url: '@Url.Action("AddCargo")',
+                            type: 'POST',
+                            processData: false,
+                            data: JSON.stringify(cargoUpdate),
+                            dataType: "json",
+                            contentType: 'application/json; charset=utf-8',
+                            success: function (data) {
+                                if (data.code == 1) {
+                                    $('#cargos').load(location.href + ' #cargos>*');
+                                    iziToast.success({
+                                        title: 'SUCESSO!',
+                                        message: data.Message,
+                                        theme: 'light',
+                                        position: 'topRight',
+                                    });
+                                } else {
+                                    iziToast.error({
+                                        title: 'FALHA!',
+                                        message: data.Message,
+                                        theme: 'light',
+                                        position: 'topRight',
+                                    });
+                                }
+                            },
+                            error: function (err) {
+                                iziToast.error({
+                                    title: 'FALHA!',
+                                    message: 'Falha ao executar a acao',
+                                    theme: 'light',
+                                    position: 'topRight',
+                                });
+                            }
+                        });
+                        instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
+
+
+                    }, true],
+                    ['<button>Cancelar</button>', function (instance, toast) {
+
+                        instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
+
+                    }],
+                ],
+                onClosing: function (instance, toast, closedBy) {
+                    console.info('Closing | closedBy: ' + closedBy);
+                },
+                onClosed: function (instance, toast, closedBy) {
+                    console.info('Closed | closedBy: ' + closedBy);
+                }
+            });
+
+        }
+
+        function postEditCargo() {
+            $('#modalEditCargo').modal('hide');
+            var idCargo = $('#idCargo').val();
+            var nome = $('#Nome').val();
+            var cidade = $('#Cidade').val();
+            var vagas = $('#Vagas').val();
+            var docExperiencia = document.getElementById('hasDocExperiencia').checked;
+            var docFormacao = document.getElementById('hasDocFormacao').checked;
+
+            var cargoUpdate = [];
+
+            cargoUpdate.push({
+                Id: parseInt(idCargo),
+                Nome: nome,
+                VagasCurriculo: parseInt(vagas),
+                IdCidade: cidade,
+                IdProcessoSeletivo: parseInt('@Model.Id'),
+                HasDocFormacao: docFormacao,
+                HasDocExperiencia: docExperiencia
+            });
+
+            iziToast.question({
+                timeout: 20000,
+                close: false,
+                overlay: true,
+                displayMode: 'once',
+                id: 'question',
+                zindex: 999,
+                title: 'Editar',
+                message: 'Voce esta certo disso?',
+                position: 'center',
+                buttons: [
+                    ['<button><b>Confirmar</b></button>', function (instance, toast) {
+
+                        $.ajax({
+                            url: '@Url.Action("EditCargo")',
+                            type: 'POST',
+                            processData: false,
+                            data: JSON.stringify(cargoUpdate),
+                            dataType: "json",
+                            contentType: 'application/json; charset=utf-8',
+                            success: function (data) {
+                                console.log(data);
+                                if (data.code == 1) {
+                                    $('#cargos').load(location.href + ' #cargos>*');
+                                    iziToast.success({
+                                        title: 'SUCESSO!',
+                                        message: 'Alteração realizada!',
+                                        theme: 'light',
+                                        position: 'topRight',
+                                    });
+                                } else {
+                                    iziToast.error({
+                                        title: 'FALHA!',
+                                        message: 'Falha ao atualizar o registro',
+                                        theme: 'light',
+                                        position: 'topRight',
+                                    });
+                                }
+                            },
+                            error: function (err) {
+                                iziToast.error({
+                                    title: 'FALHA!',
+                                    message: 'Falha ao executar a acao', 
+                                    theme: 'light',
+                                    position: 'topRight',
+                                });
+                            }
+                        });
+                        instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
+
+
+                    }, true],
+                    ['<button>Cancelar</button>', function (instance, toast) {
+
+                        instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
+
+                    }],
+                ],
+                onClosing: function (instance, toast, closedBy) {
+                    console.info('Closing | closedBy: ' + closedBy);
+                },
+                onClosed: function (instance, toast, closedBy) {
+                    console.info('Closed | closedBy: ' + closedBy);
+                }
+            });
+        }
+
+
+        function deletarCargo(id) {
+            iziToast.question({
+                timeout: 20000,
+                close: false,
+                overlay: true,
+                displayMode: 'once',
+                id: 'question',
+                zindex: 999,
+                title: 'Excluir',
+                message: 'Voce esta certo disso?',
+                position: 'center',
+                buttons: [
+                    ['<button><b>Confirmar</b></button>', function (instance, toast) {
+
+                        $.ajax({
+                            url: '@Url.Action("DeleteCargo")/' + id,
+                            type: 'GET',
+                            dataType: "json",
+                            contentType: 'application/json; charset=utf-8',
+                            success: function (data) {
+                                if (data.code == 1) {
+                                    $('#cargos').load(location.href + ' #cargos>*');
+                                    iziToast.success({
+                                        title: 'SUCESSO!',
+                                        message: 'Cargo removido.',
+                                        theme: 'light',
+                                        position: 'topRight',
+                                    });
+                                    instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
+                                } else {
+                                    iziToast.error({
+                                        title: 'Falha!',
+                                        message: 'Falha ao remover cargo',
+                                        theme: 'light',
+                                        position: 'topRight',
+                                    });
+                                    // swal({
+                                    //     title: data.Title,
+                                    //     text: data.Message,
+                                    //     icon: data.ClassAlert,
+                                    //     timer: 2000
+                                    // });
+                                }
+                            },
+                            error: function (err) {
+                                swal({
+                                    title: 'FALHA',
+                                    text: 'Falha ao deletar o cargo!',
+                                    icon: 'error',
+                                    timer: 2000
+                                });
+                            }
+                        });
+
+
+                    }, true],
+                    ['<button>Cancelar</button>', function (instance, toast) {
+
+                        instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
+
+                    }],
+                ],
+                onClosing: function (instance, toast, closedBy) {
+                    console.info('Closing | closedBy: ' + closedBy);
+                },
+                onClosed: function (instance, toast, closedBy) {
+                    console.info('Closed | closedBy: ' + closedBy);
+                }
+            });
+
+
+
+
+
+            // swal({
+            //     title: "DELETAR CARGO",
+            //     text: `Você realmente deseja deletar este cargo? Não será possível desfazer essa ação.`,
+            //     icon: "warning",
+            //     dangerMode: true,
+            //     buttons: ["Não", "Sim"]
+            // })
+            //     .then((willDelete) => {
+            //         if (willDelete) {
+            //             $.ajax({
+            //                 url: '@Url.Action("DeleteCargo")/' + id,
+            //                 type: 'GET',
+            //                 dataType: "json",
+            //                 contentType: 'application/json; charset=utf-8',
+            //                 success: function (data) {
+            //                     if (data.Code == 1) {
+            //                         $('#cargos').load(location.href + ' #cargos>*');
+            //                         swal({
+            //                             title: data.Title,
+            //                             text: data.Message,
+            //                             icon: data.ClassAlert,
+            //                             timer: 1500
+            //                         });
+            //                     } else {
+            //                         swal({
+            //                             title: data.Title,
+            //                             text: data.Message,
+            //                             icon: data.ClassAlert,
+            //                             timer: 2000
+            //                         });
+            //                     }
+            //                 },
+            //                 error: function (err) {
+            //                     swal({
+            //                         title: 'FALHA',
+            //                         text: 'Falha ao deletar o cargo!',
+            //                         icon: 'error',
+            //                         timer: 2000
+            //                     });
+            //                 }
+            //             });
+            //         }
+            //     });
+        }
+    </script>
+}

@@ -1,0 +1,205 @@
+﻿@* @model List<SiteSesc.Models.SolicitacaoCadastroCliente> *@
+
+    @using SiteSesc.Models.ViewModel
+@model List<SiteSesc.Models.SolicitacaoCadastroCliente>
+
+@{
+    int diasEmAnalise = 0;
+    var corDias = "";
+    var statusSelecionado = ViewBag.StatusSelecionado;
+
+    int? idStatus = null;
+
+}
+@* <link href="~/css/paginacao/paginacao.css" rel="stylesheet" />
+ *@
+<style>
+    .badge-count{
+        padding-left: 5px;
+        padding-right: 5px;
+        color: white;
+        font-weight: bold;
+        border-radius: 5px
+    }
+
+    .dataTables_paginate .paginate_button {
+        color: white !important;
+        padding: 6px 12px;
+        margin-right: 10px;
+        border-radius: 4px; /* Para dar uma borda arredondada */
+        text-align: center; /* Centraliza o conteúdo no bloco */
+        transition: all 0.2s ease-in-out;
+        background-color: #007bff;
+        border-color: #007bff;
+    }
+
+        /* Efeito de hover para os botões */
+        .dataTables_paginate .paginate_button:hover {
+            background-color: #0056b3; /* Cor de fundo mais escura */
+            border-color: #0056b3; /* Cor da borda mais escura */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Sombra para dar profundidade */
+            cursor: pointer; /* Muda o cursor para indicar que é clicável */
+        }
+
+
+    .ellipsis {
+        display: inline-block; /* Faz o span se comportar como um bloco */
+        color: white !important;
+        padding: 6px 12px;
+        margin-right: 10px;
+        transition: all 0.2s ease-in-out;
+        -webkit-transition: all 0.2s ease-in-out;
+        -moz-transition: all 0.2s ease-in-out;
+        -o-transition: all 0.2s ease-in-out;
+        -ms-transition: all 0.2s ease-in-out;
+        background-color: #007bff;
+        border-color: #007bff;
+        border-radius: 4px; /* Para dar uma borda arredondada */
+        text-align: center; /* Centraliza o conteúdo no bloco */
+    }
+
+    .dataTables_wrapper {
+        justify-content: flex-end; /* Alinha todo o conteúdo à direita */
+        align-items: center; /* Centraliza os itens verticalmente */
+        width: 100%; /* Garante que o container ocupe a largura total */
+    }
+
+    div.dataTables_info {
+        font-size: 10px; /* Reduz o tamanho da fonte */
+        padding: 2px; /* Reduz o espaçamento interno */
+        margin-bottom: 5px; /* Remove margens extras, se houver */
+        color: #666; /* Opção de cor mais suave para um visual discreto */
+    }
+
+
+
+</style>
+
+<h2 class="mt-4">Solicitações de cadastro</h2>
+
+<div id="filtros" class="mb-5">
+    <div class="row">
+        <div class="col-md-3">
+            <label>Filtro</label>
+            <form method="get">
+                @Html.DropDownList("idStatus", null, null, new { @class = "form-control", onchange = "submit()" })
+            </form>
+        </div>
+    </div>
+</div>
+
+<p>@ViewBag.Validacao</p>
+
+
+<table class="table" id="tblSolicitacao">
+    <thead>
+        <tr>
+            <th>
+                Nome
+            </th>
+            <th>
+                CPF
+            </th>
+            <th>
+                Data da solicitação
+            </th>
+            <th>
+                Dias em análise
+            </th>
+            <th>Status</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Nome)
+                </td>
+                <td>
+                    @if (!string.IsNullOrEmpty(item.Cpf))
+                    {
+                        @Html.DisplayFor(modelItem => item.Cpf)
+                    }else{
+                        @Html.DisplayFor(modelItem => item.Usuario.Cpf)
+                    }
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DataSolicitacao)
+                </td>
+                <td>
+                    @{
+                        diasEmAnalise = Util.GetQuantidadeDiasUteisEntreDatas(item.DataSolicitacao);
+                        if (diasEmAnalise <= 3)
+                        {
+                            corDias = "blue";
+                        }
+                        else
+                        {
+                            corDias = "red";
+                        }
+                    }
+                    <span class="badge-count" style="background-color: @corDias">
+                        @diasEmAnalise
+                    </span>
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Status.Nome)
+                </td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@item.Id">Detalhes</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@* <div class="pagination mb-5">
+    @if (Model.HasPreviousPage)
+    {
+        <a asp-action="SolicitacaoCadastroCliente" asp-route-pageNumber="@(Model.PageIndex - 1)" asp-route-idStatus="@idStatus">Anterior</a>
+    }
+    @for (var i = 1; i <= Model.TotalPages; i++)
+    {
+        <a asp-action="SolicitacaoCadastroCliente" asp-route-pageNumber="@i" class="@(i == Model.PageIndex ? "active" : "")" asp-route-idStatus="@idStatus">@i</a>
+    }
+    @if (Model.HasNextPage)
+    {
+        <a asp-action="SolicitacaoCadastroCliente" asp-route-pageNumber="@(Model.PageIndex + 1)" asp-route-idStatus="@idStatus">Próximo</a>
+    }
+</div> *@
+
+@section Scripts {
+    <script src="~/js/3th/datatables/jquery.dataTables.min.js"></script>
+    <script src="~/js/3th/datatables/dataTables.buttons.min.js"></script>
+    <script src="~/js/3th/datatables/pdfmake.min.js"></script>
+    <script src="~/js/3th/datatables/jszip.min.js"></script>
+    <script src="~/js/3th/datatables/vfs_fonts.js"></script>
+    <script src="~/js/3th/datatables/buttons.flash.min.js"></script>
+    <script src="~/js/3th/datatables/buttons.html5.min.js"></script>
+    <script src="~/js/3th/datatables/buttons.print.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            console.log("teste");
+            $('#tblSolicitacao').DataTable({
+                pageLength: 50,
+                lengthChange: false,
+                language: {
+                    url: "//cdn.datatables.net/plug-ins/1.10.19/i18n/Portuguese-Brasil.json"
+                },
+                info: true,
+                ordering: true,
+                dom: 'Bfrtip',
+                buttons: [
+                    {
+                        extend: 'excel',
+                        exportOptions: {
+                            columns: ':not(:last-child)' // Exclui a última coluna (onde está o link de edição)
+                        }
+                    }
+                ]
+            });
+        });
+    </script>
+}

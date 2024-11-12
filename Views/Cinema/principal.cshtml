@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="pt-br" xml:lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cinema - Sesc Unidade</title>
+
+    <link href="css/reset.css" rel="stylesheet" type="text/css">
+    <link href="css/global.css" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+    <link async src="https://code.jquery.com/jquery-3.7.1.min.js">
+    
+</head>
+<body>
+    
+      <header>
+        <button class="contentHeaderLogo" role="button" onclick="" 
+                    aria-describedby="prosseguir para finalizaçao do pedido">
+            <div class="logoImg1">
+                <img src="image/logo-sesc-branco-x.webp">
+            </div>
+            <div class="logoImg2">
+                <span>|</span>
+                <img src="image/logo-sesc-branco-x.webp">
+                <p>Pará</p>
+            </div>
+        </button>
+        <div class="contentHeaderMenu">
+            <button class="opMenu" onclick="location.href='https://sesc-pa.com.br/login'">
+                Fazer Login
+            </button>
+
+            <button class="opMenu" onclick="ativarAside()">
+                <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" fill="currentColor" class="bi bi-list" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5"/>
+                </svg>
+            </button>
+        </div>
+        
+        
+      </header>
+
+      <aside id="menuAside">
+        <nav>
+            <div class="areaFechar">
+                <button alt="open/close button" class="botaoFechar" onclick="ativarAside()">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
+                    <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
+                    </svg>
+                </button>
+            </div>
+
+            <div class="logoImgMenu">
+                <img src="image/logo-sesc-branco-x.webp">
+            </div>
+            
+            <div class="perfil">
+                <div class="areaImagem"><img src="image/imagemperfil.jpg" /></div>
+                <h3 align="center">Mariano Gomes</h3>
+            </div>
+
+            <ul class="listaMenu">
+                <li><a href="/">Meus Ingresso</a></li>
+                <li><a href="#">Voltar ao Portal Sesc</a></li>
+                <li><a href="#">Espaço do Cliente</a></li>
+            </ul>
+        </nav>
+      </aside>
+
+      <main>
+
+        <h1 align="center">Cinema - Sesc Ver-o-Peso</h1>
+        <hr>
+
+        <article>
+          <div class="filmecontainer">
+            <img src="image/o-menino-e-o-mundo.webp">
+            <div class="FilmeInfo">
+                <div class="filmeTitlulo">
+                    <h2>O Menino e o Mundo</h2>
+                </div>
+                <div class="filmeMenu">
+                    <a href="#" class="itemMenu ID1 menuAtivo">Sinopse</a> | 
+                    <a href="#" class="itemMenu ID1">Ficha Técnica</a> | 
+                    <a href="#" class="itemMenu ID1">Trailer</a> | 
+                    <a href="#" class="itemMenu ID1">Ingresso</a>
+                </div>
+                <hr>
+                <div class="SubID1 sinopse itemInfo itemAtivo" >
+                    Um menino mora com os pais em uma pequena cidade do campo. Diante da falta de trabalho, um dia, ele vê o pai partindo para a cidade grande. Os dias que se seguem são tristes e de memórias confusas para o garoto. Até que então ele faz as malas, pega o trem e vai descobrir o novo mundo em que seu pai mora. Para a sua surpresa, a criança encontra uma sociedade marcada pela pobreza, exploração de trabalhadores e falta de perspectivas.
+                </div>
+                <div class="SubID1 fichaTecnica itemInfo" >
+                    <p><strong>Lançamento:</strong> 2013</p>
+                    <p><strong>Diretor:</strong>  Alê Abreu</p>
+                    <p><strong>Duração:</strong>  79 minutos</p>
+                    <p><strong>Classificação:</strong>  L - Livre para todos os públicos</p>
+                    <p><strong>Gêneros:</strong>  Animação Aventura Família Nacional</p>
+                    <p><strong>Idioma:</strong>  Protuguês</p>
+                </div>
+                <div class="SubID1 trailer itemInfo" >
+                    <iframe
+                    src="https://www.youtube.com/embed/l7x8oi_1GBo?si=Gq38f-Qz4hyfx_01" 
+                    title="YouTube video player" 
+                    frameborder="0" 
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                    referrerpolicy="strict-origin-when-cross-origin" 
+                    allowfullscreen></iframe>
+                </div>
+                <div class="SubID1 ingresso itemInfo">
+                    
+                    <div class="ingressosContainer">
+                        <div class="sessaoData">
+                            <h3>21 de outubro</h3>
+                        </div>
+                        
+                        <div class="sessaoHorario">
+                            <div class="ticketContainer">
+                                <a href="escolherassento.html" class="ticketLink">
+                                    <img src="image/ticket.webp" class="ticketimg">
+                                    <span class="ticketHorario">16:00</span>
+                                </a>
+                            </div>
+                            <div class="ticketContainer">
+                                <a href="escolherassento.html" class="ticketLink">
+                                    <img src="image/ticket.webp" class="ticketimg">
+                                    <span class="ticketHorario">18:00</span>
+                                </a>
+                            </div>
+                            <div class="ticketContainer">
+                                <a href="escolherassento.html" class="ticketLink">
+                                    <img src="image/ticket.webp" class="ticketimg">
+                                    <span class="ticketHorario">20:00</span>
+                                </a>
+                            </div>
+                        </div>
+
+
+                        <div class="sessaoData">
+                            <h3>25 de outubro</h3>
+                        </div>
+                        <div class="sessaoHorario">
+                            <div class="ticketContainer">
+                                <a href="escolherassento.html" class="ticketLink">
+                                    <img src="image/ticket.webp" class="ticketimg">
+                                    <span class="ticketHorario">16:00</span>
+                                </a>
+                            </div>
+                            <div class="ticketContainer">
+                                <a href="escolherassento.html" class="ticketLink">
+                                    <img src="image/ticket.webp" class="ticketimg">
+                                    <span class="ticketHorario">18:00</span>
+                                </a>
+                            </div>
+                        </div>
+
+
+                        <div class="sessaoData">
+                            <h3>27 de outubro</h3>
+                        </div>
+                        <div class="sessaoHorario">
+                            <div class="ticketContainer">
+                                <a href="escolherassento.html" class="ticketLink">
+                                    <img src="image/ticket.webp" class="ticketimg">
+                                    <span class="ticketHorario">16:00</span>
+                                </a>
+                            </div>
+                            <div class="ticketContainer">
+                                <a href="escolherassento.html" class="ticketLink">
+                                    <img src="image/ticket.webp" class="ticketimg">
+                                    <span class="ticketHorario">18:00</span>
+                                </a>
+                            </div>
+                        </div>
+
+
+                    </div>  
+
+                </div>                        
+            </div>          
+          </div>
+
+          <div class="filmecontainer">
+            <img src="image/o-menino-e-o-mundo.webp">
+            <div class="FilmeInfo">
+                <div class="filmeTitlulo">
+                    <h2>O Menino e o Mundo</h2>
+                </div>
+                <div class="filmeMenu">
+                    <a href="#" class="itemMenu ID2 menuAtivo">Sinopse</a> | 
+                    <a href="#" class="itemMenu ID2">Ficha Técnica</a> | 
+                    <a href="#" class="itemMenu ID2">Trailer</a> | 
+                    <a href="#" class="itemMenu ID2">Ingresso</a>
+                </div>
+
+                <hr>
+                <div class="SubID2 sinopse itemInfo itemAtivo" >
+                    Um menino mora com os pais em uma pequena cidade do campo. Diante da falta de trabalho, um dia, ele vê o pai partindo para a cidade grande. Os dias que se seguem são tristes e de memórias confusas para o garoto. Até que então ele faz as malas, pega o trem e vai descobrir o novo mundo em que seu pai mora. Para a sua surpresa, a criança encontra uma sociedade marcada pela pobreza, exploração de trabalhadores e falta de perspectivas.
+                </div>
+                <div class="SubID2 fichaTecnica itemInfo" >
+                    <p><strong>Lançamento:</strong> 2013</p>
+                    <p><strong>Diretor:</strong>  Alê Abreu</p>
+                    <p><strong>Duração:</strong>  79 minutos</p>
+                    <p><strong>Classificação:</strong>  L - Livre para todos os públicos</p>
+                    <p><strong>Gêneros:</strong>  Animação Aventura Família Nacional</p>
+                    <p><strong>Idioma:</strong>  Protuguês</p>
+                </div>
+                <div class="SubID2 trailer itemInfo" >
+                    <iframe
+                    src="https://www.youtube.com/embed/l7x8oi_1GBo?si=Gq38f-Qz4hyfx_01" 
+                    title="YouTube video player" 
+                    frameborder="0" 
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                    referrerpolicy="strict-origin-when-cross-origin" 
+                    allowfullscreen></iframe>
+                </div>
+                <div class="SubID2 ingresso itemInfo">
+                    <div class="sessaoData">
+                        <h3>27 de outubro</h3>
+                    </div>
+                    <div class="sessaoHorario">
+                        <div class="ticketContainer">
+                            <a href="escolherassento.html" class="ticketLink">
+                                <img src="image/ticket.webp" class="ticketimg">
+                                <span class="ticketHorario">16:00</span>
+                            </a>
+                        </div>
+                        <div class="ticketContainer">
+                            <a href="escolherassento.html" class="ticketLink">
+                                <img src="image/ticket.webp" class="ticketimg">
+                                <span class="ticketHorario">18:00</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>                        
+            </div>          
+          </div>
+        </article>
+
+      </main>
+
+      <footer>
+          <p>Copyright © 2024 Serviço Social do Comércio AR/PA</p>
+      </footer>
+
+</body>
+</html>
+
+
+<script type="text/javascript">
+    function ativarAside(){
+        elemento = document.getElementById('menuAside')
+        elemento.classList.toggle("exibirMenuAside");
+        elemento.style.transition=" all 0.5s ease" 
+        elemento.style.display = elemento.style.display === 'block' ? 'none' : 'block';
+    }
+</script>
+
+<script type="text/javascript" src="script/scriptCinema.js" ></script>

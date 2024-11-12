@@ -1,0 +1,75 @@
+﻿@{
+    var botoes = ViewBag.Botoes as List<BotaoSideMenu>;
+    var botoesDropDown = ViewBag.BotoesDropDown as List<BotaoDropDown>;
+}
+
+<style>
+    /* Ocultar a barra de rolagem em navegadores WebKit */
+    #navbar {
+        overflow: auto;
+    }
+
+        #navbar::-webkit-scrollbar {
+        width: 0;
+        height: 0;
+    }
+
+    .img-roud{
+        height: 160%;
+        margin-left: -18px;
+        border-radius: 50%;
+    }
+</style>
+
+<i class="bi bi-list mobile-nav-toggle d-lg-none"></i>
+<header id="header" class="d-flex flex-column justify-content-center">
+    @* <a href="@Url.Action("Index", "Home")"><img src="~/images/static/logo-mini.png" width="50" class="img-fluid" alt="" style="margin-bottom: 20px;"></a> *@
+    <nav id="navbar" class="navbar nav-menu">
+        <ul>
+            
+            
+            <li>
+                <a class="nav-link" href="@Url.Action("Index", "Home")" class="nav-link scrollto">
+                    <img src="~/images/static/logo-mini.png" class="img-roud" alt="Icone Sesc -webkit-scrollbar -Ao clicar volta para o Portal do Sesc"> 
+                    &nbsp;<span>Voltar ao Portal</span>
+                </a>
+            </li>
+
+
+            @if (botoes != null)
+            {
+                foreach (var botao in botoes)
+                {
+                    if (botao.IsDropdown)
+                    {
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="@botao.UrlRedirect" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="@botao.Classe"></i>&nbsp;<span>@botao.Nome</span>
+                            </a>
+                            @if (botoesDropDown != null)
+                            {
+                                if (botoesDropDown.Any(a => a.IdBotaoSideMenu == botao.Id))
+                                {
+                                    <ul class="dropdown-menu bg-transparent" aria-labelledby="navbarDropdown">
+                                        @foreach (var botaoDropDown in botoesDropDown.Where(a => a.IdBotaoSideMenu == botao.Id))
+                                        {
+                                            <li><a class="@botaoDropDown.Classe" href="@botaoDropDown.UrlRedirect">@botaoDropDown.Nome</a></li>
+                                        }
+                                    </ul>
+                                }
+                            }
+                        </li>
+                    }
+                    else
+                    {
+                        <li>
+                            <a href="@botao.UrlRedirect" class="nav-link scrollto">
+                                <i class="@botao.Classe"></i> <span>@botao.Nome</span>
+                            </a>
+                        </li>
+                    }
+                }
+            }
+        </ul>
+    </nav>
+</header>

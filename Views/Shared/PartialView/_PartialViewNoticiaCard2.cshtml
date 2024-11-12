@@ -1,0 +1,16 @@
+﻿@model SiteSesc.Models.ModelPartialView.NoticiaCard
+
+<div class="h2_blog-item mb-30">
+    <a href="@Url.Action("DetailsUni", "Noticia", new { unidade = Model.nameRoute, slug = Model.slug })">
+        <div class="h2_blog-img">
+            <img src="@Model.EventImage" alt="@Model.EventTitle" loading="lazy" >
+        </div>
+        <div class="h2_blog-content bg-white">
+            <div class="h2_blog-content-meta">
+                <span><i class="fa-regular fa-star"></i>@Model.EventCategory</span>
+                <span><i class="fa-solid fa-location-dot"></i>@Model.EventLocation</span>
+            </div>
+            <h5 class="h2_blog-content-title">@Model.EventTitle</h5>
+        </div>
+    </a>
+</div>

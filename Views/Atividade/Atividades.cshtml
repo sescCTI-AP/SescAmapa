@@ -1,0 +1,259 @@
+﻿@using SiteSesc.Models.ViewModel
+@model PaginatedListViewModel<SiteSesc.Models.ModelPartialView.CursoItem>
+
+@{
+    ViewData["Title"] = "Atividades";
+    var areas = ViewBag.Areas as List<Area>;
+    int? idArea = null;
+    int? idUop = null;
+    var areaSelecionada = ViewBag.AreaSelecionada as Area;
+    if(areaSelecionada != null)
+    {
+        idArea = areaSelecionada.Id;
+    }
+    var uopSelecionada = ViewBag.UopSelecionada as UnidadeOperacional;
+    if (uopSelecionada != null)
+    {
+        idUop = uopSelecionada.Id;
+    }
+    // var uop = ViewBag.Unidades as List<UnidadeOperacional>;
+    string selecionado = "";
+}
+
+<link href="~/css/paginacao/paginacao.css" rel="stylesheet" />
+
+
+<style>
+
+
+    .textoComplementar {
+        font-size: 1.4rem;
+        padding: 1rem;
+    }
+
+    .section-area{
+        width: 100%;
+    }
+
+    #formRadio{
+        display: flex;
+        flex-wrap: wrap;
+        flex-direction: row;
+    }
+
+    .filtrosPesquisa{
+        width: 100%;
+        padding: 0.25rem 0.5rem;
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: start;
+        font-size: 1.2rem;
+    }
+
+    .tituloFiltro{
+        font-size: 1.6rem;
+        font-weight: 500;
+        margin-top: 1.5rem;
+    }
+
+    .form-check{
+        width:25%;
+        max-width:400px;
+    }
+
+    #idUop {
+        width: 100%;
+        max-width: 600px;
+    }
+
+@@media only screen and (max-width: 991px){
+    .form-check{
+        width:33.3%;
+    }
+}
+
+@@media only screen and (max-width: 767px){
+    .tituloFiltro{
+        text-align: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .form-check{
+        width:50%;
+    }
+
+    #idUop {
+        width: 100%;
+        max-width: 767px;
+    }
+}
+
+@@media only screen and (max-width: 385px){
+    .form-check{
+        width:calc(100% - 1rem);
+        margin-left: 1rem;
+    }
+}
+
+</style>
+
+<div class="container">
+
+    <div class="areaTitulo mt-5">
+       <h2>
+            Atividades @if (areaSelecionada != null)
+            {
+                <span>em @areaSelecionada.Nome.ToLower()</span>
+            }
+        </h2>
+    </div>
+
+    <div class="row mb-30">
+        <div class="mb-20">
+            <div class="section-area" >
+                <form asp-action="Atividades" asp-controller="Atividade" id="formRadio" >
+                    
+                    <div class="filtrosPesquisa tituloFiltro">
+                        Áreas
+                    </div>
+                                   
+                    <div class="filtrosPesquisa ">
+                        
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="idArea" id="todasAsAreas" value="" onclick="submit();"
+                            @(areaSelecionada != null ? "checked" : "")>
+                            <label class="form-check-label" for="todasAsAreas">
+                                Todas
+                            </label>
+                        </div>
+                        @foreach (var item in areas)
+                        {                                      
+                            <div class="form-check" >
+                                <input class="form-check-input" type="radio" name="idArea" id="area@item.Id" value="@item.Id" onclick="submit();"
+                                @(item.Id == areaSelecionada?.Id ? "checked" : "")>
+                                <label class="form-check-label" for="area@item.Id">
+                                    @item.Nome
+                                </label>
+                            </div>
+                        }
+
+                    </div>
+
+                    <div class="filtrosPesquisa tituloFiltro">Unidades
+                    </div>
+                    
+                    <div class="filtrosPesquisa">
+                        @Html.DropDownList("idUop", null, "Todas as unidades", new { @class = "form-control", onchange = "submit()" })
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="course-inner">
+        <div class="tab-content" id="pills-tabContent">
+            <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab" tabindex="0">
+                <div class="row">
+                    <div id="atividadesContainer" class="row">
+
+                        @foreach (var item in Model.Items)
+                        {
+                            <div class="col-xxl-3 col-lg-4 col-md-6 card-pill" data-category="category-${atividade.idCategory}">
+                                <div class="course-item mb-30">
+                                    <div class="course-img">
+                                        <img src="@item.CourseImage" alt="@item.CourseTitle" loading="lazy" >
+                                    </div>
+                                    <div class="course-content">
+                                        <div class="course-content-top">
+                                            <div class="course-top-title">
+                                                <h6>@item.CourseCategory</h6>
+                                            </div>
+                                        </div>
+                                        <h5 class="course-content-title"><a href="/atividade/detalhes/@item.CdElement">@item.CourseTitle</a></h5>
+                                        <div class="course-content-bottom">
+                                            <div class="course-bottom-info">
+                                                <span>
+                                                    @{
+                                                        string localUnidade = "";
+                                                        if(item.CourseLocation=="CENTRO DE ATIVIDADES DO SESC BELÉM - SESC DOCA  "){
+                                                            localUnidade = "Sesc Doca";
+                                                        }else
+                                                        if(item.CourseLocation=="CENTRO DE ATIVIDADES SESC CASTANHAL"){
+                                                            localUnidade = "Sesc em Castanhal";
+                                                        }else
+                                                        if(item.CourseLocation=="CENTRO DE ATIVIDADES DO SESC SANTAREM"){
+                                                            localUnidade = "Sesc em Santarém";
+                                                        }else
+                                                        if(item.CourseLocation=="CENTRO DE ATIVIDADES SESC ANANINDEUA"){
+                                                            localUnidade = "Sesc em Ananindeua";
+                                                        }else
+                                                        if(item.CourseLocation=="CASA DE MÚSICA DO SESC"){
+                                                            localUnidade = "Sesc Casa da Música";
+                                                        }else
+                                                        if(item.CourseLocation=="SESC ALTAMIRA"){
+                                                            localUnidade = "Sesc em Altamira";
+                                                        }else
+                                                        if(item.CourseLocation=="CENTRO DE ATIVIDADES - SESC MARABÁ"){
+                                                            localUnidade = "Sesc em Marabá";
+                                                        }else
+                                                        if(item.CourseLocation=="CENTRO CULTURAL DE BELÉM - SESC BOULEVARD"){
+                                                            localUnidade = "Sesc Ver-o-Peso";
+                                                        }
+                                                    }
+                                                    <strong class="atividade-unidade-nome">@localUnidade</strong>
+                                                </span>
+                                            </div>
+                                            <div class="course-bottom-price">
+                                                <label>A partir de <span>R$ @item.CoursePrice</span></label>
+                                            </div>
+                                        </div>
+                                        <a href="/atividade/detalhes/@item.CdElement" class="theme-btn course-btn">Clique aqui</a>
+                                        <div class="course-hover-cart-btn"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="pagination mb-5">
+    @if (Model.HasPreviousPage)
+    {
+        <a asp-action="Atividades" asp-route-pageNumber=1 asp-route-idArea="@idArea" asp-route-idUop="@idUop">Inicio</a>
+        <a asp-action="Atividades" asp-route-pageNumber="@(Model.PageIndex - 1)" asp-route-idArea="@idArea" asp-route-idUop="@idUop">Anterior</a>
+    }
+    
+    
+    @* @for (var i = 1; i <= Model.TotalPages; i++)
+    {
+        <a asp-action="Atividades" asp-route-pageNumber="@i" class="@(i == Model.PageIndex ? "active" : "")" asp-route-idArea="@idArea" asp-route-idUop="@idUop">@i</a>
+    } *@
+
+
+    @for (var i = Model.PageIndex -2; i <= Model.PageIndex +2; i++)
+    {
+        if( (i >= 1) && (i <= Model.TotalPages) )
+        {
+            <a asp-action="Atividades" asp-route-pageNumber="@i" class="@(i == Model.PageIndex ? "active" : "")" asp-route-idArea="@idArea" asp-route-idUop="@idUop">@i</a>
+        }
+    }
+
+
+
+
+
+
+    @if (Model.HasNextPage)
+    {
+        <a asp-action="Atividades" asp-route-pageNumber="@(Model.PageIndex + 1)" asp-route-idArea="@idArea" asp-route-idUop="@idUop">Próximo</a>
+        <a asp-action="Atividades" asp-route-pageNumber="@(Model.TotalPages)" asp-route-idArea="@idArea" asp-route-idUop="@idUop">Final</a>
+    }
+</div>

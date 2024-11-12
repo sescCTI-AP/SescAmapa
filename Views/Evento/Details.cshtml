@@ -1,0 +1,66 @@
+﻿@model SiteSesc.Models.ModelPartialView.EventoCard
+
+
+<div class="container my-5">
+    <div class="row">
+        <div class="col-md-8">
+            <h1>@Model.EventTitle</h1>
+            <h6>@Model.EventCategory - @Model.EventLocation</h6>
+            <p>@Html.Raw(Model.EventDescription)</p>
+        </div>
+        <div class="col-md-4">
+            <div class="event-data-box">
+                <div class="event-date">
+                    <span class="event-day">@Model.EventDataInicio.ToString("dd")</span>
+                    <span class="event-month">@Model.EventDataInicio.ToString("MMM").ToUpper()</span>
+                </div>
+                <div class="event-time">
+                    <span class="event-day">@Model.EventDataFim.ToString("dd")</span>
+                    <span class="event-month">@Model.EventDataFim.ToString("MMM").ToUpper()</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .event-data-box {
+        background-color: #ffffff;
+        border: 1px solid #ddd;
+        padding: 20px;
+        text-align: center;
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .event-date {
+        background-color: #004c99;
+        color: white;
+        padding: 15px;
+        border-radius: 10px;
+        margin-bottom: 15px;
+        position: relative;
+    }
+
+    .event-day {
+        font-size: 3rem;
+        font-weight: bold;
+    }
+
+    .event-month {
+        text-transform: uppercase;
+        font-size: 1.2rem;
+    }
+
+    .event-time {
+        background-color: #e9ecef;
+        padding: 10px;
+        border-radius: 8px;
+        margin-top: 10px;
+    }
+
+        .event-time h6 {
+            margin: 0;
+            color: #333;
+        }
+</style>

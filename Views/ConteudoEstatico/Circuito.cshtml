@@ -1,0 +1,348 @@
+﻿@using SiteSesc.Models.ModelPartialView;
+
+@{
+    var listaCategorias = ViewBag.ListCategorias as List<CategoriaCard>;
+}
+<link href="~/css/public/credencial.css" rel="stylesheet" />
+
+
+<style>
+
+    .allcontent h3, .allcontent h2 {
+        color: #004C99;
+        font-style: italic;
+        margin: 1.5rem auto;
+    }
+
+    .allcontent h4 {
+        margin: 3rem auto 1rem;
+    }
+
+    .allcontent h5 {
+        font-weight: 500 !important;
+    }
+
+    .tribox {
+        background-color: rgba(245,246,253,1);
+    @* box-shadow: 0px 2px 2px rgba(126, 126, 126, 0.2); *@ border-radius: 1rem;
+        padding: 1rem;
+        width: 100%;
+        height: 100%;
+        backdrop-filter: blur(10px) !important;
+    }
+
+    .allcontent a {
+        font-size: 1.1rem;
+        color: #004C99 !important;
+        text-decoration: underline !important;
+        text-decoration-color: rgba(58,121,252, 0) !important;
+    }
+
+        .allcontent a:hover {
+            color: #3a79fc !important;
+            text-decoration-color: rgba(58,121,252, 1) !important;
+            transition: 1s ease;
+        }
+</style>
+
+<section class="banner-area p-3">
+    <div class="single-banner container-fluid container-custom-1 p-0">
+        <div class="container m-0 container-banner">
+            <div class="row align-items-center">
+                <div class=" p-0">
+                    <img class="img-banner" src="~/images/static/banner_divulgacao.jpg" />
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="allcontent">
+    <div class="container">
+        <div>
+
+            <h2><i>Circuito Sesc de Corridas 2024</i></h2>
+
+            <p>
+                Realizado em todo o país, o Circuito Sesc de Corridas tem o objetivo de incentivar a prática de esportes e estimular hábitos saudáveis para o trabalhador do comércio e para o público em geral.
+                Neste ano, as etapas paraenses irão ocorrer em Ananindeua, Castanhal e Marabá. Além da corrida, também haverá caminhada e corrida infantil,
+                sendo assim, um evento que vai abranger todos os públicos.
+            </p>
+
+        </div>
+
+        <div class="row text-left">
+
+
+            <div class="col-md p-3">
+                <div class="tribox">
+                    <h3>Etapa Ananindeua</h3>
+
+                    <h4>Galeria de Fotos</h4>
+
+                    <p>
+                        - <a target="_blank" href="https://flic.kr/s/aHBqjBEMNR">Etapa Adulto</a>
+                        <br />
+                        - <a target="_blank" href="https://flic.kr/s/aHBqjBEJkh">Etapa Infantil / Infanto juvenil</a>
+                    </p>
+
+
+
+                    <h4>Inscrições</h4>
+
+                    <p>O período de inscrição vai até 26/09/2024.</p>
+
+                    <h5>Etapa Infantil/ Infantojuvenil</h5>
+                    <p>
+                        - Dependentes dos trabalhadores do comércio: R$ 15,00<br />
+                        - Público em geral: R$ 25,00</>
+                    </p>
+
+
+                    <h5>Etapa Adulto: Corrida e caminhada</h5>
+                    <p>
+                        - Trabalhadores do comércio e Dependentes: R$ 30,00<br />
+                        - Público em geral: R$ 60,00<br />
+                        - A partir de 60 anos: GRATUITO conforme o regulamento;<br />
+                        - Pessoas com deficiências: GRATUITO conforme o regulamento.
+                    </p>
+
+
+                    <p>
+                        <a target="_blank" href="~/images/static/Regulamento_Ananindeua.pdf">Baixe aqui o regulamento da Etapa Ananindeua</a>
+                    </p>
+                    <p>
+                        <a target="_blank" href="https://www.pscronos.com.br/#/evento/circuito-sesc-de-corridas-2024-etapa-ananindeua">Clique aqui para realizar sua inscrição*</a>
+                    </p>
+
+                    <p><strong style="font-size:12px; color:#700; font-weight:400">*Se o site nao abrir normalmente, experimente trocar o navegador.</strong></p>
+
+
+                    <h4>Entrega dos Kits</h4>
+
+                    <h5>Etapa Infantil/ Infantojuvenil</h5>
+                    <p>
+                        <strong>Entrega do Kit Infantil:</strong> 10/08/2024 (Sábado);<br>
+                        <strong>Local:</strong> Sesc Ananindeua (Av. Gov. Hélio Gueiros, 110 - Quarenta Horas (Coqueiro), Ananindeua - PA);<br>
+                        <strong>Horário:</strong> 10h às 18h.
+                    </p>
+
+                    <h5>Etapa Adulto</h5>
+                    <p>
+                        <strong>Entrega do Kit Adulto (corrida e caminhada):</strong> 02 e 03/08/2024 (Sexta e Sábado);<br>
+                        <strong>Local:</strong> Sesc Ananindeua (Av. Gov. Hélio Gueiros, 110 - Quarenta Horas (Coqueiro), Ananindeua - PA);<br>
+                        <strong>Horário:</strong> 10h às 18h.
+                    </p>
+                    <br>
+
+                    <h4>Realização da prova</h4>
+
+                    <h5>Etapa Infantil/ Infantojuvenil</h5>
+                    <p>
+                        <strong>Data:</strong> 11/08/2024 (Domingo);<br>
+                        <strong>Local:</strong> Mangueirão (Rod. Augusto Montenegro, s/n - Km 03 - Mangueirão, Belém - PA, 66640-000);<br>
+                        <strong>Horário:</strong> 07h.
+                    </p>
+
+                    <h5>Etapa Adulto: Corrida e caminhada</h5>
+                    <p>
+                        <strong>Data:</strong> 04/08/2024 (Domingo)<br>
+                        <strong>Corrida:</strong> 10km;<br>
+                        <strong>Caminhada:</strong> 05km;<br>
+                        <strong>Local:</strong> em frente ao Sesc Ananindeua;<br>
+                        <strong>Horário da largada:</strong> 6h.
+                    </p>
+                </div>
+            </div>
+
+
+            <div class="col-md p-3">
+                <div class="tribox">
+                    <h3>Etapa Castanhal</h3>
+
+                    <h4>Galeria de Fotos</h4>
+
+                    <p>
+                        - <a target="_blank" href="https://flic.kr/s/aHBqjBGdoD">Etapa Adulto</a>
+                        <br />
+                        - <a target="_blank" href="https://flic.kr/s/aHBqjBG7dr">Etapa Infantil / Infanto juvenil</a>
+                    </p>
+
+                    <h4>Inscrições</h4>
+
+                    <p>Período de inscrição: 29/07 a 21/08 de 2024 pela INTERNET pelo Site https://sesc-pa.com.br ou presencial na unidade do Sesc em Castanhal.</p>
+
+                    <h5>Etapa Infantil/ Infantojuvenil</h5>
+                    <p>
+                        - Dependentes dos trabalhadores do comércio R$ 15,00<br />
+                        - Público em geral: R$ 25,00
+                    </p>
+
+
+                    <h5>Etapa Adulto</h5>
+                    <p>
+                        - Inscrições a partir de 18 anos<br />
+                        - Trabalhadores do comércio e Dependentes: R$ 30,00<br />
+                        - Público em geral: R$ 60,00<br />
+                        - A partir de 60 anos: GRATUITO conforme o regulamento<br />
+                        - Pessoas com deficiências: GRATUITO conforme o regulamento.
+                    </p>
+
+                    <p>
+                        <a target="_blank" href="~/images/static/Regulamento_Castanhal.pdf">Baixe aqui o regulamento da Etapa Castanhal</a>
+                    </p>
+                    <p>
+                        <a target="_blank" href="https://www.ticketsports.com.br/e/CIRCUITO%20DE%20CORRIDAS%20SESC%202024%20-%20ETAPA%20CASTANHAL%20-69498"<h2>Clique aqui para realizar sua inscrição</h2></a>
+                    </p>
+
+                    <h4>Entrega dos Kits</h4>
+
+                    <h5>Etapa Infantil/ Infantojuvenil</h5>
+                    <p>
+                        <strong>Data:</strong> 30/08/2024 (Sexta);<br />
+                        <strong>Local:</strong> Sesc Castanhal;<br />
+                        <strong>Horário de entrega dos kits:</strong> 9h às 12h das 14h às 18h.
+                    </p>
+
+                    <h5>Etapa Adulto</h5>
+                    <p>
+                        <strong>Data:</strong> 31/08/2024 (Sábado)<br />
+                        <strong>Local:</strong> Sesc Castanhal<br />
+                        <strong>Horário de entrega dos kits:</strong> 9h às 19h.
+                    </p>
+
+
+                    <h4>Realização da prova</h4>
+
+                    <h5>Etapa Infantil/ Infantojuvenil</h5>
+                    <p>
+                        <strong>Data:</strong> 31/08/2024 (Sábado);<br />
+                        <strong>Local:</strong> Em frente da Unidade do Sesc em Castanhal;<br />
+                        <strong>Horário da largada da prova:</strong> 7h (devendo comparecer com uma hora de antecedência com o responsável).
+                    </p>
+
+                    <h5>Etapa Adulto</h5>
+                    <p>
+                        <strong>Data:</strong> 01/09/2024 (Domingo)<br />
+                        <strong>Local:</strong> Largarda em frente ao Sesc em Castanhal<br />
+                        <strong>Horário da largarda:</strong> 6h30.
+                    </p>
+                </div>
+            </div>
+
+
+            <div class="col-md p-3">
+                <div class="tribox">
+                    <h3>Etapa Marabá</h3>
+
+                    <h4>Galeria de Fotos</h4>
+
+                    <p>
+                        - <a target="_blank" href="https://flic.kr/s/aHBqjBJWZg">Etapa Adulto</a>
+                        <br />
+                        - <a target="_blank" href="https://flic.kr/s/aHBqjBJ267">Etapa Infantil / Infanto juvenil</a>
+                    </p>
+
+                    <h4>Inscrições</h4>
+
+                    <p>O período de inscrição será de 05/08 a 05/09 de 2024.</p>
+
+
+                    <h5>Etapa Infantil/ Infantojuvenil</h5>
+                    <p>
+                        - Dependentes dos trabalhadores do comércio: R$ 20,00<br />
+                        - Público em geral:R$ 30,00
+                    </p>
+
+                    <h5>Etapa Adulto</h5>
+                    <p>
+                        - Inscrições a partir de 18 anos;<br />
+                        - Trabalhadores do comércio e Dependentes - R$ 35,00<br />
+                        - Público em geral - R$ 65,00<br />
+                        - A partir de 60  anos - GRATUITO conforme o regulamento<br />
+                        - Pessoas com deficiências - GRATUITO conforme o regulamento.
+                    </p>
+
+                    <p>
+                        <a target="_blank" href="~/images/static/Regulamento_Maraba.pdf">Baixe aqui o regulamento da Etapa Marabá</a>
+                    </p>
+                    <p>
+                        <a target="_blank" href="https://www.ticketsports.com.br/e/circuito-sesc-de-corrida-de-rua---etapa-marab-69584" class="links">Clique aqui para realizar sua inscrição</a>
+                    </p>
+
+                    <h4>Entrega dos Kits</h4>
+                    <h5>Etapa Infantil/ Infantojuvenil</h5>
+                    <strong>Data:</strong> 13/09/2024<br />
+                    <strong>Local:</strong> Sesc Marabá<br />
+                    <strong>Horário de entrega dos kits:</strong> 9h às 15h.</p>
+
+                    <h5>Etapa Adulto</h5>
+                    <p>
+                        <strong>Data:</strong> 14/09/2024<br />
+                        <strong>Local:</strong> Sesc Marabá<br />
+                        <strong>Horário de entrega dos kits:</strong> 12h às 18h.
+                    </p>
+
+
+                    <h4>Realização da prova</h4>
+                    <h5>Etapa Infantil/ Infantojuvenil</h5>
+                    <p>
+                        <strong>Data:</strong> 14/09/2024;<br />
+                        <strong>Local:</strong> em frente ao Sesc em Marabá;<br />
+                        <strong>Horário da largada da prova: 7h.</strong>
+                    </p>
+
+                    <h5>Etapa Adulto</h5>
+                    <p>
+                        <strong>Data:</strong> 15/09/2024;<br />
+                        <strong>Local:</strong> em frente ao Sesc em Marabá;<br />
+                        <strong>Horário da largarda:</strong> 6h30.
+                    </p>
+                </div>
+            </div>
+
+
+        </div>
+
+
+
+    </div>
+</section>
+
+
+<section class="category-area pt-120 pb-60">
+    <div class="container">
+        <div class="row">
+            <div class="col-xl-3 col-lg-3">
+                <div class="category-left pb-60">
+                    <div class="section-area">
+                        <h2 class="section-title mb-20">Aproveite nossos serviços</h2>
+                    </div>
+                    <div class="category-rol">
+                        <div class="category-prev">
+                            <i class="fa-solid fa-arrow-left"></i>
+                        </div>
+                        <div class="category-next">
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-9 col-lg-9">
+                <div class="category-wrap">
+                    <div class="category-active swiper pb-60">
+                        <div class="swiper-wrapper">
+                            @if (listaCategorias != null)
+                            {
+                                foreach (var categoria in listaCategorias)
+                                {
+                                    @await Html.PartialAsync("PartialView/_PartialViewCategoriaDetails", categoria)
+                                }
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

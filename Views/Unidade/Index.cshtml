@@ -1,0 +1,234 @@
+﻿@model IEnumerable<SiteSesc.Models.UnidadeOperacional>
+
+@{
+    ViewData["Title"] = "Unidades";
+}
+
+<link href="~/css/paginacao/paginacao.css" rel="stylesheet" />
+
+<style>
+
+    .areaTitulo{
+        background: url("../images/unidades.webp") center no-repeat;
+        background-size: cover;
+        color: white;
+        min-height: 200px;
+        width: calc(100% - 2rem);
+        overflow: hidden;
+        padding: 0 1rem;
+        margin: 1rem;
+        border-radius: 0.5rem ;
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+    }
+
+    .areaTitulo h2{
+        color: white;
+        text-shadow: 0 0 50px black;
+        font-size: clamp(30px, 30px + 1vw, 46px)
+    }
+
+    .textoComplementar {
+        font-size: 1.4rem;
+        margin-left: 1rem;
+    }
+
+    .unidade-container {
+        display: flex;
+        flex-flow: row wrap;
+        justify-self: start; 
+        gap: 1.5rem;
+        justify-content: space-evenly;
+        padding-inline: 1rem;
+        padding-bottom: 5.5rem;
+    }
+
+    @* .unidade-container::after {
+        content: "";
+        flex: auto;
+        background: red
+    } *@
+
+
+    .unidade-card {
+        position: relative;
+        border: 1px solid #ccc;
+        border-radius: 0.7rem;
+        overflow: hidden;
+        background-color: #f9f9f9;
+        height: 220px; /* Tamanho fixo para os cards */
+        width: 250%;
+        max-width: 290px;
+        box-sizing: border-box;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombreamento leve */
+        transition: all 0.3s ease; /* Transição suave */
+        cursor: pointer; /* Indica que é clicável */
+        border: 4px solid rgba(246,190,0,0)
+    }
+
+    .unidade-Branco{
+        position: relative;
+        height: 220px; /* Tamanho fixo para os cards */
+        display: none;
+        max-width: 290px;
+    }
+
+    .unidade-card:hover, .unidade-card:focus {
+        transform: translateY(-5px); /* Efeito de elevar o card ao passar o mouse */
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Sombreamento mais forte ao passar o mouse */
+        border: 4px solid rgba(246,190,0,1)
+    }
+
+    .course-img {
+        height: 100%;
+    }
+
+    .course-img img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover; /* A imagem ocupa todo o card sem distorção */
+        border-radius: 0.5rem;
+    }
+
+
+    .unidade-titulo {
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        height: 4.5rem;
+        padding: 0.5rem;
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: #fff;
+        text-align: left;
+        background-color: rgba(0, 0, 0, 0.6); /* Fundo preto transparente */
+    }
+
+</style>
+
+<div class="container">
+    
+    <div class="areaTitulo">
+        <h2>
+            Nossas Unidades
+        </h2>
+    </div>
+
+    
+    
+    <div class="unidade-container">
+        
+        <div class="col-md-12 mb-4">
+            <p class="textoComplementar">Veja o que nossas Unidades podem lhe oferecer.</p>
+        </div>
+
+        @foreach (var unidade in Model)
+        {
+            
+            <a href="@Url.Action("Details", "Unidade", new { nome = unidade.NameRoute})" class="unidade-card col-md-3">
+                <div class="course-img">
+                    <img src="@unidade.Arquivo.CaminhoVirtualFormatado()" alt="" />
+                </div>
+                <div class="unidade-titulo">@unidade.NomeCurto</div>
+            </a>
+            
+        }
+
+        <a class="unidade-Branco col-md-3">
+            &nbsp;
+        </a>
+
+        @{
+            int resto = ViewBag.count % 4;
+            switch(resto) {
+                case 1:
+                    <style>
+                        @@media only screen and (min-width: 1400px) {
+                            .unidade-Branco{
+                                min-width: 75%;
+                                display: block;
+                            }
+                        }
+
+                        @@media only screen and (max-width: 1199px) {
+                            .unidade-Branco{
+                                min-width: 32%;
+                                display: block;
+                            }
+                        }
+                        @@media only screen and (max-width: 991px) {
+                            .unidade-Branco{
+                                min-width: 44%;
+                                display: block;
+                            }
+                        }
+
+                        @@media only screen and (max-width: 767px) {
+                            .unidade-Branco{
+                                display: none;
+                            }
+                        }
+                    </style>
+                    break;
+                case 2:
+                    <style>
+                        @@media only screen and (min-width: 1400px) {
+                            .unidade-Branco{
+                                min-width: 50%;
+                                display: block;
+                            }
+                        }
+                        @@media only screen and (max-width: 1399px) {
+                            .unidade-Branco{
+                                min-width: 60%;
+                                display: block;
+                            }
+                        }
+                        @@media only screen and (max-width: 1199px) {
+                            .unidade-Branco{
+                                display: none;
+                            }
+                        }
+                        @@media only screen and (max-width: 991px) {
+                            .unidade-Branco{
+                                display: none;
+                            }
+                        }
+
+                    </style>
+                    break;
+                case 3:
+                    <style>
+                        @@media only screen and (min-width: 1400px) {
+                            .unidade-Branco{
+                                min-width: 23%;
+                                display: block;
+                            }
+                        }
+                        @@media only screen and (max-width: 1399px) {
+                            .unidade-Branco{
+                                min-width: 60%;
+                                display: block;
+                            }
+                        }
+                        @@media only screen and (max-width: 1199px) {
+                            .unidade-Branco{
+                                min-width: 32%;
+                                display: block;
+                            }
+                        }
+                        @@media only screen and (max-width: 991px) {
+                            .unidade-Branco{
+                                min-width: 44%;
+                                display: block;
+                            }
+                        }
+                    </style>
+                    break;
+            }
+        }
+    </div>
+
+
+</div>

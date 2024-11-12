@@ -1,0 +1,24 @@
+﻿@model SiteSesc.Models.Usuario
+@using SiteSesc.Services
+@{
+    ViewData["Title"] = "Espaço do cliente";
+    bool? hasSolicitacao = ViewBag.HasSolicitacao;
+}
+<section id="hero" class="d-flex flex-column justify-content-center">
+    <div class="container" data-aos="zoom-in" data-aos-delay="100">
+        @* <img src="~/images/static/logo-sesc.webp" width="100" class="mb-5"/> *@
+        <h1>Olá, @Util.PrimeiroSegundoNome(Model.Nome)!</h1>
+        <div class="mt-5">
+            <a class="btn-rounded bg-transaparent mt-3" asp-action="Logout" asp-controller="Usuario">Sair</a>
+            @if (hasSolicitacao != null && hasSolicitacao == true)
+            {
+                <p><i class="fa-solid fa-circle-exclamation" style="color:dodgerblue"></i>&nbsp; Aguarde enquanto analisamos sua solicitação...</p>
+            }
+            else if (hasSolicitacao == false)
+            {
+                <a class="btn-rounded bg-blue mt-3" asp-action="EscolhaCategoria" asp-controller="SolicitacaoCadastroCliente">Solicitar credencial</a>
+            }
+        </div>
+
+    </div>
+</section>

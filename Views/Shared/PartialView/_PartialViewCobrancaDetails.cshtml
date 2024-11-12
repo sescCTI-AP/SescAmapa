@@ -1,0 +1,27 @@
+﻿@model SiteSesc.Models.ModelPartialView.CobrancaDetails
+
+<div class="col-lg-4 col-md-6 d-flex align-items-stretch" data-aos="zoom-in" data-aos-delay="100">
+    <div class="icon-box">
+        <i class="@Model.IconClass" style="font-size: 48px"></i>
+        <h4><a href="">@Model.Title</a></h4>
+        <h6>Vencimento: @Model.ExpirationDate</h6>
+        <h5>Valor original: @Model.Value</h5>
+        <h5>Valor atualizado: @Model.DiscountedValue</h5>
+        <br>
+        <hr>
+        <div class="row">
+            <span style="font-style: italic; margin-bottom: 20px;">Pague agora <br>Selecione uma forma de pagamento</span>
+            <div class="row">
+                <div class="col-md">
+                    <i class='bx bxs-credit-card-alt font-size-48 icon-gray font-red'></i>
+                    <p>Cartão de crédito</p>
+                </div>
+
+                <div class="col-md">
+                    <i class="fa-brands fa-pix font-size-48 font-green icon-gray"></i>
+                    <p>Pix</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

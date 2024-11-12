@@ -1,0 +1,13 @@
+﻿@model SiteSesc.Models.ModelPartialView.Comentarios
+
+<div class="blog_details-comment-item">
+    <div class="blog_details-comment-img">
+        <img src="@Model.CommentImage" alt="">
+    </div>
+    <div class="blog_details-comment-content">
+        <h6>@Model.CommentAuthor</h6>
+        <span>@Model.CommentDate</span>
+        <p>@Model.CommentContent</p>
+        <a href="#" class="comment-reply">Responder</a>
+    </div>
+</div>

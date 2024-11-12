@@ -1,0 +1,9 @@
+﻿@model SiteSesc.Models.Banner
+
+<div class="swiper-slide" data-swiper-autoplay="5000">
+    <div class="project-img">
+        <a href="@Model.Url">
+            <img class="img-banner" src="@Model.Arquivo.CaminhoVirtualFormatado()" />
+        </a>
+    </div>
+</div>

@@ -1,0 +1,7 @@
+﻿@model dynamic
+
+<td width="100">
+    <a asp-action="Edit" asp-route-id="@Model.Id" data-toggle="tooltip" title="Editar"><i class="fa-solid fa-edit"></i></a> |
+    <a asp-action="Details" asp-route-id="@Model.Id" data-toggle="tooltip" title="Visualizar"><i class="fa-solid fa-eye"></i></a> |
+    <a asp-action="Delete" asp-route-id="@Model.Id" data-toggle="tooltip" title="Excluir"><i class="fa-solid fa-trash-can"></i></a>
+</td>

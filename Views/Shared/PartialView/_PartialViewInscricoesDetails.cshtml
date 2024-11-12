@@ -1,0 +1,16 @@
+﻿@model SiteSesc.Models.ModelPartialView.InscricaoDetails
+
+<div class="resume-item pb-0">
+    <h4>@Model.Title</h4>
+    <ul>
+        @for (int i = 0; i < Model.Links.Count; i++)
+        {
+                <li>
+                    <a href="#" class="nav-link scrollto p-0 text-black">
+                        <i class="@Model.LinkIcons[i]"></i>
+                        <span>@Model.LinkDescriptions[i]</span>
+                    </a>
+                </li>
+        }
+    </ul>
+</div>

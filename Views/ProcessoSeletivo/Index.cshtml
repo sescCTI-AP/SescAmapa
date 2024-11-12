@@ -1,0 +1,359 @@
+﻿@using SiteSesc.Models.ProcessoSeletivo
+@{
+    var abertos = ViewBag.Abertos as List<psl_processoSeletivo>;
+    var emAndamento = ViewBag.EmAndamento as List<psl_processoSeletivo>;
+    var finalizados = ViewBag.Finalizados as List<psl_processoSeletivo>;
+
+    var tipos = ViewBag.Tipos as List<psl_tipoProcessoSeletivo>;
+    var cidades = ViewBag.Cidades as List<Cidade>;
+    var areas = ViewBag.Area as List<Area>;
+
+    int currentPage = ViewBag.CurrentPage;
+    int pageSize = ViewBag.PageSize;
+    int totalItems = ViewBag.TotalItems;
+    int totalPages = (int)Math.Ceiling((decimal)totalItems / pageSize);
+}
+
+
+<style>
+
+    .areaTitulo{
+        background: url("../images/processoseletivo.webp") center no-repeat;
+        background-size: cover;
+        color: white;
+        min-height: 200px;
+        width: calc(100% - 2rem);
+        overflow: hidden;
+        padding: 0 1rem;
+        margin: 1rem;
+        border-radius: 0.5rem ;
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+    }
+
+    .areaTitulo h2{
+        color: white;
+        text-shadow: 0 0 50px black;
+        font-size: clamp(30px, 30px + 1vw, 46px)
+    }
+    
+    .rowEdital .col-md-3 .form-control{
+        cursor: pointer;
+        -webkit-appearance: button !important;
+        -moz-appearance: button;
+        -o-appearance: button;
+        -ms-appearance: button;
+        appearance: button;
+        font-size: 1.1rem;
+    }
+
+    .rowEdital .col-md-3 label {
+        font-size: 1.2rem;
+    }
+
+    .textoComplementar {
+        font-size: 1.4rem;
+    }
+
+    .editalAreaBotao {
+        width: 100%;
+        display: flex;
+    }
+
+    .editalBotaoSubmit{
+        width: 100%;
+        max-width: 300px;
+        padding: 0.75rem;
+    }
+
+</style>
+
+<div class="container pt-4 mb-5">
+
+    <div class="areaTitulo">
+        <h2>
+            Processo Seletivo
+        </h2>
+    </div>
+    
+    <div class="container pt-4 mb-5">              
+        <p class="textoComplementar">Confira nossas oportuidades de emprego e venha fazer parte da nossa equipe.</p>
+        <form method="get" action="/processo-seletivo">
+            <div class="row rowEdital">
+                
+                <div class="col-md-3">
+                    <label for="tipo">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-card-list" viewBox="0 0 16 16">
+                            <path d="M14.5 3a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-.5.5h-13a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5zm-13-1A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h13a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2z"/>
+                            <path d="M5 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 5 8m0-2.5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5m0 5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5m-1-5a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0M4 8a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0m0 2.5a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0"/>
+                        </svg> 
+                        Tipo
+                    </label>
+                    <select class="form-control" id="tipo" name="tipo">
+                        <option value="" selected>
+                            Selecione um tipo
+                        </option>
+                        @foreach (var item in tipos)
+                        {
+                            <option value="@item.Id">@item.Descricao</option>
+                        }
+                    </select>
+                </div>
+
+                <div class="col-md-3">
+                    <label for="cidade">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-geo-alt" viewBox="0 0 16 16">
+                            <path d="M12.166 8.94c-.524 1.062-1.234 2.12-1.96 3.07A32 32 0 0 1 8 14.58a32 32 0 0 1-2.206-2.57c-.726-.95-1.436-2.008-1.96-3.07C3.304 7.867 3 6.862 3 6a5 5 0 0 1 10 0c0 .862-.305 1.867-.834 2.94M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10"/>
+                            <path d="M8 8a2 2 0 1 1 0-4 2 2 0 0 1 0 4m0 1a3 3 0 1 0 0-6 3 3 0 0 0 0 6"/>
+                        </svg> 
+                        Cidades
+                    </label>
+                    <select class="form-control" id="cidade" name="cidade">
+                        <option value="" selected>Selecione uma cidade</option>
+                        @foreach (var item in cidades)
+                        {
+                            <option value="@item.Id">@item.Nome</option>
+                        }
+                    </select>
+                </div>
+
+                <div class="col-md-3 ">
+                    <label for="area">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-chat-square-text" viewBox="0 0 16 16">
+                            <path d="M14 1a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1h-2.5a2 2 0 0 0-1.6.8L8 14.333 6.1 11.8a2 2 0 0 0-1.6-.8H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2.5a1 1 0 0 1 .8.4l1.9 2.533a1 1 0 0 0 1.6 0l1.9-2.533a1 1 0 0 1 .8-.4H14a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z"/>
+                            <path d="M3 3.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5M3 6a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9A.5.5 0 0 1 3 6m0 2.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5"/>
+                        </svg> 
+                        Área
+                    </label>
+                    <select class="form-control" id="area" name="area">
+                        <option value="" selected>Selecione uma área</option>
+                        @foreach (var item in areas)
+                        {
+                            <option value="@item.Id">@item.Nome</option>
+                        }
+                    </select>
+                </div>
+
+                <div class="col-md-3">
+                    <label for="status">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-check-square" viewBox="0 0 16 16">
+                            <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z" />
+                            <path d="M10.97 4.97a.75.75 0 0 1 1.071 1.05l-3.992 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425z" />
+                        </svg> 
+                        Situação
+                    </label>
+                    <select class="form-control" id="status" name="status">
+                        <option value="" selected>Selecione um Status</option>
+                        @foreach (var item in ViewBag.Situacoes)
+                        {
+                            <option value="@item.Id">@item.Descricao</option>
+                        }
+                    </select>
+                </div>
+            </div>
+            
+            <div class="editalAreaBotao">
+                <button type="submit" class="btn btn-primary mt-3 editalBotaoSubmit">Buscar</button>
+            </div>
+        </form>
+        
+    </div>
+
+    <div class="content-container">
+        @if ((abertos != null && abertos.Any()) ||
+        (emAndamento != null && emAndamento.Any()) ||
+        (finalizados != null && finalizados.Any()))
+        {
+            <div class="flex-container">
+                @if (abertos != null && abertos.Any())
+                {
+                    foreach (var item in abertos)
+                    {
+                        @await Html.PartialAsync("PartialView/_PartialViewCardProcessoSeletivo", item)
+                    }
+                }
+
+                @if (emAndamento != null && emAndamento.Any())
+                {
+                    foreach (var item in emAndamento)
+                    {
+                        @await Html.PartialAsync("PartialView/_PartialViewCardProcessoSeletivo", item)
+                    }
+                }
+
+                @if (finalizados != null && finalizados.Any())
+                {
+                    foreach (var item in finalizados)
+                    {
+                        @await Html.PartialAsync("PartialView/_PartialViewCardProcessoSeletivo", item)
+                    }
+                }
+            </div>
+        }
+        else
+        {
+            <h3>Não há Processos Seletivos disponíveis até o momento</h3>
+        }
+    </div>
+
+    <!-- Controles de paginação -->
+    @if (totalPages > 1)
+    {
+        <nav aria-label="Navegação de página">
+            <ul class="pagination">
+                @if (currentPage > 1)
+                {
+                    <li class="page-item">
+                        <a class="page-link" href="?tipo=@Context.Request.Query["tipo"]&cidade=@Context.Request.Query["cidade"]&area=@Context.Request.Query["area"]&status=@Context.Request.Query["status"]&page=1&pageSize=@pageSize" aria-label="Início">
+                            <span aria-hidden="true">Início</span>
+                        </a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?tipo=@Context.Request.Query["tipo"]&cidade=@Context.Request.Query["cidade"]&area=@Context.Request.Query["area"]&status=@Context.Request.Query["status"]&page=@(currentPage - 1)&pageSize=@pageSize" aria-label="Anterior">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                }
+
+                @for (var i = currentPage - 2; i <= currentPage + 2; i++)
+                {
+                    if (i >= 1 && i <= totalPages)
+                    {
+                        <li class="page-item @(i == currentPage ? "active" : "")">
+                            <a class="page-link" href="?tipo=@Context.Request.Query["tipo"]&cidade=@Context.Request.Query["cidade"]&area=@Context.Request.Query["area"]&status=@Context.Request.Query["status"]&page=@i&pageSize=@pageSize">@i</a>
+                        </li>
+                    }
+                }
+
+                @if (currentPage < totalPages)
+                {
+                    <li class="page-item">
+                        <a class="page-link" href="?tipo=@Context.Request.Query["tipo"]&cidade=@Context.Request.Query["cidade"]&area=@Context.Request.Query["area"]&status=@Context.Request.Query["status"]&page=@(currentPage + 1)&pageSize=@pageSize" aria-label="Próximo">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?tipo=@Context.Request.Query["tipo"]&cidade=@Context.Request.Query["cidade"]&area=@Context.Request.Query["area"]&status=@Context.Request.Query["status"]&page=@(totalPages)&pageSize=@pageSize" aria-label="Final">
+                            <span aria-hidden="true">Final</span>
+                        </a>
+                    </li>
+                }
+            </ul>
+        </nav>
+
+    }
+</div>
+
+
+<style>
+    .flex-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 16px; /* Ajuste o valor conforme necessário */
+        justify-content: space-between;
+    }
+
+    .col-md-5 * {
+        font-size: 1.2rem;
+    }
+
+    .col-md-5 select {
+        cursor: pointer;
+        -webkit-appearance: button !important;
+        -moz-appearance: button;
+        -o-appearance: button;
+        -ms-appearance: button;
+        appearance: button;
+    }
+
+    #abertos .flex-container, #andamento .flex-container, #finalizados .flex-container {
+        flex-direction: row !important;
+        justify-content: space-between !important;
+        padding: 1rem !important;
+    }
+
+    .flex-item {
+        width: calc(50% - 1rem);
+        border: 2px solid #004c99;
+        border-radius: 1rem;
+        background: white;
+        min-height: 260px;
+        box-sizing: border-box;
+        text-align: center;
+        margin-bottom: 1rem;
+    }
+
+        .flex-item:hover {
+            border: 2px solid dodgerblue;
+        }
+
+    .blog_details-widget {
+        height: 100%;
+        max-height: 320px;
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        flex-direction: column;
+        padding: 0;
+        margin: 0;
+        overflow: hidden;
+        background: none;
+    }
+
+    .box-titulo-blue {
+        background: #004c99;
+        padding: auto 1rem !important;
+        height: 86px;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .box-conteudo-ps {
+        padding: 5px 1rem;
+    }
+
+    .flex-item:hover .box-titulo-blue {
+        background: dodgerblue;
+    }
+
+    .box-titulo-blue h4 {
+        color: white;
+    }
+
+    .box-texto-cargos {
+        font-weight: 600;
+        font-size: 1.2rem;
+    }
+
+    @@media (max-width: 767px) {
+        .flex-item {
+            width: 100%;
+        }
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const tipoSelect = document.getElementById('tipo');
+        const cidadeSelect = document.getElementById('cidade');
+        const areaSelect = document.getElementById('area');
+
+        function updateUrl() {
+            const tipo = tipoSelect.value;
+            const cidade = cidadeSelect.value;
+            const area = areaSelect.value;
+
+            // Cria a nova URL com os parâmetros
+            const baseUrl = 'processo-seletivo'; // Substitua pelo seu URL base
+            const queryString = `?tipo=${tipo}&cidade=${cidade}&area=${area}&page=1&pageSize=8`;
+            window.history.replaceState(null, '', baseUrl + queryString);
+        }
+
+        tipoSelect.addEventListener('change', updateUrl);
+        cidadeSelect.addEventListener('change', updateUrl);
+        areaSelect.addEventListener('change', updateUrl);
+    });
+</script>

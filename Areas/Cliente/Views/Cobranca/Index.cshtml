@@ -1,0 +1,12 @@
+﻿@model SiteSesc.Models.ApiPagamento.ClienteCentral
+
+
+@if (Model.Cobranca?.Any() == true)
+{
+    foreach (var cob in Model.Cobranca)
+    {
+        <p>@cob.Cdelement</p>
+        <p>@cob.Sqcobranca</p>
+        <hr />
+    }
+}

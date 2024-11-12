@@ -1,0 +1,106 @@
+﻿@using SiteSesc.Models.ModelPartialView;
+
+@{
+    var listaCategorias = ViewBag.ListCategorias as List<CategoriaCard>;
+}
+<link href="~/css/public/credencial.css" rel="stylesheet" />
+
+<div class="fixo-banner-container">
+    <div class="fixo-banner-content">
+        <img src="~/images/static/bg_estrutura.webp" />
+    </div>
+</div>
+
+<section>
+    <div class="container">
+        <p><strong>Presidente</strong></p>
+
+        <p>Sebasti&atilde;o de Oliveira Campos</p>
+
+        <p>&nbsp;</p>
+
+        <p><strong>Diretora Regional</strong></p>
+
+        <p>Heloiva Amoras da Silveira Tavora</p>
+
+        <p>&nbsp;</p>
+
+        <p><strong>Diretor Administrativo e Financeiro</strong></p>
+
+        <p>Ulisses da Cunha Aguiar Guimar&atilde;es</p>
+
+        <p>&nbsp;</p>
+
+        <p><strong>Diretora de Programas Sociais</strong></p>
+
+        <p>Francinaide Soares da Cruz Alvez</p>
+
+        <p>&nbsp;</p>
+
+        <p><strong>Diretora de Planejamento e Or&ccedil;amento</strong></p>
+
+        <p>Ingrid da Frota Clemente Henriques</p>
+
+    </div>
+</section>
+
+<section class="category-area pt-120 pb-60">
+    <div class="container">
+        <div class="row">
+            <div class="col-xl-3 col-lg-3">
+                <div class="category-left pb-60">
+                    <div class="section-area">
+                        <h2 class="section-title mb-20">Programas</h2>
+                    </div>
+                    <div class="category-rol">
+                        <div class="category-prev">
+                            <i class="fa-solid fa-arrow-left"></i>
+                        </div>
+                        <div class="category-next">
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-9 col-lg-9">
+                <div class="category-wrap">
+                    <div class="category-active swiper pb-60">
+                        <div class="swiper-wrapper">
+                            @if (listaCategorias != null)
+                            {
+                                foreach (var categoria in listaCategorias)
+                                {
+                                    @await Html.PartialAsync("PartialView/_PartialViewCategoriaDetails", categoria)
+                                }
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+    .fixo-banner-container{
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .fixo-banner-content{
+        width: 100%;
+        max-width: 1600px;
+        height: auto;
+        
+    }
+
+    .fixo-banner-content img{
+        width: calc(100% - 2rem);
+        margin: 1rem;
+        max-width: 1600px;
+        border-radius: 1rem;
+    }
+</style>

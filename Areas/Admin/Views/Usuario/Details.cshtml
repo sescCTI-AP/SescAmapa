@@ -1,0 +1,727 @@
+﻿@model Usuario
+@using SiteSesc.Models.Admin
+@using SiteSesc.Models.Enums
+
+@{
+    ViewBag.Title = "Detalhes do Usuário";
+    var modulosSistema = ViewBag.ModulosSistema as List<adm_moduloSistema>;
+    var acoesSistemas = ViewBag.AcoesSistema as List<adm_acaoSistema>;
+    List<int> acoesModuloUsuarioLogado = ViewBag.Acoes as List<int>;
+}
+
+<style>
+     .input-block {
+         border: 0px;
+         background-color: transparent
+     }
+
+     .btn-rounded {
+         display: flex; /* Alinha o conteúdo do botão */
+         justify-content: center; /* Centraliza o ícone horizontalmente */
+         align-items: center; /* Centraliza o ícone verticalmente */
+         font-size: 20px; /* Ajusta o tamanho do ícone/texto */
+         cursor: pointer; /* Muda o cursor ao passar sobre o botão */
+         background-color: dodgerblue; /* Cor de fundo */
+         color: white; /* Cor do ícone */
+         transition: background-color 0.3s ease; /* Transição suave para hover */
+     }
+
+     .btn-rounded2 {
+         width: 50px; /* Defina a largura do botão */
+         height: 50px; /* Defina a altura do botão */
+         border-radius: 50%; /* Torna o botão redondo */
+         display: flex; /* Alinha o conteúdo do botão */
+         justify-content: center; /* Centraliza o ícone horizontalmente */
+         align-items: center; /* Centraliza o ícone verticalmente */
+         font-size: 20px; /* Ajusta o tamanho do ícone/texto */
+         cursor: pointer; /* Muda o cursor ao passar sobre o botão */
+         border: none; /* Remove a borda padrão */
+         background-color: red; /* Cor de fundo */
+         color: white; /* Cor do ícone */
+         transition: background-color 0.3s ease; /* Transição suave para hover */
+     }
+
+         .btn-rounded2:hover {
+             background-color: darkred; /* Muda a cor do botão ao passar o mouse */
+         }
+
+     .btn-rounded:hover {
+         background-color: blue; /* Muda a cor do botão ao passar o mouse */
+     }
+
+     .btn-rounded:hover, .btn-rounded2:hover {
+         opacity: 0.8; /* Efeito hover para ambos os botões */
+     }
+
+     .button-group {
+         display: flex;
+         gap: 10px; /* Espaçamento entre os botões */
+         align-items: center; /* Alinha os botões verticalmente */
+     }
+
+     .input-unlock {
+     }
+
+     .checkbox-group {
+         display: flex;
+         flex-wrap: wrap; /* Permite que os itens quebrem a linha */
+         gap: 5px; /* Espaçamento entre os itens */
+         justify-content: flex-start; /* Alinha os itens no início */
+         margin-top: 15px; /* Espaçamento superior da seção de checkboxes */
+     }
+
+     .checkbox-item {
+         display: flex;
+         align-items: center;
+         width: calc(50% - 5px); /* Faz com que cada item ocupe 50% da largura (com espaço entre eles) */
+         font-size: 16px; /* Tamanho da fonte */
+         padding: 1px; /* Espaçamento interno */
+         border-radius: 4px;
+         transition: background-color 0.3s ease;
+     }
+
+         .checkbox-item:hover {
+             background-color: #f0f0f0; /* Muda o fundo ao passar o mouse */
+         }
+
+         .checkbox-item input[type="checkbox"] {
+             margin-right: 10px; /* Espaçamento entre a checkbox e o texto */
+         }
+
+
+     .checkbox-group {
+         margin-top: 5px; /* Espaçamento superior da seção de checkboxes */
+     }
+
+</style>
+
+<h2>Detalhes do usuário</h2>
+
+<div  id="cardUsuario">
+    <div class="">
+        <div class="row">
+            <div class="col">
+                
+                <table class="table table-bordered table-hover">
+                    <tbody>
+                        <tr class="thead-light">
+                            <th style="width: 200px">@Html.DisplayNameFor(model => model.Nome)</th>
+                            <td>@Html.DisplayFor(model => model.Nome)</td>
+                        </tr>
+                        <tr class="thead-light">
+                            <th>@Html.DisplayNameFor(model => model.Cpf)</th>
+                            <td>@Html.DisplayFor(model => model.Cpf)</td>
+                        </tr>
+                        <tr class="thead-light">
+                            <th>@Html.DisplayNameFor(model => model.Email)</th>
+                            <td>
+                                <label id="email-user-@Model.Id">@Model.Email</label>
+
+                                
+                                    <span data-toggle="tooltip" title="Editar E-mail">
+                                        <a class="call-modal btn btn-manager" data-id="@Url.Action("AlterarEmailUsuario", "Usuario", new { idUsuario = Model.Id })" data-toggle="modal">
+                                            <span class="fas fas fa-edit text-dark" style="color: dodgerblue"></span>
+                                        </a>
+                                    </span>
+                                
+
+                            </td>
+                        </tr>
+                        <tr class="thead-light">
+                            <th>@Html.DisplayNameFor(model => model.PerfilUsuario)</th>
+                            <td>
+                                @if (acoesModuloUsuarioLogado.Contains((int)Permissao.AlterarE))
+                                {
+                                    @Html.DropDownList("IdPerfilUsuario", null, new { @class = "form-control" })
+                                }
+                                else
+                                {
+                                    @Html.DropDownList("IdPerfilUsuario", null, new { @class = "form-control", @disabled = "disabled" })
+                                }
+                            </td>
+                        </tr>
+                        <tr class="thead-light">
+                            <th>@Html.DisplayNameFor(model => model.IsAtivo)</th>
+                            <td>
+                                @if (acoesModuloUsuarioLogado.Contains((int)Permissao.Alterar))
+                                {
+                                    @(Model.IsAtivo ? "SIM" : "NÃO")
+                                    <div class="toggle-checkbox checkbox-inline toggle-success toggle-sm" title="Ativar/Desativar exibição do banner">
+                                        <input type="checkbox" id="btnAtivarDesativaUsuario" @(Model.IsAtivo ? "checked" : "")>
+                                        <label for="btnAtivarDesativaUsuario" style="margin:0"></label>
+                                    </div>
+                                }
+                                else
+                                {
+                                    @(Model.IsAtivo ? "SIM" : "NÃO")
+                                }
+                            </td>
+                        </tr>
+                        <tr class="thead-light">
+                            <th>@Html.DisplayNameFor(model => model.DataCadastro)</th>
+                            <td>@Html.DisplayFor(model => model.DataCadastro)</td>
+                        </tr>
+                    </tbody>
+                </table>
+                @if (acoesModuloUsuarioLogado.Contains((int)Permissao.Alterar))
+                {
+                    <button type="button" class="btn-rounded bg-blue mt-3 mb-3" onclick="confimarAlteracoesUsuario('@Model.Cpf')">Salvar alterações de dados</button>
+                }
+            </div>
+
+            <!-- Modal para editar e-mail -->
+            <div class="modal fade" id="modalEditarEmail" tabindex="-1" role="dialog" aria-labelledby="modalEditarEmailLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="modalEditarEmailLabel">Editar E-mail</h5>
+                            <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="formEditarEmail">
+                                <div class="form-group">
+                                    <label for="input-email">E-mail</label>
+                                    <input type="email" class="form-control" id="input-email" name="input-email" value="@Model.Email" readonly>
+                                </div>
+                                <div class="form-group">
+                                    <button type="button" class="btn btn-primary" id="btnSalvarEmail">Salvar</button>
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="col">
+                @if (acoesModuloUsuarioLogado.Contains((int)Permissao.AlterarE))
+                {
+                    <div class="card">
+                        <div class="card-heading" style="background-color: #494949; color: white; padding: 10px 15px">
+                            <h5 class="text-white" style="margin: 0; padding: 0 10px 10px 0 ">
+                                Selecione os Módulos e/ou Ações que o usuário poderá acessar
+                            </h5>
+                        </div>
+                        @if (Model.IdPerfilUsuario > 1 || Model.IdPerfilUsuario < 5)
+                        {
+                            <div class="card-footer">
+                                <div class="form-group">
+                                    <label for="perfis">Selecione os Perfis:</label>
+                                    <div id="perfis" class="checkbox-group">
+                                        <!-- Checkboxes serão geradas dinamicamente pelo JavaScript -->
+                                    </div>
+                                </div>
+
+                                <div class="button-group">
+                                    <button type="button" class="btn-rounded bg-blue mt-3 mb-3" onclick="setAutorizacaoUsuario('@Model.Cpf');">Salvar</button>
+                                    <button id="recarregarPagina" class="btn-rounded2 bg-red mt-3 mb-3">⟳</button>
+                                </div>
+                            </div>
+                        }
+                        <div class="card-body" style="padding-bottom: 10px">
+                            <div class="col-md-12 text-dark">
+                                @if (modulosSistema != null && modulosSistema.Any())
+                                {
+                                    <div class="row mt-3">
+
+                                    @foreach (var moduloSistema in modulosSistema)
+                                    {
+                                        <div class="col-md-6 mb-3">
+                                                <div class="checkbox checkbox-inline">
+                                                    <input id="modulo-sistema-@moduloSistema.Id" name="checkboxModuloSistema" value="@moduloSistema.Id" type="checkbox" hidden>
+                                                    <label for="modulo-sistema-@moduloSistema.Id" style="font-weight: 700">@moduloSistema.Nome</label>
+                                                </div>
+                                                @if (acoesSistemas != null && acoesSistemas.Any())
+                                                {
+                                                    foreach (var acaoSistema in acoesSistemas)
+                                                    {
+                                                        <div class="checkbox checkbox-inline checkbox-success" style="margin-left: 20px">
+                                                            <input id="modulo-acao-sistema-@moduloSistema.Id-@acaoSistema.Id" name="checkboxAcaosSistema"
+                                                                   value="@moduloSistema.Id-@acaoSistema.Id" type="checkbox">
+                                                            <label for="modulo-acao-sistema-@moduloSistema.Id-@acaoSistema.Id">@acaoSistema.Nome</label>
+                                                        </div>
+                                                    }
+                                                }
+                                            </div>
+   
+                                    }
+                                    </div>
+
+                                }
+                            </div>
+                        </div>
+
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+    <div class="card-footer">
+        <a href="@Url.Action("Index")" class="btn btn-default">Voltar</a>
+    </div>
+</div>
+@section Scripts
+{
+    <script>
+        const modulosSistema = document.querySelectorAll('input[name=checkboxModuloSistema]');
+        const acoesSistema = document.querySelectorAll('input[name=checkboxAcaosSistema]');
+        var autorizacaoUsuario = [];
+
+        $(document).ready(function () {
+            getAutorizacaoUsuario('@Model.Id');
+        });
+
+        $('input[name=checkboxModuloSistema]').change(function () {
+            let checkboxModulo = $(this)[0];
+
+            if (checkboxModulo.checked) {
+                autorizacaoUsuario.push({ IdModulo: Number(checkboxModulo.value), Acoes: [] });
+            } else {
+                const index = autorizacaoUsuario.findIndex(a => a.IdModulo === Number(checkboxModulo.value));
+                if (index !== -1) {
+                    if (autorizacaoUsuario[index].Acoes.length > 0) {
+                        acoesSistema.forEach(inputAcao => {
+                            autorizacaoUsuario[index].Acoes.forEach(idAcao => {
+                                if (inputAcao.value === `${checkboxModulo.value}-${idAcao}`) {
+                                    inputAcao.checked = false;
+                                }
+                            });
+                        });
+                    }
+                    autorizacaoUsuario.splice(index, 1);
+                }
+            }
+        });
+
+        $(document).ready(function () {
+            $('.call-modal').click(function () {
+                $('#modalEditarEmail').modal('show');
+            });
+
+            $('#btnSalvarEmail').click(function () {
+                var novoEmail = $('#input-email').val();
+                var cpf = '@Model.Cpf'; // Supondo que o CPF do usuário é conhecido na página
+
+                $.ajax({
+                    url: '@Url.Action("AtualizarEmail")',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        Cpf: cpf,
+                        NovoEmail: novoEmail
+                    }),
+                    success: function (response) {
+                        if (response.Code === 1) {
+                            $('#email-user-@Model.Id').text(novoEmail);
+                        }
+                        // Remova o alert e trate a resposta conforme necessário
+                        console.log(response); // Para depuração, se necessário
+                        $('#modalEditarEmail').modal('hide');
+                        window.location.reload();
+                    },
+                    error: function () {
+                        // Aqui você pode opcionalmente mostrar uma mensagem de erro na interface, se desejar
+                        console.error('Erro ao salvar o e-mail.'); // Para depuração
+                    }
+                });
+            });
+
+            $('#modalEditarEmail').on('show.bs.modal', function () {
+                $('#input-email').removeAttr('readonly').focus();
+            });
+
+            $('#modalEditarEmail').on('hidden.bs.modal', function () {
+                $('#input-email').addClass('input-block').prop('readonly', true);
+            });
+        });
+
+
+        function alterarEmail() {
+            $('input[name="input-email"]').removeAttr('readonly');
+            $('input[name="input-email"]').removeClass('input-block');
+            $('input[name="input-email"]').focus();
+        }
+
+        $('input[name="input-email"]').change(function () {
+            $('input[name="input-email"]').addClass('input-block');
+            $('input[name="input-email"]').prop('readonly', true);
+        });
+
+        $('input[name="input-email"]').blur(function (e) {
+            $('input[name="input-email"]').addClass('input-block');
+            $('input[name="input-email"]').prop('readonly', true);
+        });
+
+        $('input[name=checkboxAcaosSistema]').change(function () {
+            const idModulo = $(this)[0].value.split('-')[0];
+            const idAcao = $(this)[0].value.split('-')[1];
+            const checkboxModulo = document.querySelector(`#modulo-sistema-${idModulo}`);
+            if ($(this)[0].checked) {
+                checkboxModulo.checked = true;
+                const indexModulo = autorizacaoUsuario.findIndex(a => a.idModulo === Number(idModulo));
+                if (indexModulo !== -1) {
+                    autorizacaoUsuario[indexModulo].acoes.push(Number(idAcao));
+                } else {
+                    autorizacaoUsuario.push({ idModulo: Number(idModulo), acoes: [Number(idAcao)] });
+                }
+            } else {
+
+                console.log(autorizacaoUsuario);
+                console.log(idModulo);
+
+                const indexModulo = autorizacaoUsuario.findIndex(a => a.idModulo === Number(idModulo));
+                console.log(indexModulo);
+
+                if (indexModulo !== -1) {
+                    const indexAcao = autorizacaoUsuario[indexModulo].acoes.indexOf(Number(idAcao));
+                    if (indexAcao !== -1) {
+                        autorizacaoUsuario[indexModulo].acoes.splice(indexAcao, 1);
+                    }
+                    if (autorizacaoUsuario[indexModulo].acoes.length === 0) {
+                        checkboxModulo.checked = false;
+                        autorizacaoUsuario.splice(indexModulo, 1);
+                    }
+                }
+            }
+            console.log(autorizacaoUsuario);
+        });
+
+        function setAutorizacaoUsuario(cpfUsuario) {            
+            var listaAutorizacao = {
+                cpf: cpfUsuario,
+                listaAutorizacao: autorizacaoUsuario
+            };
+            $.ajax({
+                url: '@Url.Action("AddAutorizacaoModuloUsuario")',
+                type: 'POST',
+                dataType: "json",
+                contentType: 'application/json; charset=utf-8',
+                data: JSON.stringify(listaAutorizacao),
+                success: function (data) {
+                    if (data.code == 1) {
+                        noty({
+                            text: data.message,
+                            type: data.classAlert,
+                            timeout: 2500,
+                            progressBar: true
+                        });
+                    } else {
+                        noty({
+                            text: data.message,
+                            type: data.classAlert,
+                            timeout: 2500,
+                            progressBar: true
+                        });
+                    }
+                },
+                error: function (err) {
+                    noty({
+                        text: 'Falha ao cadastrar as Autorizaçãoes do usuário',
+                        type: 'error',
+                        timeout: 2500,
+                        progressBar: true
+                    });
+                }
+            });
+        }
+
+        function getAutorizacaoUsuario(id) {
+            $.ajax({
+                url: '@Url.Action("GetAutorizacaoModuloUsuario")',
+                type: 'post',
+                data: JSON.stringify(id),
+                dataType: "json",
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+                    if (data.code === 1) {
+                        if (data.autorizacoes.length > 0) {
+                            autorizacaoUsuario = data.autorizacoes;
+                            data.autorizacoes.forEach(autorizacao => {
+                                modulosSistema.forEach(inputModulo => {
+                                    if (inputModulo.value == autorizacao.IdModulo) {
+                                        inputModulo.checked = true;
+                                    }
+                                });
+                                if (autorizacao.acoes != null && autorizacao.acoes.length > 0) {
+                                    autorizacao.acoes.forEach(idAcao => {
+                                        acoesSistema.forEach(inputAcao => {
+                                            if (inputAcao.value === `${autorizacao.idModulo}-${idAcao}`) {
+                                                inputAcao.checked = true;
+                                            }
+                                        });
+                                    });
+                                }
+                            });
+                        }
+                    } else {
+                        noty({
+                            text: data.message,
+                            type: data.classAlert,
+                            timeout: 2500,
+                            progressBar: true
+                        });
+                    }
+                },
+                error: function (err) {
+                    noty({
+                        text: 'Falha ao obter as Autorizaçãoes do usuário',
+                        type: 'error',
+                        timeout: 2500,
+                        progressBar: true
+                    });
+                }
+            });
+        }
+
+        function confimarAlteracoesUsuario(id) {
+            var choose = document.querySelector('#btnAtivarDesativaUsuario').checked;
+            var perfil = $('#IdPerfilUsuario').val();
+            var inputEmail = $('#input-email').val();
+            var autorizacao = {
+                cpf: id,
+                email: inputEmail,
+                isAtivo: choose,
+                idPerfilUsuario: perfil
+            };
+            //console.log(JSON.stringify(autorizacao));
+            $.ajax({
+                url: '@Url.Action("Atualizar", "Usuario")',
+                type: 'POST',
+                dataType: "json",
+                contentType: 'application/json; charset=utf-8',
+                data: JSON.stringify(autorizacao),
+                success: function (data) {
+                    if (data.code === 1) {
+                        location.reload();
+                        noty({
+                            text: data.message,
+                            type: data.classAlert,
+                            timeout: 2500,
+                            progressBar: true
+                        });
+                    } else {
+                        noty({
+                            text: data.message,
+                            type: data.classAlert,
+                            timeout: 2500,
+                            progressBar: true
+                        });
+                    }
+                },
+                error: function (err) {
+                    noty({
+                        text: 'Falha ao atualizar os dados do usuário',
+                        type: 'error',
+                        timeout: 2500,
+                        progressBar: true
+                    });
+                }
+            });
+        }
+
+        document.getElementById('recarregarPagina').addEventListener('click', function () {
+            location.reload();  // Recarrega a página
+        });
+
+
+        // Defina um array com os perfis
+        let perfis = [
+            { value: 'recrutamentoSelecao', label: 'Recrutamento e Seleção ' },
+            { value: 'comunicacao', label: 'Comunicação ' },
+            { value: 'atendentesCentral', label: 'Atendentes Central ' },
+            { value: 'tecnicosAtividade', label: 'Técnicos de Atividade ' },
+            { value: 'educacao', label: 'Educação ' },
+            { value: 'saude', label: 'Saúde ' },
+            { value: 'lazer', label: 'Lazer ' },
+            { value: 'nutricao', label: 'Nutrição ' },
+            { value: 'cultura', label: 'Cultura ' },
+            { value: 'relatorio', label: 'Relatórios ' },
+        ];
+
+        // Função para gerar dinamicamente as checkboxes
+        function gerarCheckboxes() {
+            const checkboxContainer = document.getElementById('perfis');
+            perfis.forEach(perfil => {
+                const label = document.createElement('label');
+                const input = document.createElement('input');
+
+                input.type = 'checkbox';
+                input.name = 'perfis';
+                input.value = perfil.value;
+
+                label.appendChild(input);
+                label.appendChild(document.createTextNode(perfil.label));
+                label.classList.add('checkbox-item');  // Adiciona uma classe para estilização
+                checkboxContainer.appendChild(label);
+            });
+        }
+
+
+        // Chame a função para gerar as checkboxes
+        gerarCheckboxes();
+
+        document.getElementById('perfis').addEventListener('change', function () {
+            // Obtendo os checkboxes selecionados
+            let perfisSelecionados = Array.from(this.querySelectorAll('input[name="perfis"]:checked')).map(input => input.value);
+
+            // Defina um objeto que associa perfis a módulos
+            let modulosPorPerfil = {
+                
+                'recrutamentoSelecao': [5, 25],  // Exemplo de múltiplos módulos para recrutamentoSelecao
+                'comunicacao': [25, 16, 4, 12, 17, 10, 28],
+                'atendentesCentral': [2,13, 25, 3, 12,  24, 9],
+                'tecnicosAtividade': [25, 12, 24, 9],
+                'educacao': [25, 27, 19, 12, 28, 17],
+                'saude': [25, 19, 9, 12, 28, 17],
+                'lazer': [25, 12, 9, 28, 17],
+                'nutricao': [25, 18, 28, 17],
+                'cultura': [25, 18, 28, 17],
+                'relatorio': [26],
+                // Adicione mais perfis e seus respectivos módulos aqui se necessário
+            };
+
+            perfisSelecionados.forEach(perfil => {
+                let modulos = modulosPorPerfil[perfil] || []; // Obtenha os módulos para o perfil
+
+                modulos.forEach(moduloId => {
+                    if (perfil === 'recrutamentoSelecao') {
+                        for (let acaoId = 1; acaoId <= 5; acaoId++) {
+                            // Marcar o checkbox da ação específica
+                            $(`#modulo-acao-sistema-${moduloId}-${acaoId}`).prop('checked', true).change();
+
+                            // Adicionar a ação ao array de autorização
+                            let modulo = autorizacaoUsuario.find(a => a.IdModulo === moduloId);
+                            if (modulo) {
+                                modulo.Acoes.push(acaoId);
+                            } else {
+                                autorizacaoUsuario.push({ IdModulo: moduloId, Acoes: [acaoId] });
+                            }
+                        }
+
+                    } else if (perfil === 'cultura') {
+                        for (let acaoId = 1; acaoId <= 5; acaoId++) {
+                            // Marcar o checkbox da ação específica
+                            $(`#modulo-acao-sistema-${moduloId}-${acaoId}`).prop('checked', true).change();
+
+                            // Adicionar a ação ao array de autorização
+                            let modulo = autorizacaoUsuario.find(a => a.IdModulo === moduloId);
+                            if (modulo) {
+                                modulo.Acoes.push(acaoId);
+                            } else {
+                                autorizacaoUsuario.push({ IdModulo: moduloId, Acoes: [acaoId] });
+                            }
+                        }
+
+                    } else if (perfil === 'nutricao') {
+                        for (let acaoId = 1; acaoId <= 5; acaoId++) {
+                            // Marcar o checkbox da ação específica
+                            $(`#modulo-acao-sistema-${moduloId}-${acaoId}`).prop('checked', true).change();
+
+                            // Adicionar a ação ao array de autorização
+                            let modulo = autorizacaoUsuario.find(a => a.IdModulo === moduloId);
+                            if (modulo) {
+                                modulo.Acoes.push(acaoId);
+                            } else {
+                                autorizacaoUsuario.push({ IdModulo: moduloId, Acoes: [acaoId] });
+                            }
+                        }
+                    } else if (perfil === 'lazer') {
+                        for (let acaoId = 1; acaoId <= 5; acaoId++) {
+                            // Marcar o checkbox da ação específica
+                            $(`#modulo-acao-sistema-${moduloId}-${acaoId}`).prop('checked', true).change();
+
+                            // Adicionar a ação ao array de autorização
+                            let modulo = autorizacaoUsuario.find(a => a.IdModulo === moduloId);
+                            if (modulo) {
+                                modulo.Acoes.push(acaoId);
+                            } else {
+                                autorizacaoUsuario.push({ IdModulo: moduloId, Acoes: [acaoId] });
+                            }
+                        }
+                    } else if (perfil === 'saude') {
+                        for (let acaoId = 1; acaoId <= 5; acaoId++) {
+                            // Marcar o checkbox da ação específica
+                            $(`#modulo-acao-sistema-${moduloId}-${acaoId}`).prop('checked', true).change();
+
+                            // Adicionar a ação ao array de autorização
+                            let modulo = autorizacaoUsuario.find(a => a.IdModulo === moduloId);
+                            if (modulo) {
+                                modulo.Acoes.push(acaoId);
+                            } else {
+                                autorizacaoUsuario.push({ IdModulo: moduloId, Acoes: [acaoId] });
+                            }
+                        }
+                    } else if (perfil === 'educacao') {
+                        for (let acaoId = 1; acaoId <= 5; acaoId++) {
+                            // Marcar o checkbox da ação específica
+                            $(`#modulo-acao-sistema-${moduloId}-${acaoId}`).prop('checked', true).change();
+
+                            // Adicionar a ação ao array de autorização
+                            let modulo = autorizacaoUsuario.find(a => a.IdModulo === moduloId);
+                            if (modulo) {
+                                modulo.Acoes.push(acaoId);
+                            } else {
+                                autorizacaoUsuario.push({ IdModulo: moduloId, Acoes: [acaoId] });
+                            }
+                        }
+                    } else if (perfil === 'tecnicosAtividade') {
+                        for (let acaoId = 1; acaoId <= 5; acaoId++) {
+                            // Marcar o checkbox da ação específica
+                            $(`#modulo-acao-sistema-${moduloId}-${acaoId}`).prop('checked', true).change();
+
+                            // Adicionar a ação ao array de autorização
+                            let modulo = autorizacaoUsuario.find(a => a.IdModulo === moduloId);
+                            if (modulo) {
+                                modulo.Acoes.push(acaoId);
+                            } else {
+                                autorizacaoUsuario.push({ IdModulo: moduloId, Acoes: [acaoId] });
+                            }
+                        }
+                    } else if (perfil === 'atendentesCentral') {
+                        for (let acaoId = 1; acaoId <= 4; acaoId++) {
+                            // Marcar o checkbox da ação específica
+                            $(`#modulo-acao-sistema-${moduloId}-${acaoId}`).prop('checked', true).change();
+
+                            // Adicionar a ação ao array de autorização
+                            let modulo = autorizacaoUsuario.find(a => a.IdModulo === moduloId);
+                            if (modulo) {
+                                modulo.Acoes.push(acaoId);
+                            } else {
+                                autorizacaoUsuario.push({ IdModulo: moduloId, Acoes: [acaoId] });
+                            }
+                        }
+                    } else if (perfil === 'comunicacao') {
+                        for (let acaoId = 1; acaoId <= 5; acaoId++) {
+                            // Marcar o checkbox da ação específica
+                            $(`#modulo-acao-sistema-${moduloId}-${acaoId}`).prop('checked', true).change();
+
+                            // Adicionar a ação ao array de autorização
+                            let modulo = autorizacaoUsuario.find(a => a.IdModulo === moduloId);
+                            if (modulo) {
+                                modulo.Acoes.push(acaoId);
+                            } else {
+                                autorizacaoUsuario.push({ IdModulo: moduloId, Acoes: [acaoId] });
+                            }
+                        }
+                    } else if (perfil === 'relatorio') {
+                        for (let acaoId = 1; acaoId <= 5; acaoId++) {
+                            // Marcar o checkbox da ação específica
+                            $(`#modulo-acao-sistema-${moduloId}-${acaoId}`).prop('checked', true).change();
+
+                            // Adicionar a ação ao array de autorização
+                            let modulo = autorizacaoUsuario.find(a => a.IdModulo === moduloId);
+                            if (modulo) {
+                                modulo.Acoes.push(acaoId);
+                            } else {
+                                autorizacaoUsuario.push({ IdModulo: moduloId, Acoes: [acaoId] });
+                            }
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+}

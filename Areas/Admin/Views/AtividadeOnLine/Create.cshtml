@@ -1,0 +1,333 @@
+﻿@model SiteSesc.Models.Atividade.AtividadeOnLine
+@using SiteSesc.Models.ApiPagamento
+@using SiteSesc.Models
+@using SiteSesc.Models.Atividade
+@{
+    ViewBag.Title = "Nova Atividade";
+    var turmas = ViewBag.Atividades as List<AtividadeApi>;
+    var unidades = ViewBag.Unidades as List<UnidadeOperacional>;
+    var cduop = ViewBag.CdUopSelect as UnidadeOperacional;
+    var atividade = ViewBag.Atividade as AtividadeApi;
+    var modalidades = ViewBag.Modalidade as List<SubArea>;
+}
+
+<link href="~/css/3th/summernote/summernote-bs4.css" rel="stylesheet" />
+<link href="~/js/3th/croppie/croppie.min.css" rel="stylesheet" />
+<style>
+    .cr-boundary {
+        margin: 0 !important;
+    }
+
+    .cr-slider-wrap {
+        margin: 15px 0 !important;
+        padding: 0 !important;
+    }
+
+    label {
+        font-size: 12px
+    }
+
+    .note-popover .popover-content, .card-header.note-toolbar {
+        border-radius: 20px;
+    }
+
+    .note-resizebar {
+        display: none
+    }
+
+</style>
+
+@if (ViewBag.Inscrito == 1)
+{
+    <script>
+        Swal.fire({
+            title: 'Ops!',
+            text: 'Essa turma já está cadastrada em alguma Atividade Online.',
+            icon: 'warning',
+            confirmButtonText: 'OK'
+        });
+    </script>
+}
+else if (ViewBag.Inscrito == 2)
+{
+    <script>
+        Swal.fire({
+            title: 'Sucesso!',
+            text: 'Cadastro realizado com sucesso!',
+            icon: 'success',
+            confirmButtonText: 'OK'
+        });
+    </script>
+}
+else if (ViewBag.Inscrito == 3)
+{
+    <script>
+        Swal.fire({
+            title: 'Erro!',
+            text: 'Ocorreu um erro inesperado. Por favor, tente novamente mais tarde.',
+            icon: 'error',
+            confirmButtonText: 'OK'
+        });
+    </script>
+}
+
+@if (cduop == null)
+{
+    <form>
+        <div class="form-group">
+            <label>Selecione a unidade da atividade</label>
+            <select class="form-control" id="cduop" name="cduop" onchange="submit();">
+                <option value="" selected>Selecione uma unidade</option>
+                @foreach (var item in unidades)
+                {
+                    <option value="@item.Cduop">@item.Nome</option>
+                }
+            </select>
+        </div>
+    </form>
+}
+
+@if (turmas != null && turmas.Any())
+{
+    <h2 style="text-transform: uppercase; font-weight: bold">@cduop.Nome</h2>
+
+    using (Html.BeginForm("Create", "AtividadeOnLine", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        @Html.AntiForgeryToken()
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <input type="hidden" name="imagemRecortada" id="imagemRecortada" />
+        <div class="text-left">
+            <a id="btn-select-turma" class="btn-rounded bg-blue" data-bs-toggle="modal" data-bs-target="#modalTurmas">Selecionar turma da central</a>
+        </div>
+
+        @if (atividade != null)
+        {
+            <div class="card mt-4">
+                <div class="card-body">
+                    <h5 class="font-size-12"><b>DADOS DA ATIVIDADE NA CENTRAL</b></h5>
+                    <input id="CdPrograma" name="CdPrograma" value="@atividade.cdprograma" hidden />
+                    <input id="CdConfig" name="CdConfig" value="@atividade.cdconfig" hidden />
+                    <input id="SqOcorrenc" name="SqOcorrenc" value="@atividade.sqocorrenc" hidden />
+                    <input id="DataInicio" name="DataInicio" value="@atividade.dtiniocorr" hidden />
+                    <input id="DataFim" name="DataFim" value="@atividade.dtfimocorr" hidden />
+                    <input id="HoraInicio" name="HoraInicio" value="@atividade.horarios?.FirstOrDefault().hrinicio" hidden />
+                    <input id="HoraFim" name="HoraFim" value="@atividade.horarios?.FirstOrDefault().hrfim" hidden />
+
+
+                    @* <input id="cduop" name="cduop" value="@atividade.cduopcad" hidden /> *@
+
+                    <div class="form-group">
+                        <label>NOME NA CENTRAL</label>
+                        <input class="form-control" value="@atividade.dsusuario" readonly />
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-md">
+                            <div class="form-group">
+                                <label>VAGAS TOTAIS</label>
+                                <input class="form-control" value="@atividade.nuvagas" readonly />
+                            </div>
+                        </div>
+                        <div class="col-md">
+                            <div class="form-group">
+                                <label>INÍCIO DA ATIVIDADE</label>
+                                <input class="form-control" value="@atividade.dtiniocorr?.ToShortDateString()" readonly />
+                            </div>
+                        </div>
+                        <div class="col-md">
+                            <div class="form-group">
+                                <label>FINAL DA ATIVIDADE</label>
+                                <input class="form-control" value="@atividade.dtfimocorr?.ToShortDateString()" readonly />
+                            </div>
+                        </div>
+                        <div class="col-md">
+                            <div class="form-group">
+                                <label>INÍCIO DAS INCRIÇÕES</label>
+                                <input class="form-control" value="@atividade.dtlinscri?.ToShortDateString()" readonly />
+                            </div>
+                        </div>
+                        <div class="col-md">
+                            <div class="form-group">
+                                <label>FINAL DAS INSCRIÇÕES</label>
+                                <input class="form-control" value="@atividade.dtuinscri?.ToShortDateString()" readonly />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <div>
+                    <h3 class="font-size-18"><b>DADOS PARA EXIBIÇÃO</b></h3>
+                    <input id="Ano" name="Ano" value="@atividade.aamoda" hidden />
+                    @if (cduop != null)
+                    {
+                        <input value="@atividade.cduopcad" hidden id="cduop" name="Cduop" />
+                    }
+                    <div class="form-group">
+                        <label>NOME DE EXIBIÇÃO</label>
+                        <input class="form-control" id="NomeExibicao" name="NomeExibicao" />
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-md">
+                            <div class="form-group">
+                                <label>MODALIDADE</label>
+                                <select id="IdSubArea" name="IdSubArea" class="form-control">
+                                    <option selected>Selecione uma modalidade</option>
+                                    @foreach (var item in modalidades)
+                                    {
+                                        <option value="@item.Id">@item.Nome</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group mt-3">
+                        <label>DESCRIÇÃO</label>
+                        <textarea class="form-control" data-val="true" data-val-required="Preenchimento obrigatório" id="Descricao" name="Descricao" row="5" style="display: none;"></textarea>
+                    </div>
+
+                    <div class="row mt-3">
+                        <div class="col-md">
+                            <label><b>OPÇÕES</b></label>
+                            <div>
+                                @Html.CheckBoxFor(m => m.IsOnline, new { @class = "form-check-input" })
+                                <label asp-for="IsOnline" for="IsOnline">Inscrição on-line?</label>
+                            </div>
+                            <div>
+                                @Html.CheckBoxFor(m => m.IsGratuito, new { @class = "form-check-input" })
+                                <label asp-for="IsGratuito" for="IsGratuito">Atividade gratuita?</label>
+                            </div>
+                            <div>
+                                @Html.CheckBoxFor(m => m.DescontoPontualidade, new { @class = "form-check-input" })
+                                <label asp-for="DescontoPontualidade" for="DescontoPontualidade">Desconto de pontualidade</label>
+                                <span class="font-size-12" style="font-style: italic; color: dodgerblue">5% até 1 dia antes da data de vencimento</span>
+                            </div>
+
+                        </div>
+                        <div class="col-md">
+                            @if (atividade != null)
+                            {
+                                <label><b>FORMAS DE PAGAMENTO</b></label>
+
+                                <br />
+                                <label style="color: red; font-style: italic">Selecione as formas de pagamento disponível para o cliente</label>
+                                foreach (var item in atividade.formaspgto)
+                                {
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="@item.cdformato" value="@item.cdformato" name="formato">
+                                        <label class="form-check-label" for="@item.cdformato">@item.nmformato</label>
+                                    </div>
+                                    <br />
+                                }
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group mt-5">
+                <label class="font-size-18"><b>SELECIONAR UMA IMAGEM PARA CAPA DA ATIVIDADE</b></label>
+                <label for="upload" role="button" class="btn-rounded bg-blue"><span class="fa-solid fa-image fa-2x"></span> <span class="font-size-16">&nbsp;Selecionar Imagem</span></label>
+                <input data-val="true" data-val-required="Arquivo" id="upload" name="upload" type="file" style="display: none" accept=".jpg, .jpeg, .png">
+                <button type="button" class="btn-rounded bg-transaparent bg-blue" id="btnCortarImagem" disabled>
+                    <span class="fa fa-scissors"></span> Cortar Imagem
+                </button>
+                <p class="text-primary mb-0 mt-2">Obs.: Selecione uma imagem, ajuste o enquadramento e depois clique em Cortar imagem.</p>
+
+            </div>
+            <div class="row">
+                <div id="cropp-remove" class="col-md-8">
+                    <div id="croppingArea"></div>
+                </div>
+                <div class="col-md text-center">
+                    <div id="resultCrop"></div>
+                </div>
+            </div>
+        }
+
+        <div class="div-fixed">
+            <p class="text-white" id="msg-validacao">A opção de salvamento estará disponível após o recorte da imagem</p>
+            <div id="btn-cadastrar-submit">
+                <a href="@Url.Action("Index")" type="button" class="btn-rounded bg-transparent border-white text-white text-center">
+                    <span class="fa fa-remove"></span> Cancelar
+                </a>
+                <button type="submit" class="btn-rounded bg-green">
+                    <span class="fa fa-save"></span> Salvar
+                </button>
+            </div>
+        </div>
+    }
+}
+
+
+<div class="modal fade" id="modalTurmas" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="exampleModalLongTitle">Selecionar Turma</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    @if (cduop != null)
+                    {
+                        <input value="@cduop.Cduop" hidden id="cduop" name="cduop" />
+                    }
+
+                    <div class="col-md">
+                        TURMA:
+                        <select class="form-control" id="turmaCentral" name="cdelement" title="Selecione uma turma" onchange="submit();">
+                            @if (turmas != null)
+                            {
+                                <option selected>Selecione uma turma</option>
+                                foreach (var item in turmas)
+                                {
+                                    <option value="@item.cdelement">@item.dsusuario</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts
+{
+    <script src="~/js/3th/summernote/summernote-bs4.js"></script>
+    <script src="~/js/3th/summernote/summernote-pt-BR.js"></script>
+    <script src="~/js/3th/croppie/croppie.min.js"></script>
+    <script src="~/js/3th/croppie/exif.min.js"></script>
+    <script src="~/js/noticia/cropNoticia.js"></script>
+    <script>
+        $(document).ready(function () {
+            $("#btn-cadastrar-submit").hide();
+            if ('@cduop' != '') {
+                if ('@atividade' == '') {
+                    $('#btn-select-turma').hide();
+                    $('#modalTurmas').modal('show');
+                }
+
+                $('#Descricao').summernote({
+                    fontStyle: {
+                        foreColor: 'black'
+                    },
+                    height: 500,
+                    lang: 'pt-BR',
+                    toolbar: [
+                        ['style', ['bold', 'italic', 'underline', 'clear']],
+                        ['font', ['strikethrough', 'superscript', 'subscript']],
+                        ['fontsize', ['fontsize']],
+                        ['color', ['color']],
+                        ['para', ['ul', 'ol', 'paragraph']],
+                        ['height', ['height']]
+                    ]
+                });
+                $('#Descricao').summernote('foreColor', 'black');
+            }
+        });
+       
+    </script>
+}

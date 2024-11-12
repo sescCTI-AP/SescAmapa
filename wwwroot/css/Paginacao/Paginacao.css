@@ -1,0 +1,32 @@
+﻿pagination.label-warning {
+    background-color: orange;
+    color: black
+}
+.fs-18{
+    font-size: 18px
+}
+.pagination {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+    .pagination a {
+        margin: 5px 5px;
+        padding: 10px 15px;
+        border: 1px solid #ccc;
+        text-decoration: none;
+        color: #007bff;
+    }
+
+        .pagination a.active {
+            background-color: #007bff;
+            color: white;
+            border-color: #007bff;
+        }
+
+        .pagination a:hover {
+            background-color: #0056b3;
+            color: white;
+        }

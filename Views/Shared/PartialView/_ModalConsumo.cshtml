@@ -1,0 +1,71 @@
+﻿@model List<SiteSesc.Models.ApiPagamento.HSTMOVCART>
+
+@{
+    Layout = null;
+
+}
+
+<style>
+    td, th{
+        font-size: 12px
+    }
+</style>
+
+<div class="modal fade" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h6 class="modal-title">Últimas movimentações no cartão Sesc</h6>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                @if (Model != null && Model.Any())
+                {
+                    <div class="table-responsive">
+                        <table class="table table-hover" id="tdMovimentacaoCartaoCliente">
+                            <thead>
+                                <tr>
+                                    <th>PRODUTO</th>
+                                    <th>DATA</th>
+                                    <th>HORA</th>
+                                    <th>VALOR</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var hstmovcart in Model.OrderByDescending(m => m.DTMOVIMENT))
+                                {
+                                    <tr>
+                                        <td>@hstmovcart.DSPRODUTO</td>
+                                        <td class="text-center">@hstmovcart.DTMOVIMENT.ToShortDateString()</td>
+                                        <td class="text-center">@hstmovcart.HORAMOV</td>
+                                        <td class="@(hstmovcart.VLPRODMOV > 0 ? "text-success" : "text-danger") text-center"><span>@hstmovcart.VLPRODMOV.ToString("C")</span></td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+                else
+                {
+                    <div class="alert-warning jumbotron" style="border-radius: .25rem !important;">
+                        <h3>Ainda não há nenhum lançamento para esse cartão.</h3>
+
+
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $('#tdMovimentacaoCartaoCliente').DataTable({
+        pageLength: 10,
+        lengthChange: false,
+        language: {
+            url: "//cdn.datatables.net/plug-ins/1.10.19/i18n/Portuguese-Brasil.json"
+        },
+        info: true,
+        ordering: false
+    });
+</script>

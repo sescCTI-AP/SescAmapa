@@ -1,0 +1,284 @@
+﻿@model SiteSesc.Models.ApiPagamento.DadosCobranca
+@using System.Globalization
+@{
+    int anoExpiracao = DateTime.Now.Year;
+}
+
+<style>
+    @@media (min-width: 576px) {
+        .modal-dialog {
+            max-width: 900px;
+            margin: 1.75rem auto;}
+        }
+        #card-number {
+            font-size: 1.5em;
+            letter-spacing: 0.1em;
+        }
+
+        #card-titular, #card-expiration, #card-cvv {
+            font-size: 1.2em;
+        }
+
+        
+
+    
+</style>
+<form id="form-recarga-credito">
+    
+        
+
+            <input hidden name="dados.IDCLASSE" value="@Model.IDCLASSE" />
+            <input hidden name="dados.CDUOP" value="@Model.CDUOP" />
+            <input hidden name="dados.SQMATRIC" value="@Model.SQMATRIC" />
+            <input hidden name="dados.CPF" value="@Model.CPF" />
+            <input hidden name="dados.CDELEMENT" value="@Model.CDELEMENT" />
+            <input hidden name="dados.SQCOBRANCA" value="@Model.SQCOBRANCA" />
+
+            <div class="text-center mt-3">
+                <div class="mx-0 inline">
+                    @if (!string.IsNullOrEmpty(Model.VALOR))
+                    {
+                        <span class="font-size-24">@Model.DESCRICAO</span>
+                    }
+                </div>               
+            </div>
+    <div class="row">
+        <!-- Visualização do Cartão -->
+        <div class="col-md-6 mb-3">
+            <div class="card p-3" style="border: 1px solid #ddd; border-radius: 10px; width: 100%; background-color: #f8f9fa;">
+                <div class="card-body">
+                    <h5 class="card-title font-weight-bold">Cartão Fictício</h5>
+                    <div class="mb-2">
+                        <span id="card-number">**** **** **** ****</span>
+                    </div>
+                    <div class="mb-2">
+                        <small>Titular:</small>
+                        <div id="card-titular">Nome do Titular</div>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <small>Validade:</small>
+                            <div id="card-expiration">MM/AA</div>
+                        </div>
+                        <div>
+                            <small>CVV:</small>
+                            <div id="card-cvv">***</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Formulário de Informações do Cartão -->
+        <div class="col-md-6">
+            <div class="mx-0 inline text-center">
+                    @if (!string.IsNullOrEmpty(Model.VALOR))
+                    {
+                        <span class="font-size-24"><b>@Model.VALOR</b></span>
+                    }
+                    else
+                    {
+                        <span class="font-size-24">R$ </span>
+                        <input type="text" class="form-control font-size-24 moneyInput notNull" id="moneyInput" name="payment.Amount" placeholder="Digite um valor" /> 
+                    }
+                </div>
+
+            <!-- Nome do Titular (sozinho) -->
+            <div class="row">
+                <div class="col-md-12 mb-3">
+                    <div class="form-group">
+                        <label for="titular" class="font-weight-bold">Titular do Cartão*</label>
+                        <input id="titular" name="payment.Name" class="form-control notNull" />
+                    </div>
+                </div>
+            </div>
+
+            <!-- CPF e Número do Cartão (lado a lado) -->
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <div class="form-group">
+                        <label for="cpf-cartao" class="font-weight-bold">CPF do Titular*</label>
+                        <input id="cpf-cartao" name="payment.Identity" class="form-control notNull" />
+                    </div>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <div class="form-group">
+                        <label for="numero-cartao" class="font-weight-bold">Número do Cartão*</label>
+                        <input id="numero-cartao" type="text" name="payment.CardNumber" class="form-control" placeholder="**** **** **** ****" />
+                        
+                    </div>
+                </div>
+            </div>
+
+            <!-- CVV e Data de Vencimento (lado a lado) -->
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <div class="form-group">
+                        <label for="security-code" class="font-weight-bold">Cód. Segurança*</label>
+                        <input id="security-code" type="text" maxlength="3" name="payment.SecurityCode" class="form-control notNull" placeholder="123" />
+                    </div>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="font-weight-bold">Vencimento*</label>
+                    <div class="d-flex">
+                        <select class="form-control mr-2 notNull" name="payment.MonthExpiration">
+                            <option value="" selected>Mês</option>
+                            @for (var i = 1; i <= 12; i++)
+                            {
+                                var mes = "0" + i;
+                                if( i < 10)
+                                {
+                                    
+                                    <option value="@mes">@mes</option>
+                                }
+                                else{
+
+                                <option value="@i">@i</option>
+                                    
+                                }
+
+                            }
+                        </select>
+                        <select class="form-control notNull" name="payment.YearExpiration">
+                            <option value="" selected>Ano</option>
+                            @for (var i = DateTime.Now.Year; i < DateTime.Now.Year + 10; i++)
+                            {
+                                <option value="@i">@i</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <div class="mt-5">
+        <a class="btn-rounded bg-transaparent mt-3" onclick="onModalClose()">Cancelar</a>
+        <button class="btn-rounded bg-blue mt-3">Confirmar</button>
+    </div>
+</form>
+
+
+
+<script>
+    document.getElementById("form-recarga-credito").addEventListener("submit", function (event) {
+        event.preventDefault();
+
+        if (validarFormulario()) {
+            var loadingImg = document.createElement('img');
+            loadingImg.src = '/images/loading.gif';
+            loadingImg.alt = 'Carregando...';
+            loadingImg.id = 'loadingImg';
+
+            var loadingDiv = document.createElement('div');
+            loadingDiv.id = 'loading';
+            loadingDiv.style.display = 'flex'; // Inicialmente oculto
+
+            loadingDiv.appendChild(loadingImg);
+            document.body.appendChild(loadingDiv);
+
+
+            let formData = new FormData(this);
+
+            fetch("/cliente/cobrancas/pagamento-credito", {
+                method: "POST",
+                body: formData
+            })
+                .then(response => response.text())
+                .then(data => {
+                    var retorno = JSON.parse(data);
+                    if (retorno.code == 1) {
+                        document.getElementById('loading').style.display = 'none';
+
+                        swal({
+                            title: 'Eba!',
+                            text: retorno.msg,
+                            icon: 'success',
+                            timer: 3000
+                        });
+                        setTimeout(function () {
+                            location.reload();
+                        }, 2000);
+                    }
+                    else {
+                        document.getElementById('loading').style.display = 'none';
+
+                        swal({
+                            title: 'Ops!',
+                            text: retorno.msg,
+                            icon: 'error',
+                            timer: 3000
+                        });
+                    }
+                })
+                .catch(error => {
+                    document.getElementById('loading').style.display = 'none';
+
+                    swal({
+                        title: 'Ops!',
+                        text: '',
+                        icon: 'error',
+                        timer: 3000
+                    });
+                });
+        }
+
+
+    });
+
+    
+        // Atualiza o número do cartão
+        document.getElementById('numero-cartao').addEventListener('input', function () {
+            const cardNumber = this.value.replace(/\D/g, ''); // Remove caracteres não numéricos
+            document.getElementById('card-number').textContent = cardNumber.padEnd(16, '*').replace(/(\d{4})(?=\d)/g, '$1 ');
+        });
+
+    // Atualiza o titular do cartão
+    document.getElementById('titular').addEventListener('input', function () {
+        const titular = this.value || 'Nome do Titular';
+        document.getElementById('card-titular').textContent = titular;
+    });
+
+    // Atualiza a data de vencimento
+    document.querySelector('select[name="payment.MonthExpiration"]').addEventListener('change', function () {
+        const month = this.value.padStart(2, '0');
+        const year = document.querySelector('select[name="payment.YearExpiration"]').value.slice(2);
+        document.getElementById('card-expiration').textContent = month && year ? `${month}/${year}` : 'MM/AA';
+    });
+
+    document.querySelector('select[name="payment.YearExpiration"]').addEventListener('change', function () {
+        const year = this.value.slice(2);
+        const month = document.querySelector('select[name="payment.MonthExpiration"]').value.padStart(2, '0');
+        document.getElementById('card-expiration').textContent = month && year ? `${month}/${year}` : 'MM/AA';
+    });
+
+    // Atualiza o CVV
+    document.getElementById('security-code').addEventListener('input', function () {
+        const cvv = this.value.replace(/\D/g, '').padEnd(3, '*');
+        document.getElementById('card-cvv').textContent = cvv;
+    });
+
+
+
+
+    function validarFormulario() {
+        var camposNotNull = document.querySelectorAll('.notNull');
+
+        for (var i = 0; i < camposNotNull.length; i++) {
+            if (camposNotNull[i].value.trim() === '') {
+                alert('Por favor, preencha todos os campos obrigatórios.');
+                return false;
+            }
+        }
+        return true;
+    }
+
+    function exibirModal(conteudo) {
+
+
+        // Exibe o conteúdo retornado em um modal
+        // Código para exibir modal aqui
+    }
+</script>

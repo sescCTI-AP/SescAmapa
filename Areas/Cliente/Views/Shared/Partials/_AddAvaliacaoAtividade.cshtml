@@ -1,0 +1,34 @@
+﻿@model SiteSesc.Models.Avaliacao.AvaliacaoAtividadeCliente;
+@{
+    string[] star = new string[6];
+}
+
+@switch (Model.rating)
+{
+    case 1: star[1] = "checked"; break;
+    case 2: star[2] = "checked"; break;
+    case 3: star[3] = "checked"; break;
+    case 4: star[4] = "checked"; break;
+    case 5: star[5] = "checked"; break;
+}
+
+<div class="rate" style="pointer-events:none">
+    <input class="" type="radio" id="star55" @star[5] disabled />
+    <label for="star55">5 stars</label>
+    <input class="" type="radio" id="star44" @star[4] disabled />
+    <label for="star44">4 stars</label>
+    <input class="" type="radio" id="star33" @star[3] disabled />
+    <label for="star33">3 stars</label>
+    <input class="" type="radio" id="star22" @star[2] disabled />
+    <label for="star22">2 stars</label>
+    <input class="" type="radio" id="star11" @star[1] disabled />
+    <label for="star11">1 star</label>
+</div>
+
+<small>@Model.DataCadastro</small>
+<div class="row">   
+    <div class="col-12 text-change-whith-theme">
+        @Model.comentario
+    </div>
+</div>
+<hr/>

@@ -1,0 +1,17 @@
+﻿.MsoNormal > span {
+    font-family: "Roboto", sans-serif !important
+}
+
+.fechar {
+    font-size: 32px;
+    margin: 20px
+}
+
+#modal-termo {
+    opacity: 0.97
+}
+
+.disabled {
+    pointer-events: none; /* Desabilita o link */
+    color: grey; /* Estilo visual para indicar que está desabilitado */
+}

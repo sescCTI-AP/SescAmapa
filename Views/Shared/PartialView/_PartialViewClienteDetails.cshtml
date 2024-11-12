@@ -1,0 +1,14 @@
+﻿@model SiteSesc.Models.ModelPartialView.ClienteDetails
+
+<div class="col-lg-4 col-md-6 portfolio-item @Model.CssClass">
+    <div class="portfolio-wrap">
+        <img src="@Model.ImagePath" class="img-fluid" alt="">
+        <div class="portfolio-info">
+            <h4>@Model.Name</h4>
+            <p>@Model.Description</p>
+            <div class="portfolio-links">
+                <a href="#" class="portfolio-lightbox" title="@Model.FullTitle"><i class="bx bx-search-alt"></i></a>
+            </div>
+        </div>
+    </div>
+</div>

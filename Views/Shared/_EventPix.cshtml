@@ -1,0 +1,51 @@
+﻿<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+    <title>@ViewBag.Title - SESC</title>
+    <link rel="shortcut icon" href="~/img/logo/logo-sesc-sm.png">
+    <link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/css/3th/font-awesome.min.css" rel="stylesheet" />
+    <link href="~/css/Login/main.css" rel="stylesheet" />
+    <link href="~/css/Login/util.css" rel="stylesheet" />
+    <link href="~/css/Atividade/compra.css" rel="stylesheet" />
+
+    @RenderSection("Styles", false)
+
+</head>
+
+<style>
+    body {
+        background: url('../../img/static/fundoevento.png') no-repeat top center scroll;
+        display: table;
+        width: 100% !important;
+        height: 100vh !important;
+        background: rgb(0,76,153);
+        background: linear-gradient(180deg, rgba(0,76,153,1) 20%, rgba(0,53,106,1) 95%);
+        background-size: cover
+    }
+</style>
+
+<body style="height: 100%;" id="body-background">
+    
+    <!-- Content Wrapper START -->
+    <div class="main-content" style="padding-left: 0px; padding-right: 0px; padding-bottom: 0px">
+        <div class="container-fluid" style="padding-left: 0px; padding-right: 0px; padding-bottom: 0px">
+            <div class="container">
+                @RenderBody()
+            </div>
+        </div>
+    </div>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="~/js/3th/jquery.mask.min.js"></script>
+    <script src="~/js/3th/sweetalert.min.js"></script>
+    <script src="~/js/3th/loadingoverlay.min.js"></script>
+<script src="~/js/3th/lottie-player.js"></script>
+
+    @RenderSection("Scripts", false)
+</body>
+</html>

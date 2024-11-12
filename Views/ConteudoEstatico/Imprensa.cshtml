@@ -1,0 +1,107 @@
+﻿@using SiteSesc.Models.ModelPartialView;
+
+@{
+    var listaCategorias = ViewBag.ListCategorias as List<CategoriaCard>;
+}
+
+
+<style>
+    #componentesComunicacao *{
+        font-size: 1.2rem;
+    }
+
+    .fixo-banner-container{
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .fixo-banner-content{
+        width: 100%;
+        max-width: 1600px;
+        height: auto;
+        
+    }
+
+    .fixo-banner-content img{
+        width: calc(100% - 2rem);
+        margin: 1rem;
+        max-width: 1600px;
+        border-radius: 1rem;
+    }
+
+</style>
+
+<div class="fixo-banner-container">
+    <div class="fixo-banner-content">
+        <img src="~/images/static/bg_time.webp" />
+    </div>
+</div>
+
+<section>
+    <div class="container" id="componentesComunicacao">
+        <p><strong>Ger&ecirc;ncia de Comunica&ccedil;&atilde;o</strong></p>
+
+        <p>Held&eacute;r dos Anjos <em>&ndash; Gerente </em></p>
+
+        <p>Tha&iacute;s Pimenta <em>- Jornalista</em></p>
+
+        <p>Debb Cabral <em>- Jornalista</em></p>
+
+        <p>Evelyze Duarte <em>- Publicit&aacute;ria</em></p>
+
+        <p>Pedro Vilhena <em>- Publicit&aacute;rio</em></p>
+
+        <p>Jamile Oliveira <em>- Designer</em></p>
+
+        <p>Evellyn Cristina <em>&ndash; Assistente T&eacute;cnica</em></p>
+
+        <p>&nbsp;</p>
+
+        <p>Telefone: <a href="tel:+559140059587" class="link-primary">(91) 4005-9587</a></p>
+
+        <p>E-mail: comunicacao@pa.sesc.com.br</p>
+
+        <p>Endere&ccedil;o: Av. Assis de Vasconcelos, 359 (9&ordm; andar). Bairro: Campina</p>
+
+    </div>
+</section>
+
+<section class="category-area pt-120 pb-60">
+    <div class="container">
+        <div class="row">
+            <div class="col-xl-3 col-lg-3">
+                <div class="category-left pb-60">
+                    <div class="section-area">
+                        <h2 class="section-title mb-20">Aproveite nossos serviços</h2>
+                    </div>
+                    <div class="category-rol">
+                        <div class="category-prev">
+                            <i class="fa-solid fa-arrow-left"></i>
+                        </div>
+                        <div class="category-next">
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-9 col-lg-9">
+                <div class="category-wrap">
+                    <div class="category-active swiper pb-60">
+                        <div class="swiper-wrapper">
+                            @if (listaCategorias != null)
+                            {
+                                foreach (var categoria in listaCategorias)
+                                {
+                                    @await Html.PartialAsync("PartialView/_PartialViewCategoriaDetails", categoria)
+                                }
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

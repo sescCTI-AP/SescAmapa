@@ -1,0 +1,35 @@
+{
+  "metadata": [
+    {
+      "src": [
+        {
+          // Aponta para o diret�rio do projeto onde os arquivos .csproj est�o localizados.
+          // Se o .csproj estiver na raiz, voc� pode usar "." para indicar o diret�rio atual.
+          "files": [ "**/*.csproj" ],
+          "exclude": [ "**/obj/**", "**/bin/**", "**/node_modules/**" ]
+        }
+      ],
+      "dest": "api"
+    }
+  ],
+  "build": {
+    "content": [
+      {
+        // Inclui os arquivos YAML gerados e qualquer arquivo markdown ou TOC na documenta��o.
+        "files": [ "api/**.yml", "toc.yml", "*.md" ]
+      }
+    ],
+    "resource": [
+      {
+        // Inclui recursos como imagens dentro da pasta 'wwwroot', se necess�rio.
+        "files": [ "wwwroot/images/**" ]
+      }
+    ],
+    "dest": "_site",
+    "globalMetadata": {
+      "_enableSearch": true
+    },
+    "template": [ "default", "statictoc" ],
+    "overwrite": [ "apidoc/**.md" ]
+  }
+}

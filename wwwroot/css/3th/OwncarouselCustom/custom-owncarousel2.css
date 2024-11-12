@@ -1,0 +1,32 @@
+﻿/*CARROUSEL*/
+.owl-prev, .owl-next {
+    position: absolute;
+    top: 50%;
+    outline: none !important;
+}
+
+.owl-prev {
+    margin-left: -15px;
+}
+
+.owl-next {
+    right: -15px;
+}
+
+    .owl-prev span, .owl-next span {
+        font-size: 5rem;
+        font-weight: bolder;
+        color: cornflowerblue;
+        /*border: 1px solid cornflowerblue;
+        border-radius: 60% !important;*/
+        /*        padding-left: 8px !important;
+        padding-right: 8px !important;*/
+        display: inline-block;
+        line-height: 50%;
+        /*        padding-bottom: 11px;*/
+    }
+
+        .owl-prev span:hover, .owl-next span:hover {
+            color: darkblue;
+            border-color: darkblue;
+        }

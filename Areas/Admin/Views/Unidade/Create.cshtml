@@ -1,0 +1,141 @@
+﻿@model SiteSesc.Models.UnidadeOperacional
+
+@{
+}
+
+<link href="~/js/croppie/croppie.min.css" rel="stylesheet" />
+<link href="~/css/summernote/summernote-bs4.css" rel="stylesheet" />
+
+<h2>Cidades</h2>
+<h4>Adicionar</h4>
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Nome" class="control-label"></label>
+                <input asp-for="Nome" class="form-control" />
+                <span asp-validation-for="Nome" class="text-danger"></span>
+            </div>
+            <input asp-for="Descricao" type="hidden" id="descricao" />
+            <div class="form-group">
+                <label asp-for="NomeCurto" class="control-label">Nome Curto</label>
+                <input asp-for="NomeCurto" id="NomeCurto" class="form-control" />
+                <span asp-validation-for="NomeCurto" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Endereco" class="control-label">Endereço</label>
+                <input asp-for="Endereco" class="form-control" />
+                <span asp-validation-for="Endereco" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Cduop" class="control-label">Cd. Unidade Operacional</label>
+                <input asp-for="Cduop" class="form-control" />
+                <span asp-validation-for="Cduop" class="text-danger"></span>
+            </div>
+
+            <input asp-for="DataCadastro" type="hidden" id="dataCadastro" />
+            <input asp-for="DataAtualizacao" type="hidden" id="dataAtualizacao" />
+            <input asp-for="IdUsuario" type="hidden" value="1" />
+            <input asp-for="IdArquivo" type="hidden" value="1" />
+
+            <div class="form-group form-check">
+                <input asp-for="IsAtivo" class="form-check-input" type="checkbox" />
+                <label asp-for="IsAtivo" class="form-check-label">Ativo</label>
+                <span asp-validation-for="IsAtivo" class="text-danger"></span>
+            </div>
+
+            <!-- Campo NameRoute oculto -->
+            <input type="hidden" asp-for="NameRoute" id="NameRoute" class="form-control" />
+
+            <div class="form-group mt-5">
+                <a asp-action="Index" asp-controller="Unidade" class="btn btn-danger">Voltar</a>
+                <input type="submit" value="Salvar" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
+<script src="~/js/croppie/croppie.min.js"></script>
+<script src="~/js/croppie/exif.min.js"></script>
+<script src="~/js/banner/cropbanner.js"></script>
+<script src="~/js/summernote/summernote-bs4.js"></script>
+<script src="~/js/summernote/summernote-pt-br.js"></script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var now = new Date().toISOString();  // Data e hora atual no formato ISO
+        document.getElementById("dataCadastro").value = now;
+        document.getElementById("dataAtualizacao").value = now;
+        document.getElementById("descricao").value = '-';
+    });
+
+    $(document).ready(function () {
+        $('#Descricao').summernote({
+            fontStyle: {
+                foreColor: 'black'
+            },
+            height: 500,
+            lang: 'pt-BR',
+            toolbar: [
+                ['style', ['bold', 'italic', 'underline', 'clear']],
+                ['font', ['strikethrough', 'superscript', 'subscript']],
+                ['fontsize', ['fontsize']],
+                ['color', ['color']],
+                ['para', ['ul', 'ol', 'paragraph']],
+                ['height', ['height']]
+            ]
+        });
+        $('#Descricao').summernote('foreColor', 'black');
+    });
+
+    // Função para gerar o slug a partir do NomeCurto
+    function gerarSlug(tituloCurto) {
+        if (!tituloCurto) return '';
+
+        const acentuados = {
+            'ã': 'a',
+            'á': 'a',
+            'à': 'a',
+            'â': 'a',
+            'ä': 'a',
+            'é': 'e',
+            'ê': 'e',
+            'í': 'i',
+            'ó': 'o',
+            'õ': 'o',
+            'ô': 'o',
+            'ö': 'o',
+            'ú': 'u',
+            'ü': 'u',
+            'ç': 'c',
+        };
+
+        const tituloSemAcentos = tituloCurto.replace(/[ãáàâäéêíóõôöúüç]/g, (match) => acentuados[match]);
+
+        return tituloSemAcentos
+            .toLowerCase()
+            .replace(/\s+/g, '-')  // Substitui espaços por hífens
+            .replace(/[^\w\-]+/g, '') // Remove caracteres especiais
+            .replace(/\-\-+/g, '-') // Substitui múltiplos hífens por um único
+            .replace(/^-+/, '') // Remove hífens do início
+            .replace(/-+$/, ''); // Remove hífens do final
+    }
+
+    $(document).ready(function () {
+        // Escuta o evento de input no campo NomeCurto
+        $('#NomeCurto').on('input', function () {
+            const tituloCurto = $(this).val();
+            const slug = gerarSlug(tituloCurto);
+            console.log("Slug gerado: ", slug);  // Debug: verificar se o slug está sendo gerado corretamente
+            $('#NameRoute').val(slug); // Atualiza o campo oculto do slug
+        });
+    });
+</script>

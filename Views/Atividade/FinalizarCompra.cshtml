@@ -1,0 +1,58 @@
+﻿@model SiteSesc.Models.ViewModel.FinalizarInscricao
+@{
+    var i = "";
+}
+
+<style>
+    .pai {
+        display: flex;
+    }
+
+    .elemento {
+        margin: 5px;
+        padding: 20px;
+    }
+</style>
+
+<div id="termo-content" class="container">
+    @if (Model.TemplateTermo != null)
+    {
+        @Html.Raw(Model.TemplateTermo)
+    }
+    else
+    {
+        <div class="alert alert-warning">
+            No momento não foi possível visualizar o termo de adesão. Tente novamente mais tarde ou entre em contato com a Central de Relacionamento.
+        </div>
+    }
+
+    <p class="mt-5 danger" style="font-style: italic">Após a confirmação você será redirecionado para a tela de pagamento, caso algum erro ocorra você poderá tentar um novo pagamento acessando o "Espaço do cliente" e clicando em suas matrículas</p>
+
+    <div class="pai">
+        <div class="elemento">
+            <input type="checkbox" class="form-check-input" id="aceita-termo" onclick="habilitaCadastro();">
+
+        </div>
+        <div class="elemento">
+            <label class="form-check-label" for="aceita-termo" id="lb-aceite">Li e aceito os termos descritos acima</label>
+        </div>
+    </div>
+
+
+    @if (Model.Valor > 0)
+    {
+        <form method="post" asp-action="Inscrever">
+            <input name="inscricao.CDUOP" type="hidden" value="@Model.Cliente.Cduop">
+            <input name="inscricao.SQMATRIC" type="hidden" value="@Model.Cliente.Sqmatric">
+            <input name="inscricao.CDPROGRAMA" type="hidden" value="@Model.AtividadeApi.cdprograma" />
+            <input name="inscricao.CDCONFIG" type="hidden" value="@Model.AtividadeApi.cdconfig" />
+            <input name="inscricao.SQOCORRENC" type="hidden" value="@Model.AtividadeApi.sqocorrenc" />
+            <input name="inscricao.CDFORMATO" type="hidden" value="@Model.FormasPgto.cdformato" />
+            <button id="btn-confirmar" disabled class="btn btn-danger rounded-0 w-100 text-white" type="submit">Confirmar</button>
+        </form>
+    }
+    @*     else if (Model.Valor == 0)
+    {
+    <button id="btn-confirmar" disabled class="btn btn-danger rounded-0 w-100 text-white" onclick="insencaoInscricao();">Efetuar inscrição</button>
+    } *@
+</div>

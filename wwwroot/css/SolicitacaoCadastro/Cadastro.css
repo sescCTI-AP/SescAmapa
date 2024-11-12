@@ -1,0 +1,250 @@
+﻿/* colors */
+:root {
+    --bg: #f8f8f8;
+    --vibrant: #E8474C;
+    --text: white;
+    --label: white;
+    --border: transparent;
+    --static: #222222;
+    --focus: #4E4E4E;
+    --active: white;
+    --inactive: #4E4E4E;
+    --error: #E8474C;
+}
+
+/* html */
+html {
+    -webkit-font-smoothing: antialiased;
+}
+
+/* body */
+body {
+    background-color: var(--bg);
+    font-family: 'Titillium Web', sans-serif;
+}
+
+@media screen and (min-width: 40em) {
+    body {
+        font-size: 1.25em;
+    }
+}
+@media (max-width: 400px) {
+    .card {
+        width: 100%;
+    }
+}
+
+/* block */
+.block {
+    padding: .75em 1em;
+    appearance: none;
+    outline: none;
+    line-height: normal;
+    border-radius: 0;
+    border: none;
+    background: none;
+    display: block;
+}
+
+/* label */
+.label {
+    /*font-weight: bold;*/
+    color: gray;
+    padding-top: 0;
+    padding-left: 0;
+    letter-spacing: .025em;
+    font-size: 1.125em;
+    line-height: 1.25;
+    position: relative;
+    z-index: 100;
+}
+
+.required .label::after {
+    content: '\0020*';
+    color: var(--error);
+    font-weight: normal;
+    font-size: .75em;
+    vertical-align: top;
+}
+
+/* stripes */
+.stripes {
+    background-size: 50px 50px;
+    background-image: linear-gradient(0deg, #555, #555 25%, transparent 25%, transparent 50%, #555 50%, #555 75%, transparent 75%, transparent);
+    background-repeat: repeat;
+}
+
+/* input */
+.input {
+    font: inherit;
+    line-height: normal;
+    width: 100%;
+    box-sizing: border-box;
+    background: var(--static);
+    color: white;
+    position: relative;
+}
+
+    .input::placeholder {
+        color: var(--label);
+    }
+
+    .input:-webkit-autofill {
+        box-shadow: 0 0 0px 1000px var(--bg) inset;
+        -webkit-text-fill-color: white;
+        border-top-color: var(--bg);
+        border-left-color: var(--bg);
+        border-right-color: var(--bg);
+    }
+
+    .input:not(:focus):not(:active) {
+        background: var(--static);
+        color: white;
+    }
+
+        .input:not(:focus):not(:active).error,
+        .error .input:not(:focus):not(:active) {
+            background: linear-gradient(135deg, rgba(232, 71, 76, .5), rgba(232, 71, 76, .5) 25%, transparent 25%, transparent 50%, rgba(232, 71, 76, .5) 50%, rgba(232, 71, 76, .5) 75%, transparent 75%, transparent);
+        }
+
+    .input:active,
+    .input:focus {
+        background: var(--focus);
+    }
+
+/* error */
+.error {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    z-index: 100;
+    font-size: .625em;
+    color: var(--label);
+}
+
+/* checkbox */
+.checkbox {
+    border: 0;
+    clip: rect(0 0 0 0);
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+    width: 1px;
+}
+
+    .checkbox + label {
+        display: inline-block;
+        width: auto;
+        color: var(--inactive);
+        position: relative;
+        user-select: none;
+        cursor: pointer;
+    }
+
+    .checkbox:focus + label,
+    .checkbox:active + label {
+        color: var(--focus);
+    }
+
+    .checkbox:checked + label {
+        color: var(--active);
+    }
+
+/* button */
+.button {
+    font: inherit;
+    line-height: normal;
+    cursor: pointer;
+    background: var(--vibrant);
+    color: white;
+    font-weight: bold;
+    width: auto;
+    margin-left: auto;
+    font-weight: bold;
+    padding-left: 2em;
+    padding-right: 2em;
+}
+
+    .button:hover,
+    .button:focus,
+    .button:active {
+        color: white;
+        border-color: white;
+    }
+
+    .button:active {
+        position: relative;
+        top: 1px;
+        left: 1px;
+    }
+
+/* body */
+body {
+    padding: 2em;
+}
+
+/* form */
+.form {
+    max-width: 40em;
+    margin: 0 auto;
+    position: relative;
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-between;
+    align-items: flex-end;
+    border: none !important
+}
+
+.card {
+    width: 100%;
+    border: none !important
+}
+
+    .form .field {
+        width: 100%;
+        margin: 0 0 1.5em 0;
+    }
+
+@media screen and (min-width: 40em) {
+    .form .field.half {
+        width: calc(50% - 10px);
+    }
+    .form .field.half-3 {
+        width: calc(33% - 5px);
+    }
+}
+
+@media screen and (max-width: 400px){
+    .card {
+        width: 100% !important
+    }
+}
+
+.form .field.last {
+    margin-left: auto;
+}
+
+.form .text-input {
+    font: inherit;
+    line-height: 2.5em;
+    width: 100%;
+    box-sizing: border-box;
+    background: white;
+    color: gray;
+    position: relative;
+    border-radius: 6px;
+    padding-left: 10px;
+    border: 1px solid #e3e3e3
+}
+
+.form .textarea {
+    font: inherit;
+    line-height: normal;
+    width: 100%;
+    box-sizing: border-box;
+    background: var(--static);
+    color: white;
+    position: relative;
+}

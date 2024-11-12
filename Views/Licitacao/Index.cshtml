@@ -1,0 +1,369 @@
+﻿@using SiteSesc.Models.Licitacao
+@{
+    var abertos = ViewBag.Abertos as List<lct_licitacao>;
+    var emAndamento = ViewBag.EmAndamento as List<lct_licitacao>;
+    var finalizados = ViewBag.Finalizados as List<lct_licitacao>;
+
+    var tipos = ViewBag.Tipos as List<lct_tipoLicitacao>;
+    var modalidades = ViewBag.Modalidades as List<lct_modalidade>;
+    var status = ViewBag.status as List<lct_statusLicitacao>;
+
+    int currentPage = ViewBag.CurrentPage;
+    int pageSize = ViewBag.PageSize;
+    int totalItems = ViewBag.TotalItems;
+    int totalPages = (int)Math.Ceiling((decimal)totalItems / pageSize);
+}
+
+<style>
+
+    .areaTitulo{
+        background: url("../images/edital.webp") center no-repeat;
+        background-size: cover;
+        color: white;
+        min-height: 200px;
+        width: calc(100% - 1rem);
+        overflow: hidden;
+        padding: 0 1rem;
+        margin: 1rem;
+        border-radius: 0.5rem ;
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+    }
+
+    .areaTitulo h2{
+        color: white;
+        text-shadow: 0 0 50px black;
+        font-size: clamp(30px, 30px + 1vw, 46px)
+    }
+
+    .rowEdital .col-md-3 .form-control{
+        cursor: pointer;
+        -webkit-appearance: button !important;
+        -moz-appearance: button;
+        -o-appearance: button;
+        -ms-appearance: button;
+        appearance: button;
+        font-size: 1.1rem;
+    }
+
+    .rowEdital .ctao {
+        width: 100%;
+        display: flex;
+    }
+
+    .editalBotaoSubmit{
+        width: 100%;
+        max-width: 300px;
+        padding: 0.75rem;
+    }
+
+    .ol-md-3{
+        font-size: 1.2rem;
+    }
+
+    .textoComplementar {
+        font-size: 1.4rem;
+    }
+
+
+</style>
+
+
+<div class="container pt-4 mb-5">
+    
+    <div class="areaTitulo">
+        <h2>
+            Edital de Licitação
+        </h2>
+    </div>
+
+    <script>
+        function toggleDonwDoc() {
+            $("#edital-doc-download-sub").slideToggle('middle')
+        }
+    </script>
+    
+    <h4 id="edital-doc-download" onclick="toggleDonwDoc()" class="btn btn-primary">Documentos para download</h4>
+    <div id="edital-doc-download-sub">
+        <ul>
+            <li><a target="_blank" class="link-primary" href="~/images/static/CodigoDeEtica.pdf">Código de Ética</a></li>
+            <li><a target="_blank" class="link-primary" href="~/images/static/resolucao_sesc.pdf">Regulamento de Licitações e Contratos do Sesc</a></li>
+            <li><a target="_blank" class="link-primary" href="~/images/static/CAGEMAR_2022.pdf">Catálogo Geral de Produtos e Marcas Homologadas - CAGEMAR</a></li>
+            <li><a target="_blank" class="link-primary" href="~/images/static/credenciamento_cadastro_autonomo.pdf">Credenciamento - Cadastro de Autônomo</a></li>
+            <li><a target="_blank" class="link-primary" href="~/images/static/Homologacao_Catalogo_De_Produtos_Alimenticios_E_Marcas.pdf">Homologação - Catálogo de Produtos Alimentícios e Marcas</a></li>
+        </ul>
+    </div>
+
+    <div class="container pt-4 mb-5">              
+            <p class="textoComplementar">Confira nossos editais e participe das nossas Licitações para aquisição de bens e serviços.</p>
+        <form method="get" action="/licitacao">
+            <div class="row rowEdital">
+                <div class="col-md-3">
+                    <label for="tipo">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-card-list" viewBox="0 0 16 16">
+                            <path d="M14.5 3a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-.5.5h-13a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5zm-13-1A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h13a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2z" />
+                            <path d="M5 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 5 8m0-2.5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5m0 5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5m-1-5a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0M4 8a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0m0 2.5a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0" />
+                        </svg>
+                        Tipo
+                    </label>
+                    <select class="form-control" id="tipo" name="tipo">
+                        <option value="" selected>Selecione um tipo</option>
+                        @foreach (var item in tipos)
+                        {
+                            <option value="@item.Id">@item.Descricao</option>
+                        }
+                    </select>
+                </div>
+
+                <div class="col-md-3">
+                    <label for="modalidade">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-ui-checks-grid" viewBox="0 0 16 16">
+                            <path d="M2 10h3a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1m9-9h3a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-3a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1m0 9a1 1 0 0 0-1 1v3a1 1 0 0 0 1 1h3a1 1 0 0 0 1-1v-3a1 1 0 0 0-1-1zm0-10a2 2 0 0 0-2 2v3a2 2 0 0 0 2 2h3a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zM2 9a2 2 0 0 0-2 2v3a2 2 0 0 0 2 2h3a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2zm7 2a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2h-3a2 2 0 0 1-2-2zM0 2a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm5.354.854a.5.5 0 1 0-.708-.708L3 3.793l-.646-.647a.5.5 0 1 0-.708.708l1 1a.5.5 0 0 0 .708 0z" />
+                        </svg>
+                        Modalidades
+                    </label>
+                    <select class="form-control" id="modalidade" name="modalidade">
+                        <option value="" selected>Selecione uma Modalidade</option>
+                        @foreach (var item in ViewBag.Modalidades)
+                        {
+                            <option value="@item.Id">@item.Descricao</option>
+                        }
+                    </select>
+                </div>              
+
+                <div class="col-md-3">
+                    <label for="status">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-check-square" viewBox="0 0 16 16">
+                            <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z" />
+                            <path d="M10.97 4.97a.75.75 0 0 1 1.071 1.05l-3.992 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425z" />
+                        </svg>
+                        Situação
+                    </label>
+                    <select class="form-control" id="status" name="status">
+                        <option value="" selected>Selecione um Status</option>
+                        @foreach (var item in ViewBag.Status)
+                        {
+                            <option value="@item.Id">@item.Descricao</option>
+                        }
+                    </select>
+                </div>
+            </div>
+            <div class="editalAreaBotao">
+                <button type="submit" class="btn btn-primary mt-3 editalBotaoSubmit">Buscar</button>
+            </div>
+        </form>
+
+
+    </div>
+    
+    <div class="content-container">
+        @if ((abertos != null && abertos.Any()) ||
+        (emAndamento != null && emAndamento.Any()) ||
+        (finalizados != null && finalizados.Any()))
+        {
+            <div class="flex-container">
+                @if (abertos != null && abertos.Any())
+                {
+                    foreach (var item in abertos)
+                    {
+                        @await Html.PartialAsync("PartialView/_PartialViewCardLicitacao", item)
+                    }
+                }
+
+                @if (emAndamento != null && emAndamento.Any())
+                {
+                    foreach (var item in emAndamento)
+                    {
+                        @await Html.PartialAsync("PartialView/_PartialViewCardLicitacao", item)
+                    }
+                }
+
+                @if (finalizados != null && finalizados.Any())
+                {
+                    foreach (var item in finalizados)
+                    {
+                        @await Html.PartialAsync("PartialView/_PartialViewCardLicitacao", item)
+                    }
+                }
+            </div>
+        }
+        else
+        {
+            <h3>Não há Processos Seletivos disponíveis até o momento</h3>
+        }
+    </div>
+
+    <!-- Controles de paginação -->
+    @if (totalPages > 1)
+    {
+        <nav aria-label="Navegação de página">
+            <ul class="pagination">
+                @if (currentPage > 1)
+                {
+                    <li class="page-item">
+                        <a class="page-link" href="?tipo=@Context.Request.Query["tipo"]&modalidade=@Context.Request.Query["area"]&status=@Context.Request.Query["status"]&page=1&pageSize=@pageSize" aria-label="Anterior">
+                            <span aria-hidden="true">Inicio</span>
+                        </a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?tipo=@Context.Request.Query["tipo"]&modalidade=@Context.Request.Query["area"]&status=@Context.Request.Query["status"]&page=@(currentPage - 1)&pageSize=@pageSize" aria-label="Anterior">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                }
+
+                @for (var i = currentPage - 2; i <= currentPage + 2; i++)
+                {
+                    if ((i >= 1) && (i <= totalPages))
+                    {
+                        <li class="page-item @(i == currentPage ? "active" : "")">
+                            <a class="page-link" href="?tipo=@Context.Request.Query["tipo"]&modalidade=@Context.Request.Query["area"]&status=@Context.Request.Query["status"]&page=@i&pageSize=@pageSize">@i</a>
+                        </li>
+                    }
+                }
+
+                @if (currentPage < totalPages)
+                {
+                    <li class="page-item">
+                        <a class="page-link" href="?tipo=@Context.Request.Query["tipo"]&modalidade=@Context.Request.Query["area"]&status=@Context.Request.Query["status"]&page=@(currentPage + 1)&pageSize=@pageSize" aria-label="Próximo">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?tipo=@Context.Request.Query["tipo"]&modalidade=@Context.Request.Query["area"]&status=@Context.Request.Query["status"]&page=@(totalPages)&pageSize=@pageSize" aria-label="Próximo">
+                            <span aria-hidden="true">Final</span>
+                        </a>
+                    </li>
+                }
+            </ul>
+        </nav>
+    }
+</div>
+</div>
+<script>
+        function toggleDonwDoc() {
+            $("#edital-doc-download-sub").slideToggle('middle')
+        }
+    </script>
+    
+    
+
+
+</div>
+
+
+
+<style>
+
+    label {
+        margin-top: 5px !important;
+    }
+
+    .flex-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 16px; /* Ajuste o valor conforme necessário */
+        justify-content: space-between;
+    }
+
+    .col-md-5 *{
+        font-size: 1.2rem;
+    }
+
+    .col-md-5 select{
+        cursor: pointer;
+        -webkit-appearance: button !important;
+        -moz-appearance: button;
+        -o-appearance: button;
+        -ms-appearance: button;
+        appearance: button;
+    }
+
+    #abertos .flex-container, #andamento .flex-container, #finalizados .flex-container {
+        flex-direction: row !important;
+        justify-content: space-between !important;
+        padding: 1rem !important;
+        background: red;
+    }
+
+    .flex-item {
+        width: calc(50% - 1rem);
+        border: 2px solid #004c99;
+        border-radius: 1rem;
+        background: white;
+        min-height: 260px;
+        box-sizing: border-box;
+        text-align: center;
+        margin-bottom: 1rem;
+    }
+
+    .flex-item:hover {
+        border: 2px solid dodgerblue;
+    }
+
+    .blog_details-widget{
+        height: 100%;
+        min-height: 320px;
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        flex-direction: column;
+        padding: 0;
+        margin: 0;
+        @* overflow: hidden; *@
+        background: none;
+    }
+
+    .box-titulo-blue{
+        background: #004c99;
+        padding: auto 1rem !important;
+        height: 86px;
+        width: 100%;
+        border-radius: 0.5rem 0.5rem 0 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .box-conteudo-ps {
+        padding: 1rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        height: 90%;
+    }
+
+    .flex-item:hover .box-titulo-blue{
+        background:dodgerblue;
+    }
+
+    .box-titulo-blue h4 { color: white;}
+
+    .box-texto-cargos {
+        font-weight: 600;
+        font-size: 1.2rem;
+    }
+
+    #edital-doc-download {
+        margin-top: 2rem;
+        margin-left: 3rem;
+    }
+
+    #edital-doc-download-sub{
+        display: none;
+        margin-left: 3rem;
+    }
+
+
+    @@media only screen and (max-width: 767px) {
+        .flex-item{
+            width: 100% !important;
+        }
+
+        #edital-doc-download, #edital-doc-download-sub{
+            margin-left: 1.5rem;
+        }
+
+    }
+</style>

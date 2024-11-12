@@ -1,0 +1,1198 @@
+﻿@model SiteSesc.Models.SolicitacaoCadastroCliente
+@{
+    Layout = "~/Views/Shared/_Default.cshtml";
+    ViewBag.Title = "Novo cadastro";
+    ViewBag.TipoCadastro = "Novo cadastro";
+    var comerciarioEmpresa = ViewBag.Comerciario;
+    var categoria = comerciarioEmpresa ? "Pleno" : "Atvidade";
+    var cduotitul = ViewBag.CDUOTITUL;
+    var sqtitulmat = ViewBag.SQTITULMAT;
+}
+
+<link href="~/css/SolicitacaoCadastro/novoCadastro.css" rel="stylesheet" />
+<link rel="stylesheet" href="~/css/SolicitacaoCadastro/app.css" type="text/css" />
+<style>
+    .required::after {
+        content: '*';
+        color: red;
+        margin-right: 4px;
+        font-size: 14px
+    }
+
+    #loading {
+        display: none; /* Esconda por padrão */
+        position: fixed;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 9999;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+</style>
+@* <---Div formulario ---> *@
+<div class="card bg-transparent border-0">
+    @if (cduotitul != null)
+    {
+        <h2 class="text-center">Solicitação de dependente</h2>
+    }
+    @* <--Titulo--> *@
+    <h3 class="mt-5 text-center" style="font-style: italic; color: dodgerblue">
+        @if (comerciarioEmpresa)
+        {
+            <span>Trabalhador do Comércio</span>
+        }
+        else
+        {
+            <span>Público em geral</span>
+        }
+
+    </h3>
+    <br />
+
+    <div id="loading" class="loading-gif">
+        <img src="~/images/loading.gif" alt="Loading">
+    </div>
+
+
+    <div class="card-block px-0">
+        <form method="post" asp-action="CreatePost" asp-controller="SolicitacaoCadastroCliente" asp-area="Cliente" enctype="multipart/form-data" id="formAlteracaoClienteComerciario">
+            <input value="@categoria" hidden asp-for="TipoCategoria" />
+            <input value="@cduotitul" hidden name="CDUOTITUL" />
+            <input value="@sqtitulmat" hidden name="SQTITULMAT" />
+            <div class="form-wizard col-12 ml-auto mr-auto px-0" id="form-dados">
+                <div>
+                    @* <--- DADOS PESSOAIS ---> *@
+                    <div id="page-w-1" class="row mx-0 p-3 border shadow-sm rounded bg-white" style="display: block">
+                        <h3 class="text-center w-100">DADOS PESSOAIS</h3>
+
+                        <div class="col-md-12 pt-4 my-3">
+                            <div class="row">
+                                @*<--- FOTO PERFIL --->*@
+                                <div class="wrap-input100 col-md-3 no-border">
+                                    <div id="div-foto-perfil" class="upload shadow-sm border"
+                                         style="background-image:url('@ViewBag.Foto'); background-size:cover;">
+                                        <label asp-for="FotoPerfil" class="col-12 text-center required" style="z-index: 9999; position: absolute; width: 200px; font-weight:bold">Foto de perfil</label>
+                                        <input type="file" asp-for="FotoPerfil" id="FotoPerfil" descricao-documento="FotoPerfil"
+                                               accept="image/*" class="foto anexo-inputs" required>
+                                    </div>
+                                </div>
+
+                                @*<--- NOME --->*@
+                                <div class="wrap-input100 col-md ml-3 no-border">
+                                    @* <---Nome ---> *@
+                                    <div class="wrap-input100  bg1 mt-3">
+                                        <label asp-for="Nome" class="label-input100 required">
+                                            Nome Completo
+                                        </label>
+                                        <input asp-for="Nome" id="Nome" class="input100"
+                                               placeholder="Informe seu nome completo" required maxlength="80" />
+                                    </div>
+
+                                    <div class="wrap-input100  bg1 mt-3">
+                                        <label asp-for="NomeSocial" class="label-input100">
+                                            Nome Social
+                                            (opcional)
+                                        </label>
+                                        <input asp-for="NomeSocial" id="Nome" class="input100"
+                                               placeholder="Informe o nome social" maxlength="80" />
+                                    </div>
+                                    @if (cduotitul != null)
+                                    {
+                                        <div class="wrap-input100  bg1 mt-3">
+                                            <label for="cpfDependente" class="label-input100 required">
+                                                CPF do dependente
+                                            </label>
+                                            <input name="cpfDependente" id="cpfDependente" class="input100"
+                                                   placeholder="Informe o CPF do dependente" maxlength="14" required/>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="col-md-12 pr-4 pl-4">
+
+                            <div class="row mx-0">
+                                @* <--- Estado civil ---> *@
+                                <div class="wrap-input100 bg1 col-12 col-md-6 pr-2">
+                                    <span class="label-input100 required">
+                                        Estado Civil
+                                    </span>
+                                    <div>
+                                        <select asp-for="IdEstadoCivil" asp-items="@ViewBag.IdEstadoCivil" class="js-select2" required>
+                                            <option value="" selected>Selecione uma opção</option>
+                                        </select>
+                                        <div class="dropDownSelect2"></div>
+                                    </div>
+                                </div>
+                                @* <--- Data de Nascimento ---> *@
+                                <div class="wrap-input100 bg1 col-12 col-md ml-3">
+                                    <label class="label-input100 required" for="DataNascimento">DATA DE NASCIMENTO</label>
+                                    <input type="date" asp-for="DataNascimento"
+                                           id="DataEmissaoDocumentoIdentificacao" class="input100 datetimepicker-input" autocomplete="off" value=""
+                                           placeholder="Selecione uma data" required />
+                                </div>
+                            </div>
+
+                            <div class="row mx-0">
+                                @* <--- Escolaridade ---> *@
+                                <div class="wrap-input100  bg1 col-12 col-md-6 pr-2">
+                                    <span class="label-input100 required">
+                                        Escolaridade
+                                    </span>
+                                    <div>
+                                        <select asp-for="IdEscolaridade" asp-items="@ViewBag.IdEscolaridade" class="js-select2" required>
+                                            <option value="" selected>Selecione uma opção</option>
+                                        </select>
+                                        <div class="dropDownSelect2"></div>
+                                    </div>
+                                </div>
+
+                                @* <---Ultima Serie ---> *@
+                                <div class="wrap-input100  bg1 col-12 col-md ml-3">
+                                    <label asp-for="UltimaSerie" class="label-input100">
+                                        Última Série
+                                    </label>
+                                    <input asp-for="UltimaSerie" id="Nome" class="input100"
+                                           placeholder="Em caso de escolaridade incompleta" />
+                                </div>
+                            </div>
+
+                            <div class="row mx-0">
+                                @* <--- Sexo ---> *@
+                                <div class="wrap-input100  bg1 col-12 col-md-6 pr-2">
+                                    <span class="label-input100 required">
+                                        Sexo
+                                    </span>
+                                    <div>
+                                        <select asp-for="IdSexo" class="js-select2" required>
+                                            <option value="" selected>Selecione uma opção</option>
+                                            <option value="0">Masculino</option>
+                                            <option value="1">Feminino</option>
+                                        </select>
+                                        <div class="dropDownSelect2"></div>
+                                    </div>
+                                </div>
+
+                                @* <--- Telefone ---> *@
+                                <div class="wrap-input100  bg1 col-12 col-md ml-3">
+                                    <label asp-for="TelefonePrimario" class="label-input100 required">
+                                        Telefone
+                                    </label>
+                                    <input type="tel" asp-for="TelefonePrimario" id="Telefone" class="input100"
+                                           placeholder="Informe o seu telefone" required />
+                                </div>
+                            </div>
+
+
+                        </div>
+
+                        <div class="col-md-12 pt-4 my-3 pr-4 pl-4">
+                            <div class="row mx-0">
+                                @*<--- NOME PAI --->*@
+                                <div class="wrap-input100 bg1 col-md pr-2">
+                                    <label class="label-input100 required" asp-for="NomePai">NOME DO PAI</label>
+                                    <input type="text" asp-for="NomePai" name="NomePai" class="input100" maxlength="80" placeholder="Informe o nome do pai" required>
+                                </div>
+
+                                @*<--- NOME DA MÃE --->*@
+                                <div class="wrap-input100 bg1 col-md ml-3">
+                                    <label class="label-input100 required" asp-for="NomeMae">NOME DA MÃE</label>
+                                    <input type="text" asp-for="NomeMae" name="NomeMae" class="input100" maxlength="80" placeholder="Informe o nome da mãe" required>
+                                </div>
+                            </div>
+
+                            <div class="row mx-0">
+                                @if (cduotitul != null)
+                                {
+                                    <div class="wrap-input100  bg1 col-12 col-md-6 pr-2 mr-3">
+                                        <span class="label-input100">
+                                            Parentesco
+                                        </span>
+                                        <select asp-for="IdParentesco" class="js-select2">
+                                            <option value="1" selected>Cônjuge/Companheiro de união estável</option>
+                                            <option value="2">Viúvo(a)</option>
+                                            <option value="3">Filho(a)</option>
+                                            <option value="4">Neto(a)</option>
+                                            <option value="5">Enteado(a)</option>
+                                            <option value="6">Pessoa sob guarda</option>
+                                            <option value="7">Pai</option>
+                                            <option value="8">Mãe</option>
+                                            <option value="9">Padrasto</option>
+                                            <option value="10">Madrasta</option>
+                                            <option value="11">Avô</option>
+                                            <option value="12">Avó</option>
+                                            <option value="13">Tutor</option>
+                                            <option value="16">Tutelado</option>
+                                            <option value="17">Curatelado</option>
+                                            <option value="18">Curador</option>
+                                            <option value="19">Guardião legal</option>
+                                            <option value="20">Tutor de dependente órfão</option>
+                                        </select>
+                                        <div class="dropDownSelect2"></div>
+                                    </div>
+                                }
+
+
+                                @*<--- NACIONALIDADE --->*@
+                                <div class="wrap-input100 bg1 col-md pr-2">
+                                    <label asp-for="Nacionalidade" class="label-input100 required">Nacionalidade</label>
+                                    <input asp-for="Nacionalidade" id="Nome" class="input100"
+                                           placeholder="Ex: Brasileiro(a)" required maxlength="40" />
+                                </div>
+
+                                @*<--- NATURALIDADE --->*@
+                                <div class="wrap-input100 bg1 col-md ml-3">
+                                    <label class="label-input100 required" asp-for="Naturalidade">Naturalidade</label>
+                                    <input type="text" asp-for="Naturalidade" name="Naturalidade" maxlength="40" class="input100" placeholder="Ex: Belém-PA" required>
+                                </div>
+                            </div>
+
+                            <div class="row  mx-0">
+                                @*<--- RENDA --->*@
+                                <div class="wrap-input100 bg1 col-md pr-2">
+                                    <label asp-for="RendaIndividual" class="label-input100 required">RENDA (R$)</label>
+                                    <input type="text" asp-for="RendaIndividual" name="RendaIndividual" class="input100 currency" onkeyup="mascaraMoeda(this, event)" value="" placeholder="Ex: 1.412,00" required>
+                                </div>
+                                @*<--- RENDA FAMILIAR --->*@
+                                <div class="wrap-input100 bg1 col-md ml-3">
+                                    <label asp-for="RendaFamiliar" class="label-input100 required">RENDA FAMILIAR (R$)</label>
+                                    <input type="text" asp-for="RendaFamiliar" name="RendaFamiliar" class="input100" onkeyup="mascaraMoeda(this, event)" value="" placeholder="Ex: 1.412,00" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        @*<---DOCUMENTOS--->*@
+                        <div class="col-md-12 pt-4 border-dashed my-3">
+                            <h3>Documento de identificação</h3>
+                            <div class="row mt-2">
+                                <div class="col-md">
+                                    <div class="wrap-input100  bg1">
+                                        <span class="label-input100 required">
+                                            Tipo
+                                        </span>
+                                        <div>
+                                            <select asp-for="IdTipoDocumentoIdentificacao" asp-items="@ViewBag.IdTipoDocumentoIdentificacao" class="js-select2" required>
+                                                <option value="" selected>Selecione uma opção</option>
+                                            </select>
+                                            <div class="dropDownSelect2"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md">
+                                    <div class="wrap-input100  bg1" data-validate="Informe um número válido">
+                                        <label asp-for="NumeroDocumento" class="label-input100 required">
+                                            Número
+                                        </label>
+                                        <input asp-for="NumeroDocumento" id="NumeroDocumento"
+                                               class="input100" placeholder="Número do documento de identificação" required maxlength="15" />
+                                    </div>
+                                </div>
+                                <div class="col-md">
+                                    <div class="wrap-input100  bg1" data-validate="Informe um número válido">
+                                        <label asp-for="OrgaoEmissor" class="label-input100 required">
+                                            Órgão emissor
+                                        </label>
+                                        <input asp-for="OrgaoEmissor"
+                                               id="OrgaoEmissor" class="input100"
+                                               placeholder="Número do documento de identificação" required maxlength="15" />
+                                    </div>
+                                </div>
+                                <div class="col-md">
+                                    <div class="wrap-input100  bg1" data-validate="Informe uma data">
+                                        <label asp-for="DataEmissaoDocumento" class="label-input100 required">
+                                            Data de expedição
+                                        </label>
+
+                                        <input type="date" asp-for="DataEmissaoDocumento"
+                                               id="DataEmissaoDocumento" class="input100 datetimepicker-input"
+                                               placeholder="Selecione uma data" required />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mx-0 py-2 shadow-sm">
+                            @* <---ESTUDANTE ---> *@
+                            <div class="col-md-3">
+                                <label>É estudante?</label>
+                                <div class="toggle-checkbox checkbox-inline toggle-success toggle-sm"
+                                     data-toggle="tooltip" title="Exibir/Não Exibir">
+                                    <input type="checkbox" asp-for="IsEstudante">
+                                    <label for="IsEstudante" style="margin: 0"></label>
+                                </div>
+                            </div>
+
+                            @* <---DEFICIENCIA ---> *@
+                            <div class="col-md-3">
+                                <label>Possui deficiência?</label>
+                                <div class="toggle-checkbox checkbox-inline toggle-success toggle-sm"
+                                     data-toggle="tooltip" title="Exibir/Não Exibir">
+                                    <input type="checkbox" asp-for="IsDeficiente">
+                                    <label for="IsDeficiente" style="margin: 0"></label>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    @* <a>Voltar</a> *@
+                                </div>
+                                <div class="col-md-6 text-right">
+                                    <a onclick="navigation(1,2)" class="btn bt-lg btn-primary w-100 text-white">Avançar ></a>
+                                    @* <a onclick="navigation(2)" class="btn bt-lg btn-primary w-100 text-white">Avançar ></a> *@
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    @*<---ENDEREÇO---> *@
+                    <div id="page-w-2" class="row mx-0 p-3 border shadow-sm rounded mt-5 bg-white" style="display: none">
+
+                        <h3 class="text-center w-100 mb-3">ENDEREÇO</h3>
+
+                        <div class="mx-0 px-0 row col-12">
+
+                            @*<---CEP--->*@
+                            <div class="col-12 col-md-4">
+                                <div class="wrap-input100  bg1" data-validate="Digite o CEP">
+                                    <label asp-for="Cep" class="label-input100 required">
+                                        CEP
+                                    </label>
+                                    <input asp-for="Cep" id="Cep" class="input100"
+                                           placeholder="Informe um cep" required maxlength="10" />
+                                </div>
+                            </div>
+
+                            @*<---CIDADE--->*@
+                            <div class="col-12 col-md-4">
+                                <div class="wrap-input100  bg1">
+                                    <label asp-for="Cidade" class="label-input100 required">
+                                        Cidade
+                                    </label>
+
+                                    <input hidden asp-for="Cidade" id="Cidade" required />
+                                    <input id="Dscidade" class="input100" readonly required />
+
+                                    @*                                     <select asp-for="Cidade" asp-items="@ViewBag.Municipios" class="js-select2" required>
+                                    <option value="" selected>Selecione uma opção</option>
+                                    </select> *@
+                                    <div class="dropDownSelect2"></div>
+                                </div>
+                            </div>
+
+                            @*<---UF--->*@
+                            <div class="col-12 col-md-4">
+                                <div class="wrap-input100  bg1">
+                                    <span class="label-input100 required">
+                                        UF
+                                    </span>
+                                    <div>
+                                        <input readonly asp-for="UF" id="UF" class="input100" required />
+                                        <div class="dropDownSelect2"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mx-0 px-0 row col-12">
+                            @*<---LOGADOURO--->*@
+                            <div class="col-12 col-md-8">
+
+                                <div class="wrap-input100  bg1" data-validate="Informe seu nome">
+                                    <label asp-for="Logradouro" class="label-input100 required">
+                                        Logradouro
+                                    </label>
+                                    <input readonly asp-for="Logradouro" id="Logradouro" class="input100" required maxlength="100" />
+                                    @*                                     <input asp-for="Logradouro" id="Logradouro" class="input100"
+                                    placeholder="Informe o logradouro" required /> *@
+                                </div>
+
+                            </div>
+
+                            @*<---NUMERO--->*@
+                            <div class="col-12 col-md-4">
+                                <div class="wrap-input100  bg1" data-validate="Nº da casa ou lote">
+                                    <label asp-for="NumeroEndereco" class="label-input100 required">
+                                        Número/Lote
+                                    </label>
+                                    <input asp-for="NumeroEndereco" id="NumeroEndereco" class="input100"
+                                           placeholder="Digite o número" required />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mx-0 px-0 row col-12">
+
+                            @*<---COMPLELEMNTO--->*@
+                            <div class="col-12 col-md-8">
+                                <div class="wrap-input100 bg1">
+                                    <label asp-for="Complemento" class="label-input100">Complemento</label>
+                                    <input asp-for="Complemento" id="Email" class="input100"
+                                           placeholder="Digite um complemento (opcional)" maxlength="100" />
+                                </div>
+                            </div>
+
+                            @*<---BAIRRO--->*@
+                            <div class="col-12 col-md ">
+                                <div class="wrap-input100  bg1">
+                                    <label asp-for="Bairro" class="label-input100 required">
+                                        Bairro
+                                    </label>
+                                    <input readonly asp-for="Bairro" id="Bairro" class="input100" required maxlength="40" />
+                                    @*                                     <input asp-for="Bairro" id="Bairro" class="input100"
+                                    placeholder="Digite um bairro" required /> *@
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <a onclick="moveToPrevious(2,1)" class="btn bt-lg btn-secondary w-100 text-white">< Voltar</a>
+                            </div>
+                            <div class="col-md-6 text-right">
+                                @if (comerciarioEmpresa)
+                                {
+                                    <a onclick="navigation(2,3)" class="btn bt-lg btn-primary w-100 text-white">Avançar ></a>
+                                }
+                                else
+                                {
+                                    <input type="submit" class="btn bt-lg btn-success w-100 text-white" value="Enviar" />
+                                }
+                            </div>
+                        </div>
+                    </div>
+
+                    @if (comerciarioEmpresa && cduotitul == null)
+                    {
+                        @*<---DADOS DA EMPRESA---> *@
+                        <div id="page-w-3" class="dados-empresa row mx-0 p-3 border shadow-sm rounded bg-white mt-5" style="display: none">
+
+                            <h3 class="text-center w-100 mb-3">SITUAÇÃO PROFISSIONAL</h3>
+
+                            <div class="mx-0 px-0 row col-12">
+
+                                @*<---CNPJ--->*@
+                                <div class="col-12 col-md-4">
+                                    <div class="wrap-input100  bg1">
+                                        <label asp-for="CnpjEmpresa" class="label-input100 required">
+                                            CNPJ
+                                        </label>
+                                        <input asp-for="CnpjEmpresa" id="CnpjEmpresa" class="input100 input-empresa" placeholder="Digite um CNPJ" required/>
+                                    </div>
+                                </div>
+
+                                @*<---RAZÃO SOCIAL--->*@
+                                <div class="col-12 col-md">
+                                    <div class="wrap-input100  bg1">
+                                        <label asp-for="RazaoSocial" class="label-input100 required">
+                                            Razão social
+                                        </label>
+                                        <input  asp-for="RazaoSocial" id="RazaoSocial" class="input100 input-empresa" placeholder="Digite uma razão social"  required />
+                                    </div>
+                                </div>                                
+
+                            </div>
+
+
+                            <div class="mx-0 px-0 row col-12">
+
+                                @*<---SITUAÇÃO PROFISSIONAL--->*@
+                                <div class="col-12 col-md-4">
+                                    <div class="wrap-input100  bg1">
+                                        <label asp-for="IdSituacaoProfissional" class="label-input100 required">
+                                            Situação profissional
+                                        </label>
+                                        <select asp-for="IdSituacaoProfissional" asp-items="@ViewBag.IdSituacaoProfissional" class="js-select2" required>
+                                            <option value="" selected>Selecione uma opção</option>
+                                        </select>
+                                        <div class="dropDownSelect2"></div>
+                                    </div>
+                                </div>
+
+                                @*<---CARGO--->*@
+                                <div class="col-12 col-md">
+                                    <div class="wrap-input100  bg1">
+                                        <label asp-for="Cargo" class="label-input100 required">
+                                            Cargo
+                                        </label>
+                                        <input asp-for="Cargo" id="Cargo"
+                                               class="input100 input-empresa" placeholder="Digite um cargo" required />
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="mx-0 px-0 row col-12">
+                                @*<---DATA ADMISSÃO--->*@
+                                <div class="col-12 col-md">
+                                    <div class="wrap-input100  bg1">
+                                        <label asp-for="DataAdmissao" class="label-input100 required">
+                                            Data de admissão
+                                        </label>
+                                        <input type="date" asp-for="DataAdmissao"
+                                               id="DataAdmissao" class="input100 datetimepicker-input input-empresa"
+                                               placeholder="Selecione uma data de admissão" required />
+                                    </div>
+                                </div>
+
+                                @*<---DATA DE DEMISSÃO--->*@
+                                <div class="col-12 col-md">
+                                    <div class="wrap-input100  bg1">
+                                        <label asp-for="DataDemissao"
+                                               class="label-input100">Data de demissão (caso exista)</label>
+                                        <input type="date" asp-for="DataDemissao"
+                                               id="DataDemissao" class="input100 datetimepicker-input"
+                                               placeholder="Selecione uma data de demissão" />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mx-0 px-0 row col-12">
+
+                                @* <---NUMERO CARTEIRA--->*@
+                                <div class="col-12 col-md-4">
+                                    <div class="wrap-input100  bg1">
+                                        <label asp-for="NumeroCarteiraProssional"
+                                               class="label-input100 required">
+                                            Nº da carteira de trabalho
+                                        </label>
+                                        <input asp-for="NumeroCarteiraProssional"
+                                               id="NumeroCarteiraProfissional" class="input100 input-empresa"
+                                               placeholder="Digite o número da carteira ou contrato" required maxlength="12" />
+                                        <small>@ViewBag.Carteira</small>
+                                    </div>
+                                </div>
+
+                                @* <---SERIE---> *@
+                                <div class="col-12 col-md-4">
+                                    <div class="wrap-input100  bg1">
+                                        <label asp-for="SerieCtps" class="label-input100 required">
+                                            Série
+                                        </label>
+                                        <input asp-for="SerieCtps" id="Serie"
+                                               class="input100 input-empresa" placeholder="Digite a série" required />
+                                    </div>
+                                </div>
+
+                                @* <---PIS/ PASEP---> *@
+                                <div class="col-12 col-md-4">
+                                    <div class="wrap-input100  bg1">
+                                        <label asp-for="PisPasep" class="label-input100 required">
+                                            PIS/PASEP
+                                        </label>
+                                        <input asp-for="PisPasep" id="PisPasep" id="PisPasep"
+                                               class="input100 input-empresa" placeholder="Digite o PIS/PASEP" required maxlength="11" />
+                                        <small>@ViewBag.PisPasep</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <a onclick="moveToPrevious(3,2)" class="btn bt-lg btn-secondary w-100 text-white">Voltar</a>
+                                </div>
+                                <div class="col-md-6 text-right">
+                                    <a onclick="navigation(3,4)" class="btn bt-lg btn-primary w-100 text-white">Avançar ></a>
+                                </div>
+                            </div>
+                        </div>
+
+                        @*<---ANEXOS---> *@
+                        <div id="page-w-4" class="row mx-0 p-3 border shadow-sm rounded bg-white mt-5" style="display: none">
+
+                            <h3 class="text-center w-100 mb-3">ANEXOS</h3>
+
+                            <h5 class="mx-0 px-0 row col-12 justify-content-center">
+                                <span>Selecione arquivos no formato</span>
+                                <b class="badge badge-warning rounded-pill"> &nbsp;.jpg </b>,
+                                <b class="badge badge-warning rounded-pill"> &nbsp;.jpeg </b>,
+                                <b class="badge badge-warning rounded-pill"> &nbsp;.gif </b>, ou
+                                <b class="badge badge-warning rounded-pill"> &nbsp;.png </b>
+                            </h5>
+
+                            <div class="row mx-0 mt-5 col-12">
+
+                                @*<---DOCUMENTO IDENTIFICAÇÃO FRENTE--->*@
+                                <div class="col-12 col-md-3 ">
+                                    <div class="card" style="border-radius: 20px">
+                                        <div class="card-header">
+                                            <h5 class="label-input100 text-center required">Documento de Identificação Frente </h5>
+                                        </div>
+
+                                        <div class="card-body">
+                                            <label for="RgFrente"
+                                                   class="label-input-file label-input100 text-white ">Selecionar</label>
+                                            <input type="file" title=" " asp-for="RgFrente" id="RgFrente"
+                                                   class="anexo-inputs anexo-obrigatorio d-none" descricao-documento="RgFrente"
+                                                   accept="image/*" required>
+
+                                            <img class="preview-img-endereco preview-img mt-2 w-100"
+                                                 id="preview-img-endereco">
+                                            <label class="descricao-anexo col text-center"></label>
+                                            <label class="font-weight-bold text-danger text-center erro-anexo w-100 d-none">
+                                                Anexe um arquivo!
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                @*<---DOCUMENTO IDENTIFICAÇÃO VERSO--->*@
+                                <div class="col-12 col-md-3 ">
+                                    <div class="card" style="border-radius: 20px">
+                                        <div class="card-header">
+                                            <h5 class="label-input100 text-center required">Documento de Identificação Verso </h5>
+                                        </div>
+
+                                        <div class="card-body">
+                                            <label for="RgVerso"
+                                                   class="label-input-file label-input100 text-white ">Selecionar</label>
+                                            <input type="file" title=" " asp-for="RgVerso" id="RgVerso"
+                                                   class="anexo-inputs anexo-obrigatorio d-none" descricao-documento="RgVerso"
+                                                   accept="image/*" required>
+
+                                            <img class="preview-img-endereco preview-img mt-2 w-100"
+                                                 id="preview-img-endereco">
+                                            <label class="descricao-anexo col text-center"></label>
+                                            <label class="font-weight-bold text-danger text-center erro-anexo w-100 d-none">
+                                                Anexe um arquivo!
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                @*<---COMPROVANTE DE ENDEREÇO--->*@
+                                <div class="col-12 col-md-3 ">
+                                    <div class="card" style="border-radius: 20px">
+                                        <div class="card-header">
+                                            <h5 class="label-input100 text-center required">Comprovante de endereco</h5>
+                                        </div>
+
+                                        <div class="card-body">
+                                            <label for="ComprovanteEndereco"
+                                                   class="label-input-file label-input100 text-white">Selecionar</label>
+                                            <input type="file" title=" " asp-for="ComprovanteEndereco"
+                                                   id="ComprovanteEndereco" class="anexo-inputs anexo-obrigatorio d-none"
+                                                   descricao-documento="ComprovanteEndereco" accept="image/*" required>
+
+                                            <img class="preview-img-endereco preview-img mt-2 w-100"
+                                                 id="preview-img-endereco">
+                                            <label class="descricao-anexo col text-center"></label>
+                                            <label class="font-weight-bold text-danger text-center erro-anexo w-100 d-none">
+                                                Anexe um arquivo!
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                @*<---CPF--->*@
+                                <div class="col-12 col-md-3 dados-empresa">
+                                    <div class="card" style="border-radius: 20px">
+                                        <div class="card-header">
+                                            <h5 class="label-input100 required">
+                                                CPF
+                                            </h5>
+                                        </div>
+
+                                        <div class="card-body">
+                                            <label asp-for="DocumentoCpf"
+                                                   class="label-input-file label-input100 text-white">Selecionar</label>
+                                            <input type="file" asp-for="DocumentoCpf" id="DocumentoCpf"
+                                                   class="anexo-inputs anexo-empresa d-none" descricao-documento="DocumentoCpf"
+                                                   accept="image/*" required />
+                                            <img class="preview-img-vinculo-p preview-img text-center w-100"
+                                                 id="preview-img-vinculo-p">
+                                            <label class="descricao-anexo col text-center"></label>
+                                            <label class="font-weight-bold text-danger text-center erro-anexo w-100 d-none">
+                                                Anexe um arquivo!
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                @* <--- CONTRA CHEQUE ---> *@
+
+                                <div class="col-12 col-md-3 ">
+                                    <div class="card" style="border-radius: 20px">
+                                        <div class="card-header">
+                                            <h5 class="label-input100 text-center required">Contra cheque</h5>
+                                        </div>
+
+                                        <div class="card-body">
+                                            <label for="ContraCheque"
+                                                   class="label-input-file label-input100 text-white">Selecionar</label>
+                                            <input type="file" title=" " asp-for="ContraCheque" id="ContraCheque"
+                                                   class="anexo-inputs anexo-obrigatorio d-none" descricao-documento="ContraCheque"
+                                                   accept="image/*" required>
+
+                                            <img class="preview-img-endereco preview-img mt-2 w-100"
+                                                 id="preview-img-endereco">
+                                            <label class="descricao-anexo col text-center"></label>
+                                            <label class="font-weight-bold text-danger text-center erro-anexo w-100 d-none">
+                                                Anexe um arquivo!
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                @* <--- Carteira de Trabalho 01 --->*@
+
+                                <div class="col-12 col-md-3 ">
+                                    <div class="card" style="border-radius: 20px">
+                                        <div class="card-header">
+                                            <h5 class="label-input100 text-center required">Carteira de trabalho Primeira Página</h5>
+                                        </div>
+
+                                        <div class="card-body">
+                                            <label for="VinculoPrimeiraPagina"
+                                                   class="label-input-file label-input100 text-white">Selecionar</label>
+                                            <input type="file" title=" " asp-for="VinculoPrimeiraPagina" id="VinculoPrimeiraPagina"
+                                                   class="anexo-inputs anexo-obrigatorio d-none" descricao-documento="VinculoPrimeiraPagina"
+                                                   accept="image/*" required>
+
+                                            <img class="preview-img-endereco preview-img mt-2 w-100"
+                                                 id="preview-img-endereco">
+                                            <label class="descricao-anexo col text-center"></label>
+                                            <label class="font-weight-bold text-danger text-center erro-anexo w-100 d-none">
+                                                Anexe um arquivo!
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                @* <--- Carteira de Trabalho 02 ---> *@
+
+                                <div class="col-12 col-md-3 ">
+                                    <div class="card" style="border-radius: 20px">
+                                        <div class="card-header">
+                                            <h5 class="label-input100 text-center required">Carteira de trabalho Página Contratação</h5>
+                                        </div>
+
+                                        <div class="card-body">
+                                            <label for="VinculoSegundaPagina"
+                                                   class="label-input-file label-input100 text-white">Selecionar</label>
+                                            <input type="file" title=" " asp-for="VinculoSegundaPagina" id="VinculoSegundaPagina"
+                                                   class="anexo-inputs anexo-obrigatorio d-none" descricao-documento="VinculoSegundaPagina"
+                                                   accept="image/*" required>
+
+                                            <img class="preview-img-endereco preview-img mt-2 w-100"
+                                                 id="preview-img-endereco">
+                                            <label class="descricao-anexo col text-center"></label>
+                                            <label class="font-weight-bold text-danger text-center erro-anexo w-100 d-none">
+                                                Anexe um arquivo!
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <a onclick="moveToPrevious(4,3)" class="btn bt-lg btn-secondary w-100 text-white">Voltar</a>
+                                </div>
+                                <div class="col-md-6 text-right">
+                                    <input type="submit" class="btn bt-lg btn-success w-100 text-white btn-enviar" value="Enviar" />
+                                </div>
+                            </div>
+                        </div>
+                    }
+
+                    @if(cduotitul != null){
+                        @*<---ANEXOS---> *@
+                        <div id="page-w-3" class="row mx-0 p-3 border shadow-sm rounded bg-white mt-5" style="display: none">
+
+                            <h3 class="text-center w-100 mb-3">ANEXOS</h3>
+
+                            <h5 class="mx-0 px-0 row col-12 justify-content-center">
+                                <span>Selecione arquivos no formato</span>
+                                <b class="badge badge-warning rounded-pill"> &nbsp;.jpg </b>,
+                                <b class="badge badge-warning rounded-pill"> &nbsp;.jpeg </b>,
+                                <b class="badge badge-warning rounded-pill"> &nbsp;.gif </b>, ou
+                                <b class="badge badge-warning rounded-pill"> &nbsp;.png </b>
+                            </h5>
+
+                            <div class="row mx-0 mt-5 col-12">
+
+                                @*<---DOCUMENTO IDENTIFICAÇÃO FRENTE--->*@
+                                <div class="col-12 col-md-3 ">
+                                    <div class="card" style="border-radius: 20px">
+                                        <div class="card-header">
+                                            <h5 class="label-input100 text-center required">Documento de Identificação Frente </h5>
+                                        </div>
+
+                                        <div class="card-body">
+                                            <label for="RgFrente"
+                                                   class="label-input-file label-input100 text-white ">Selecionar</label>
+                                            <input type="file" title=" " asp-for="RgFrente" id="RgFrente"
+                                                   class="anexo-inputs anexo-obrigatorio d-none" descricao-documento="RgFrente"
+                                                   accept="image/*" required>
+
+                                            <img class="preview-img-endereco preview-img mt-2 w-100"
+                                                 id="preview-img-endereco">
+                                            <label class="descricao-anexo col text-center"></label>
+                                            <label class="font-weight-bold text-danger text-center erro-anexo w-100 d-none">
+                                                Anexe um arquivo!
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                @*<---DOCUMENTO IDENTIFICAÇÃO VERSO--->*@
+                                <div class="col-12 col-md-3 ">
+                                    <div class="card" style="border-radius: 20px">
+                                        <div class="card-header">
+                                            <h5 class="label-input100 text-center required">Documento de Identificação Verso </h5>
+                                        </div>
+
+                                        <div class="card-body">
+                                            <label for="RgVerso"
+                                                   class="label-input-file label-input100 text-white ">Selecionar</label>
+                                            <input type="file" title=" " asp-for="RgVerso" id="RgVerso"
+                                                   class="anexo-inputs anexo-obrigatorio d-none" descricao-documento="RgVerso"
+                                                   accept="image/*" required>
+
+                                            <img class="preview-img-endereco preview-img mt-2 w-100"
+                                                 id="preview-img-endereco">
+                                            <label class="descricao-anexo col text-center"></label>
+                                            <label class="font-weight-bold text-danger text-center erro-anexo w-100 d-none">
+                                                Anexe um arquivo!
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                @*<---CPF--->*@
+                                <div class="col-12 col-md-3 dados-empresa">
+                                    <div class="card" style="border-radius: 20px">
+                                        <div class="card-header">
+                                            <h5 class="label-input100 required">
+                                                CPF
+                                            </h5>
+                                        </div>
+
+                                        <div class="card-body">
+                                            <label asp-for="DocumentoCpf"
+                                                   class="label-input-file label-input100 text-white">Selecionar</label>
+                                            <input type="file" asp-for="DocumentoCpf" id="DocumentoCpf"
+                                                   class="anexo-inputs anexo-empresa d-none" descricao-documento="DocumentoCpf"
+                                                   accept="image/*" required />
+                                            <img class="preview-img-vinculo-p preview-img text-center w-100"
+                                                 id="preview-img-vinculo-p">
+                                            <label class="descricao-anexo col text-center"></label>
+                                            <label class="font-weight-bold text-danger text-center erro-anexo w-100 d-none">
+                                                Anexe um arquivo!
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <a onclick="moveToPrevious(4,3)" class="btn bt-lg btn-secondary w-100 text-white">Voltar</a>
+                                </div>
+                                <div class="col-md-6 text-right">
+                                    <input type="submit" class="btn bt-lg btn-success w-100 text-white btn-enviar" value="Enviar" />
+                                </div>
+                            </div>
+                        </div>
+                    }
+
+
+
+
+                </div>
+            </div>
+        </form>
+        @*<div class="loading"></div>*@
+    </div>
+    <div class="card-footer">
+        <a href="@Url.Action("Index", "Home")" class="btn btn-link btn-sm">
+            <span class="fa fa-arrow-left"></span> Voltar
+        </a>
+    </div>
+</div>
+
+
+@section Scripts
+{
+    <script src="~/js/SolicitacaoCadastro/wizard-navigation.js"></script>
+    <script>
+
+        $(document).ready(function () {
+
+            //<--- AÇÕES AO CARREGAR E MASCARAS --->
+            $('#loading').hide();   
+            $('#Cep').mask('99999-999');
+            $('#cpfDependente').mask('000.000.000-00');
+            $('#DataNascimento').mask('99/99/9999');
+            $('#ComerciarioEmpresaPreCadastro_CnpjEmpresa').mask('00.000.000/0000-00');
+            $('#CnpjEmpresa').mask('00.000.000/0000-00');
+            $('#PisPasep').mask('000.00000.00-0')
+            $('#validacao').modal('show');
+            var behavior = function (val) {
+                return val.replace(/\D/g, '').length === 11 ? '(00) 00000-0000' : '(00) 0000-00009';
+            },
+                options = {
+                    onKeyPress: function (val, e, field, options) {
+                        field.mask(behavior.apply({}, arguments), options);
+                    }
+                };
+            $('#Telefone').mask(behavior, options);
+
+            //<--- AÇÕES RADIO TIPO CLIENTE --->
+            $('.radio-group .radio-categoria').click(function () {
+                var categoria = this.id;
+                $('.selected .fa').removeClass('fa-check');
+                $('.radio-categoria').removeClass('selected');
+                $(this).addClass('selected');
+                $('#form-dados').show();
+
+                //<---COMERCIARIO--->
+                if (categoria === 'categoria-comerciario') {
+                    $('.dados-empresa').show();
+                    var inputsEmpresa = document.querySelectorAll('.input-empresa');
+                    inputsEmpresa.forEach(function (e) {
+                        e.required = true;
+                    });
+                    $('#IdCategoria').val('1');
+                    $('.anexo-empresa').addClass('anexo-obrigatorio')
+                }
+                //<---PUBLICO GERAL--->
+                else {
+                    $('.dados-empresa').hide();
+                    var inputsEmpresa = document.querySelectorAll('.input-empresa');
+                    inputsEmpresa.forEach(function (e) {
+                        e.required = false;
+                    });
+                    $('#IdCategoria').val('2');
+                    $('.anexo-empresa').removeClass('anexo-obrigatorio')
+                }
+            });
+        });
+
+        $("#RazaoSocial").on('keydown paste focus mousedown', function (e) {
+            if (e.keyCode != 9) // ignore tab
+                e.preventDefault();
+        });
+
+
+        function navigation(idNow, idNext) {
+            validateAndMoveNext('page-w-' + idNow, 'page-w-' + idNext);
+        }
+
+        function moveToPrevious(currentPageId, nextPageId) {
+            document.getElementById('page-w-' + currentPageId).style.display = 'none';
+            document.getElementById('page-w-' + nextPageId).style.display = 'block';
+        }
+
+
+        // <--- VERIFICA SE JÁ EXISTE O NUMERO DE RG --->
+        $('#NumeroDocumentoIdentificacao').focusout(function () {
+            let docIdentificacao = $(this).val();
+            $.ajax({
+                url: '@Url.Action("VerificarDocIdentificacao", "Cliente", new { area = "Cliente" })/',
+                type: "POST",
+                data: { docIdentificacao: docIdentificacao },
+                success: function (data) {
+                    if (data.Code === 1) {
+                        swal({
+                            text: data.Message,
+                            icon: data.ClassAlert,
+                        })
+                    }
+                },
+                error: function (err) {
+                    alert('teste');
+                }
+            });
+        });
+
+        // <--- BUSCA SE JÁ EXISTE A EMPRESA PELO CNPJ --->
+        $('#CnpjEmpresa').focusout(function () {
+            let cnpj = $(this).val();
+            $.ajax({
+                url: '@Url.Action("GetDadosEmpresaByCnpj", "SolicitacaoCadastroCliente", new { area = "Cliente" })/',
+                type: "POST",
+                data: { cnpj: cnpj },
+                success: function (data) {
+                    console.log(data);
+
+                    if (data.code === 1) {
+                        $('#RazaoSocial').val(data.data.razaoSocial);
+                    }
+                    else {
+                        swal({
+                            text: data.message,
+                            icon: data.ClassAlert,
+                        })
+                        $('#RazaoSocial').val("");
+
+                    }
+                },
+                error: function (err) {
+                    alert(err);
+                }
+            });
+        });
+
+        $('#Cep').focusout(function () {
+            let cep = $(this).val();
+            $.ajax({
+                url: '/cadastro/busca-cep/' + cep,
+                type: "GET",
+                success: function (data) {
+                    console.log(data);
+
+                    if (data.code === 1) {
+                        $('#Cidade').val(data.data.siafi);
+                        $('#Dscidade').val(data.data.localidade);
+                        $('#UF').val(data.data.uf);
+                        $('#Logradouro').val(data.data.logradouro);
+                        $('#Bairro').val(data.data.bairro);
+                        //$('#').val(data.data.razaoSocial);
+                    }
+                    else {
+                        swal({
+                            text: data.Message,
+                            icon: data.ClassAlert,
+                        })
+                    }
+                },
+                error: function (err) {
+                    alert(err);
+                }
+            });
+        });
+
+        // <--- BUSCA SE JÁ EXISTE PIS/PASEP --->
+        // $('#PisPasep').focusout(function () {
+        //     let pis = $(this).val();
+        //     $.ajax({
+        //         url: '@Url.Action("VerificaPisPasep", "Cliente", new { area = "Cliente" })/',
+        //         type: "POST",
+        //         data: { pis: pis },
+        //         success: function (data) {
+        //             if (data.Code === 2) {
+        //                 swal({
+        //                     text: data.Message,
+        //                     icon: data.ClassAlert,
+        //                 })
+        //             }
+        //         },
+        //         error: function (err) {
+        //             alert('teste11111');
+        //         }
+        //     });
+        // });
+
+        document.getElementById("formAlteracaoClienteComerciario").addEventListener("submit", function (event) {
+            $('#loading').show();
+        });
+
+
+
+        function mascaraMoeda(campo, evento) {
+            var tecla = (!evento) ? window.event.keyCode : evento.which;
+            var valor = campo.value.replace(/[^\d]+/gi, '').reverse();
+            var resultado = "";
+            var mascara = "##.###.###,##".reverse();
+            for (var x = 0, y = 0; x < mascara.length && y < valor.length;) {
+                if (mascara.charAt(x) != '#') {
+                    resultado += mascara.charAt(x);
+                    x++;
+                } else {
+                    resultado += valor.charAt(y);
+                    y++;
+                    x++;
+                }
+            }
+            campo.value = resultado.reverse();
+        }
+
+        //<--- AO SUBMETER FORMULARIO --->
+        onSend = function (xhr) {
+
+            $.LoadingOverlay("show",
+                {
+                    background: "rgba(176, 177, 178, 0.5)",
+                    text: "Aguarde..."
+                });
+        };
+
+        //<--- SUBMISSÃO COMPLETA --->
+        completed = function (xhr) {
+            $.LoadingOverlay("hide");
+            console.log(xhr);
+            if (xhr.responseJSON.Code === 1) {
+                swal({
+                    text: xhr.responseJSON.Message,
+                    icon: xhr.responseJSON.ClassAlert,
+                }).then(function () {
+                    window.location = `@Url.Action("Dashboard", "Cliente", new
+            { area = "Cliente" })`
+                });
+            }
+            else {
+                swal({
+                    text: xhr.responseJSON.Message,
+                    icon: xhr.responseJSON.ClassAlert,
+                })
+            }
+        };
+
+        error = function (xhr) {
+            $.LoadingOverlay("hide");
+            swal({
+                text: xhr.responseJSON.Message,
+                icon: xhr.responseJSON.ClassAlert,
+            });
+        };
+
+
+        //<--- ANEXO CHANGE --->
+        $('.anexo-inputs').change(function () {
+            const anexoFile = $(this).get(0).files;
+            if (anexoFile.length > 0) {
+                getBase64(anexoFile[0])
+                    .then(data => {
+                        if ($(this).attr('id') === 'FotoPerfil') {
+                            return $('#div-foto-perfil').css('background-image', `url(${data})`)
+                        }
+                        $(this).next('.preview-img').attr('src', `${data}`)
+                            .next('.descricao-anexo').html(anexoFile[0].name)
+
+                        if ($(this).siblings('.erro-anexo').is(':visible')) {
+                            $(this).siblings('.erro-anexo').addClass('d-none')
+                        }
+                    });
+            }
+        })
+
+        document.addEventListener('input', function (event) {
+            if (event.target.tagName === 'INPUT' && event.target.type === 'text') {
+                event.target.value = event.target.value.toUpperCase();
+            }
+        });
+
+        String.prototype.reverse = function () {
+            return this.split('').reverse().join('');
+        };
+
+        function getBase64(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = error => reject(error);
+            });
+        }
+
+    </script>
+
+}

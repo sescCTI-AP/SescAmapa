@@ -1,0 +1,82 @@
+﻿@using SiteSesc.Models.ViewModel
+@model PaginatedListViewModel<SiteSesc.Models.Noticia>
+
+@{
+    ViewData["Title"] = "Notícias";
+    var areas = ViewBag.Areas as List<Area>;
+    int? idArea = null;
+    var areaSelecionada = ViewBag.AreaSelecionada as Area;
+    string selecionado = "";
+}
+
+
+<link href="~/css/paginacao/paginacao.css" rel="stylesheet" />
+
+<div class="container">
+    <h2 class="mt-5">
+        Notícias @if (areaSelecionada != null)
+        {
+            <span>@areaSelecionada.Nome.ToLower()</span>
+        }
+    </h2>
+
+    <div class="row mb-30">
+        <div class="col-xl-8 col-lg-8 col-md-8">
+            <div class="mb-20">
+                <div class="section-area">
+                    <form asp-action="Index" asp-controller="Noticia">
+                        <select class="form-control" name="idArea" onchange="submit();">
+                            <option value="">Todas as áreas</option>
+                            @foreach (var item in areas)
+                            {
+                                <option value="@item.Id">@item.Nome</option>
+                            }
+                        </select>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        @if (Model.Items.Any())
+        {
+            foreach (var noticia in Model.Items)
+            {
+                <div class="col-md-6 col-lg-3 col-xs-12">
+                    <div class="h2_blog-item mb-30">
+                        <a href="@Url.Action("Details", "Noticia", new { area = noticia.Area.NameRoute, slug = noticia.Slug })">
+                            <div class="h2_blog-img">
+                                <img src="@noticia.Arquivo.CaminhoVirtualFormatado()" alt="@noticia.TituloCurto" loading="lazy" >
+                            </div>
+                            <div class="h2_blog-content bg-white">
+                                <div class="h2_blog-content-meta">
+                                    <span><i class="fa-regular fa-star"></i>@noticia.Area.Nome</span>
+                                    <span><i class="fa-solid fa-location-dot"></i>@noticia.Cidade.Nome</span>
+                                </div>
+                                <h5 class="h2_blog-content-title">@noticia.TituloCurto</h5>
+                                <span><i></i>@noticia.IdUnidade.NomeCurto</span>
+
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+</div>
+
+
+<div class="pagination mb-5">
+    @if (Model.HasPreviousPage)
+    {
+        <a asp-action="Index" asp-route-pageNumber="@(Model.PageIndex - 1)" asp-route-idArea="@idArea">Anterior</a>
+    }
+    @for (var i = 1; i <= Model.TotalPages; i++)
+    {
+        <a asp-action="Index" asp-route-pageNumber="@i" class="@(i == Model.PageIndex ? "active" : "")" asp-route-idArea="@idArea">@i</a>
+    }
+    @if (Model.HasNextPage)
+    {
+        <a asp-action="Index" asp-route-pageNumber="@(Model.PageIndex + 1)" asp-route-idArea="@idArea">Próximo</a>
+    }
+</div>
