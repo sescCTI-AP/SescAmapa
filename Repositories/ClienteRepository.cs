@@ -346,7 +346,7 @@ namespace SiteSesc.Repositories
             {
                 if (_apiClient.token == null) await _apiClient.ObtemLoginApp();
                 var contentJson = JsonConvert.SerializeObject(cliente);
-                var response = await _apiClient.Cliente.PostAsync($"/v1/cliente/add",
+                var response = await _apiClient.Cliente.PostAsync($"/v1/cliente/AddClienteDb2",
                     new StringContent(contentJson, Encoding.UTF8, "application/json"));
                 if (response.IsSuccessStatusCode)
                 {

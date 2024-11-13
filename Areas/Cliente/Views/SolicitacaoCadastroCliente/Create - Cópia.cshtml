@@ -89,7 +89,7 @@
                                             Nome Completo
                                         </label>
                                         <input asp-for="Nome" id="Nome" class="input100"
-                                               placeholder="Informe seu nome completo" required maxlength="80" value="Matheus Jose" />
+                                               placeholder="Informe seu nome completo" required maxlength="80" />
                                     </div>
 
                                     <div class="wrap-input100  bg1 mt-3">
@@ -125,7 +125,7 @@
                                     </span>
                                     <div>
                                         <select asp-for="IdEstadoCivil" asp-items="@ViewBag.IdEstadoCivil" class="js-select2" required>
-                                            <option value="1" selected>Selecione uma opção</option>
+                                            <option value="" selected>Selecione uma opção</option>
                                         </select>
                                         <div class="dropDownSelect2"></div>
                                     </div>
@@ -134,8 +134,8 @@
                                 <div class="wrap-input100 bg1 col-12 col-md ml-3">
                                     <label class="label-input100 required" for="DataNascimento">DATA DE NASCIMENTO</label>
                                     <input type="date" asp-for="DataNascimento"
-                                           id="DataEmissaoDocumentoIdentificacao" class="input100 datetimepicker-input" autocomplete="off"
-                                           placeholder="Selecione uma data" required value="06/11/1987"/>
+                                           id="DataEmissaoDocumentoIdentificacao" class="input100 datetimepicker-input" autocomplete="off" value=""
+                                           placeholder="Selecione uma data" required />
                                 </div>
                             </div>
 
@@ -147,7 +147,7 @@
                                     </span>
                                     <div>
                                         <select asp-for="IdEscolaridade" asp-items="@ViewBag.IdEscolaridade" class="js-select2" required>
-                                            <option value="1" selected>Selecione uma opção</option>
+                                            <option value="" selected>Selecione uma opção</option>
                                         </select>
                                         <div class="dropDownSelect2"></div>
                                     </div>
@@ -171,7 +171,7 @@
                                     </span>
                                     <div>
                                         <select asp-for="IdSexo" class="js-select2" required>
-                                            <option value="1" selected>Selecione uma opção</option>
+                                            <option value="" selected>Selecione uma opção</option>
                                             <option value="0">Masculino</option>
                                             <option value="1">Feminino</option>
                                         </select>
@@ -185,7 +185,7 @@
                                         Telefone
                                     </label>
                                     <input type="tel" asp-for="TelefonePrimario" id="Telefone" class="input100"
-                                           placeholder="Informe o seu telefone" required value="(63)99285-7729"/>
+                                           placeholder="Informe o seu telefone" required />
                                 </div>
                             </div>
 
@@ -197,13 +197,13 @@
                                 @*<--- NOME PAI --->*@
                                 <div class="wrap-input100 bg1 col-md pr-2">
                                     <label class="label-input100 required" asp-for="NomePai">NOME DO PAI</label>
-                                    <input type="text" asp-for="NomePai" name="NomePai" class="input100" maxlength="80" value="Normando alves" placeholder="Informe o nome do pai" required>
+                                    <input type="text" asp-for="NomePai" name="NomePai" class="input100" maxlength="80" placeholder="Informe o nome do pai" required>
                                 </div>
 
                                 @*<--- NOME DA MÃE --->*@
                                 <div class="wrap-input100 bg1 col-md ml-3">
                                     <label class="label-input100 required" asp-for="NomeMae">NOME DA MÃE</label>
-                                    <input type="text" asp-for="NomeMae" name="NomeMae" class="input100" maxlength="80" value="Maria Gorete" placeholder="Informe o nome da mãe" required>
+                                    <input type="text" asp-for="NomeMae" name="NomeMae" class="input100" maxlength="80" placeholder="Informe o nome da mãe" required>
                                 </div>
                             </div>
 
@@ -243,13 +243,13 @@
                                 <div class="wrap-input100 bg1 col-md pr-2">
                                     <label asp-for="Nacionalidade" class="label-input100 required">Nacionalidade</label>
                                     <input asp-for="Nacionalidade" id="Nome" class="input100"
-                                           placeholder="Ex: Brasileiro(a)" required maxlength="40" value="BRASILEIRO"/>
+                                           placeholder="Ex: Brasileiro(a)" required maxlength="40" />
                                 </div>
 
                                 @*<--- NATURALIDADE --->*@
                                 <div class="wrap-input100 bg1 col-md ml-3">
                                     <label class="label-input100 required" asp-for="Naturalidade">Naturalidade</label>
-                                    <input type="text" asp-for="Naturalidade" name="Naturalidade" value="ARACAJU" maxlength="40" class="input100" placeholder="Ex: Belém-PA" required>
+                                    <input type="text" asp-for="Naturalidade" name="Naturalidade" maxlength="40" class="input100" placeholder="Ex: Belém-PA" required>
                                 </div>
                             </div>
 
@@ -257,12 +257,12 @@
                                 @*<--- RENDA --->*@
                                 <div class="wrap-input100 bg1 col-md pr-2">
                                     <label asp-for="RendaIndividual" class="label-input100 required">RENDA (R$)</label>
-                                    <input type="text" asp-for="RendaIndividual" name="RendaIndividual" class="input100 currency" onkeyup="mascaraMoeda(this, event)" value="3.450,00" placeholder="Ex: 1.412,00" required>
+                                    <input type="text" asp-for="RendaIndividual" name="RendaIndividual" class="input100 currency" onkeyup="mascaraMoeda(this, event)" value="" placeholder="Ex: 1.412,00" required>
                                 </div>
                                 @*<--- RENDA FAMILIAR --->*@
                                 <div class="wrap-input100 bg1 col-md ml-3">
                                     <label asp-for="RendaFamiliar" class="label-input100 required">RENDA FAMILIAR (R$)</label>
-                                    <input type="text" asp-for="RendaFamiliar" name="RendaFamiliar" class="input100" onkeyup="mascaraMoeda(this, event)" value="3.450,00" placeholder="Ex: 1.412,00" required>
+                                    <input type="text" asp-for="RendaFamiliar" name="RendaFamiliar" class="input100" onkeyup="mascaraMoeda(this, event)" value="" placeholder="Ex: 1.412,00" required>
                                 </div>
                             </div>
                         </div>
@@ -278,7 +278,7 @@
                                         </span>
                                         <div>
                                             <select asp-for="IdTipoDocumentoIdentificacao" asp-items="@ViewBag.IdTipoDocumentoIdentificacao" class="js-select2" required>
-                                                <option value="1" selected>Selecione uma opção</option>
+                                                <option value="" selected>Selecione uma opção</option>
                                             </select>
                                             <div class="dropDownSelect2"></div>
                                         </div>
@@ -290,7 +290,7 @@
                                             Número
                                         </label>
                                         <input asp-for="NumeroDocumento" id="NumeroDocumento"
-                                               class="input100" placeholder="Número do documento de identificação" value="231321" required maxlength="15" />
+                                               class="input100" placeholder="Número do documento de identificação" required maxlength="15" />
                                     </div>
                                 </div>
                                 <div class="col-md">
@@ -300,7 +300,7 @@
                                         </label>
                                         <input asp-for="OrgaoEmissor"
                                                id="OrgaoEmissor" class="input100"
-                                               placeholder="Número do documento de identificação" required maxlength="15" value="ssp-to"/>
+                                               placeholder="Número do documento de identificação" required maxlength="15" />
                                     </div>
                                 </div>
                                 <div class="col-md">
@@ -311,7 +311,7 @@
 
                                         <input type="date" asp-for="DataEmissaoDocumento"
                                                id="DataEmissaoDocumento" class="input100 datetimepicker-input"
-                                               placeholder="Selecione uma data" required value="03/11/2022"/>
+                                               placeholder="Selecione uma data" required />
                                     </div>
                                 </div>
                             </div>

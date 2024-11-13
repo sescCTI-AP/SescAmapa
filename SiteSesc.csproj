@@ -46,6 +46,7 @@
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="8.0.0" />
     <PackageReference Include="System.Data.SqlClient" Version="4.8.6" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.1.0" />
+    <PackageReference Include="System.Net.Mail.Abstractions" Version="1.1.21" />
     <PackageReference Include="ZXing.Net" Version="0.16.9" />
   </ItemGroup>
 

@@ -254,15 +254,20 @@ namespace SiteSesc.Models
                     NUCGCCEI = s.CnpjEmpresa,
                     CDCATEGORI = cdcategoria,
                     CDNIVEL = null,
+                    NUDV = 0,
                     SQTITULMAT = s.Sqtitulmat,
                     CDUOTITUL = s.Cduotitul,
                     STMATRIC = 1,
                     CDMATRIANT = "",
+                    CDCLASSIF = "",
                     NMCLIENTE = s.Nome,
                     DTNASCIMEN = s.DataNascimento,
                     NMPAI = s.NomePai,
                     NMMAE = s.NomeMae,
-                    CDSEXO = s.IdSexo == 2 ? "1" : "0" ,
+                    DTINSCRI = DateTime.Now,
+                    DTATU = DateTime.Now,
+                    DTVENCTO = DateTime.Now.AddYears(2),
+                    CDSEXO = s.IdSexo == 2 ? "1" : "0",
                     CDESTCIVIL = (short)s.IdEstadoCivil,
                     VBESTUDANT = s.IsEstudante ? (short)1 : (short)0,
                     NUULTSERIE = null,
@@ -286,6 +291,7 @@ namespace SiteSesc.Models
                     TEOBS = "Cadastro submetido via cadastro web",
                     NRVIACART = 1,
                     NMSOCIAL = s.NomeSocial,
+                    TELEFONE = s.TelefonePrimario,
                     SITUPROF = 0,
                     TIPOIDENTIDADE = 0,
                     COMPIDENTIDADE = "",
@@ -310,7 +316,8 @@ namespace SiteSesc.Models
                     NUCEP = s.Cep.Replace("-","").Replace(".",""),
                     STPRINCIP = 1,
                     SMFIELDATU = 0,
-                    DSMUNICIP = s.Cidade
+                    DSMUNICIP = s.Cidade,
+                    LGATU = "XPTO"
                 };
 
                 cliente.ENDERECO = endereco;

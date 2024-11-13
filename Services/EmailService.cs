@@ -1,5 +1,6 @@
 ﻿using MimeKit;
 using SiteSesc.Data;
+using System.Net.Mail;
 
 namespace SiteSesc.Services
 {

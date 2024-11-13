@@ -332,20 +332,9 @@ else
             {
                 <p><i class="fa-solid fa-circle-exclamation" style="color:dodgerblue"></i>&nbsp; Você possui uma solicitação em análise...</p>
             }
-            <div class="social-links">
-                <a data-bs-target="#modalConsumo" data-bs-toggle="modal" class="google-plus" title="Meu consumo"><i class="fa-solid fa-hand-holding-dollar font-size-48"></i></a>
-                @* <a href="#" title="Agendamentos"><i class="bx bx-time font-size-48"></i></a> *@
-                <a href="#" title="Meus cupons e descontos"><i class="bx bxs-badge-dollar font-size-48"></i></a>
-                <a onclick="ava('@Model.Nucpf');" title="Ava"><i class="fa-solid fa-graduation-cap font-size-48"></i></a>
-
-                <a data-bs-target="#modalAgendamento" data-bs-toggle="modal" title="Agendamentos"><i class="fa-solid fa-calendar-days font-size-48"></i></a>
-
-            </div>
-            @* data-toggle="modal" data-id="@Url.Action("MovimentacaoCartao", "Cliente", new { numeroCartao = clienteDb2.NUMCARTAO })" *@
             <div class="row text-center botoesCredenciaisContainer">
                 <div class="superiores">
                     <div class="botaoCredenciais">
-                        @* <a data-bs-toggle="modal" data-bs-target="#modal-recarga"> *@
                         <a id="loadPartialButton">
                             <div class="btn-rounded bg-blue tex-center mt-5 bcAzul">Recarregar Credencial Sesc</div>
                         </a>
@@ -355,25 +344,7 @@ else
                             <div class="btn-rounded bg-transaparent text-center mt-5 bcTransparente">Ver Credencial Sesc</div>
                         </a>
                     </div>
-                    <div class="botaoCredenciais">
-                        <a asp-action="RedirectToMarmitaApp" asp-controller="Cliente" asp-route-userId="@Model.Nucpf" asp-route-email="@usuario?.Email" asp-route-credencial="@Model.Credencial" asp-route-nome="@Model.Nmcliente.Trim()">
-                            <div class="btn-rounded bg-transaparent text-center mt-5 bcTransparente">Comprar Refeição</div>
-                        </a>
-                    </div>
-                    @if (ViewBag.Rematricula ?? false)
-                    {
-                        if (ViewBag.CartaoVencido == null)
-                        {
-                            if (ViewBag.Inadimplente == null)
-                            {
-                                <div class="botaoCredenciais">
-                                    <a class="btn-square-purple-150 rounded cursor-pointer" onclick="getRematricula('@Model.Nucpf')">
-                                        <div class="btn-rounded bg-warning text-center mt-5 bcTransparente">Rematrículas</div>
-                                    </a>
-                                </div>
-                            }
-                        }
-                    }
+
                 </div>
                 @if (ViewBag.Renovacao ?? false)
                 {

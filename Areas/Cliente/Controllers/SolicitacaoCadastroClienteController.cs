@@ -233,7 +233,7 @@ namespace SiteSesc.Areas.Cliente.Controllers
                         }
 
                         //verifica se existe solicitaçao já criada. Caso sim, retorna para a tela inicial
-                        if (_solicitacaoRepository.VerificarExisteSolicitacao(cpfDependente, solicitacao.TipoCategoria.ToLower()).Result)
+                        if (_solicitacaoRepository.VerificarExisteSolicitacao(cpf, solicitacao.TipoCategoria.ToLower()).Result)
                         {                           
                             return RedirectToAction("Index", "Cliente");
 
