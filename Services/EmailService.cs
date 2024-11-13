@@ -42,7 +42,8 @@ namespace SiteSesc.Services
 
                 using (var client = new MailKit.Net.Smtp.SmtpClient())
                 {
-                    client.Connect(emailSettings.SmtpHost, emailSettings.SmtpPort, false);
+                    client.Connect(emailSettings.SmtpHost, emailSettings.SmtpPort, MailKit.Security.SecureSocketOptions.StartTls);
+                    client.Authenticate(emailSettings.Username, emailSettings.Password);
                     client.Send(message);
                     client.Disconnect(true);
                 }
@@ -52,7 +53,7 @@ namespace SiteSesc.Services
                 Console.WriteLine($"Ocorreu um erro ao enviar o email usando {emailSettings.FromAddress}: \n{ex.Message}");
                 throw;
             }
-        }
+        }   
     }
 }
 
