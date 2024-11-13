@@ -88,7 +88,13 @@ namespace SiteSesc.Areas.Cliente.Controllers
             if (!string.IsNullOrEmpty(cpfDependente))
                 cpfBusca = cpfDependente;
 
-            var cobrancas = await _cobrancaRepository.ObterCobrancaPorCpf(cpfBusca, anoBase);
+            var cobrancas = new List<COBRANCA>();
+
+            for (int i = anoBase; i <= DateTime.Now.Year; i++)
+            {
+                cobrancas.AddRange(await _cobrancaRepository.ObterCobrancaPorCpf(cpfBusca, i));
+            }
+
             ViewBag.Cliente = await _clienteRepository.ObterClientePorCpf(cpfBusca);
             return View(cobrancas);
         }
