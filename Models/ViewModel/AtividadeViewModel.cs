@@ -42,8 +42,8 @@ namespace SiteSesc.Models.ViewModel
                 Imagem = site.Arquivo.CaminhoVirtualFormatado(),
                 Area = site.SubArea.Area.Nome,
                 SubArea = site.SubArea.Nome,
-                Hrinicio = horario.Count() > 0 ? horario.FirstOrDefault().hrinicio : "",
-                Hrfim = horario.Count() > 0 ? horario.FirstOrDefault().hrfim : "",
+                Hrinicio = horario?.Count() > 0 ? horario.FirstOrDefault().hrinicio : "",
+                Hrfim = horario?.Count() > 0 ? horario.FirstOrDefault().hrfim : "",
                 Valores = valores,
                 DescontoPontualidade = site.DescontoPontualidade,
                 Cdelement = api.cdelement

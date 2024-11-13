@@ -45,6 +45,9 @@ namespace SiteSesc.Models.Atividade
         public int IdUnidadeOperacional { get; set; }
         public DateTime DataCadastro { get; set; }
         public DateTime? DataDesativacao { get; set; }
+        public int? DescontoInscricao { get; set; }
+        public DateTime? DataInicioPromocao { get; set; }
+        public DateTime? DataFimPromocao { get; set; }
         public bool IsAtivo { get; set; }
         public bool DescontoPontualidade { get; set; }
         public DateTime? DataInicio { get; set; }

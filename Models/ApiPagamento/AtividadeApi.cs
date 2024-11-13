@@ -23,7 +23,7 @@ namespace SiteSesc.Models.ApiPagamento
         public int cduopcad { get; set; }
         public string aamoda { get; set; }
         public List<FormasPgto> formaspgto { get; set; }
-        public List<Horario>? horarios { get; set; }
+        //public List<Horario>? horarios { get; set; }
         public int? cdmapa { get; set; }
 
         [NotMapped]
