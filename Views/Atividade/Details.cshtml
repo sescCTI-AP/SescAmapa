@@ -73,44 +73,6 @@
                                             <span class="badge bg-success text-white">Vagas disponíveis</span>
                                         }
                                     </div>
-
-                                    <div class="course_details-category">
-                                        <div class="footer-social">
-                                            <span>Compartilhe essa atividade</span>
-                                            @{
-                                                string textoConcat = "https://sesc-pa.com.br"; 
-                                                string[] words = ViewBag.CurrentUrl.Split('/');
-                                                for (int i = 3; i < words.Length; i++)
-                                                {
-                                                    textoConcat = textoConcat +"/"+ Encoding.UTF8.GetString(Encoding.Default.GetBytes(@words[i]));
-                                                }
-                                            }
-                                            <ul>
-                                                <!--<li><a href="#"><i class="fa-brands fa-x-twitter"></i></a></li>-->
-                                                <li class="padronizar-share-icon">
-                                                    <a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=@textoConcat">
-                                                    <i class="fa-brands fa-facebook-f"></i>
-                                                    </a>
-                                                </li>
-                                                <li class="padronizar-share-icon">
-                                                    <a target="_blank" href="https://www.linkedin.com/shareArticle?mini=true&url=@textoConcat">
-                                                        <i class="fa-brands fa-linkedin-in"></i>
-                                                    </a>
-                                                </li>
-                                                <li class="padronizar-share-icon">
-                                                    <a target="_blank" href="https://api.whatsapp.com/send?text=@textoConcat" >
-                                                        <i class="fa-brands fa-whatsapp"></i>
-                                                    </a>
-                                                </li>
-                                                <li class="padronizar-share-icon">
-                                                    <a onclick="share()">
-                                                        <i class="fa fa-share" aria-hidden="true"></i>
-                                                    </a>
-                                                </li>
-                                            </ul>
-
-                                        </div>
-                                    </div>
                                 </div>
 
                         </div>
@@ -255,18 +217,6 @@
 
 <script>
 
-
-    function share(){
-        if (navigator.share !== undefined) {
-            navigator.share({
-                title: 'Sesc no Pará',
-                text: "@WebUtility.HtmlDecode(Model.NomeExibicao)",
-                url: "@textoConcat",
-            })
-            .then()
-            .catch((error) => console.log('Error sharing', error));
-        }
-    }
 
     function selectUser(cpf) {
         $('#cpfselecionado').val(cpf);
