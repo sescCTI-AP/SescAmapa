@@ -53,7 +53,7 @@ namespace SiteSesc.Repositories
 
                     return successContent;
                 }
-                var errorContent = await response.Content.ReadAsStringAsync();
+                var errorContent = await response.Content.ReadAsStringAsync(); 
                 Console.WriteLine(errorContent);
                 return null;
             }
