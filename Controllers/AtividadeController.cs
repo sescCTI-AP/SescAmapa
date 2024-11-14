@@ -54,79 +54,9 @@ namespace SiteSesc.Controllers
                 viewModel.IdUop = idUop;
             }
             ViewBag.idUop = new SelectList(await _defaultRepository.ObtemUnidadesAtividades(), "Id", "Nome", idUop);
-            foreach(var unidadeOperacional in ViewBag.idUop.Items){
-                  
-                switch(unidadeOperacional.Nome){
-                    case "CENTRO DE ATIVIDADES DO SESC BELÉM - SESC DOCA  ": 
-                    unidadeOperacional.Nome = "Sesc Doca";
-                    break;
-                    
-                    case "CENTRO DE ATIVIDADES SESC CASTANHAL": 
-                    unidadeOperacional.Nome = "Sesc em Castanhal";
-                    break;
-
-                    case "CENTRO DE ATIVIDADES DO SESC SANTAREM": 
-                    unidadeOperacional.Nome = "Sesc em Santarém";
-                    break;
-
-                    case "CENTRO DE ATIVIDADES SESC ANANINDEUA": 
-                    unidadeOperacional.Nome = "Sesc em Ananindeua";
-                    break;
-
-                    case "CASA DE MÚSICA DO SESC": 
-                    unidadeOperacional.Nome = "Sesc Casa da Música";
-                    break;
-
-                    case "SESC ALTAMIRA": 
-                    unidadeOperacional.Nome = "Sesc em Altamira";
-                    break;
-
-                    case "CENTRO DE ATIVIDADES - SESC MARABÁ": 
-                    unidadeOperacional.Nome = "Sesc em Marabá";
-                    break;
-
-                    case "CENTRO CULTURAL DE BELÉM - SESC BOULEVARD": 
-                    unidadeOperacional.Nome = "Sesc Ver-o-Peso";
-                    break;
-
-                    default:
-                    //unidadeOperacional.Nome = "Indefinido";
-                    break;
-                }
-            }
-            //ViewBag.Unidades = await _defaultRepository.ObtemUnidadesAtividades();
             ViewBag.Areas = await _areaRepository.GetAreasAtivas();
             return View(viewModel);
         }
-        //[Route("todas-atividades/{id?}/{cduop?}")]
-        //public async Task<IActionResult> Atividades(int? idArea = null, int? cduop = null)
-        //{
-        //    var listCursos = new List<CursoItem>();
-        //    var atividades = await _atividadeRepository.GetAtivas(idArea);
-
-        //    if (atividades is List<AtividadeOnLine>)
-        //    {
-        //        var listaAtividades = (List<AtividadeOnLine>)atividades;
-        //        foreach (var atividade in listaAtividades)
-        //        {
-        //            var atividadeApi = await _atividadeRepository.ObterAtividade(atividade.turma);
-        //            if (atividadeApi != null)
-        //            {
-        //                var formasPgto = await _atividadeRepository.ObterFormasPgtoCdelement(atividade.cdelement);
-        //                var horarios = await _atividadeRepository.ObterHorariosCdelement(atividade.cdelement);
-        //                var valorAtividade = await _atividadeRepository.ObterValores(atividade.turma, formasPgto);
-        //                var valor = valorAtividade.Count() > 0 ? valorAtividade.Min(va => va.vlparcela).ToString() : null;
-        //                listCursos.Add(new CursoItem((int)atividade.SubArea.IdArea, atividade.cdelement, atividade.Arquivo.CaminhoVirtualFormatado(), atividade.NomeExibicao, atividade.SubArea.Area.Nome, atividade.adm_unidadeOperacional.Nome, valor, atividade.Descricao, null));
-        //            }
-        //        }
-        //    }
-
-        //    ViewBag.Areas = await _areaRepository.GetAreasAtivas();
-
-        //    ViewBag.Unidades = await _defaultRepository.ObtemUnidadesAtividades();
-        //    return View(listCursos);
-        //}
-
 
         [Route("detalhes/{cdelement}")]
         public async Task<IActionResult> Details(string cdelement)
@@ -143,8 +73,6 @@ namespace SiteSesc.Controllers
 
             var isLogado = ((ClaimsIdentity)User.Identity).FindFirst("CPF") != null ? true : false;
             ViewBag.Logado = isLogado;
-
-
 
 
             // Obtém a URL atual

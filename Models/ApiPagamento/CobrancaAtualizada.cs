@@ -17,7 +17,7 @@ namespace SiteSesc.Models.ApiPagamento
         public decimal descontoConcedido { get; set; }
         public string atividade { get; set; }
         public DateTime vencimento { get; set; }
-        public int? strecebido { get; set; }
+        public int? strecebido { get; set; } = 0;
 
         public string Status
         {

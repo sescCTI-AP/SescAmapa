@@ -51,24 +51,9 @@ namespace SiteSesc.Controllers
 
         }
 
-        public async Task<IActionResult> Index(int? areaId)
+        public async Task<IActionResult> Index()
         {
-            var areas = await _areaRepository.GetAreasAtivas();
-            var unidades = await _unidadeRepository.GetUOAtiva();
-
-            var listCategorias = new List<CategoriaCard> {
-                new CategoriaCard("../images/static/HomeIndex/category/1.webp", "Educação", 26),
-                new CategoriaCard("../images/static/HomeIndex/category/2.webp", "Esporte/Lazer", 42),
-                new CategoriaCard("../images/static/HomeIndex/category/3.webp", "Cultura", 25),
-                new CategoriaCard("../images/static/HomeIndex/category/4.webp", "Saúde", 18),
-                new CategoriaCard("../images/static/HomeIndex/category/5.webp", "Assistência", 19)
-            };
-
-            ViewBag.ListCategorias = listCategorias;
-            ViewBag.Areas = areas;
-            ViewBag.Unidades = await _defaultRepository.ObtemUnidadesAtividades();
-            ViewBag.SelectedAreaId = areaId; 
-            return View();
+            return RedirectToAction("Atividades", "Atividade");
         }
 
 
