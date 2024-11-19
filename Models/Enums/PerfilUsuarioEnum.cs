@@ -5,14 +5,12 @@ namespace SiteSesc.Models.Enums
     public enum PerfilUsuarioEnum
     {
         [Description("Administrador")]
-        Administrador = 1,
+        Administrador = 2,
         [Description("Cliente")]
-        Cliente = 2,
-        [Description("Coordernador")]
-        Coordernador = 3,
+        Cliente = 4,
         [Description("Funcionario")]
-        Funcionario = 4,
+        Funcionario = 3,
         [Description("SysAdmin")]
-        SysAdmin = 5
+        SysAdmin = 1
     }
 }

@@ -416,10 +416,6 @@ namespace SiteSesc.Repositories
                     return AddAllPermission();
                 }
 
-                if (perfilUsuario == (int)PerfilUsuarioEnum.Coordernador)
-                {
-                    return ReadPermission();
-                }
                 if (perfilUsuario == (int)PerfilUsuarioEnum.Administrador)
                 {
                     return AdmPermission();

@@ -5,8 +5,8 @@
 @{
     ViewBag.Title = "Detalhes do Usuário";
     var modulosSistema = ViewBag.ModulosSistema as List<adm_moduloSistema>;
-    var acoesSistemas = ViewBag.AcoesSistema as List<adm_acaoSistema>;
     List<int> acoesModuloUsuarioLogado = ViewBag.Acoes as List<int>;
+    var acoesSistemas = ViewBag.AcoesSistema as List<adm_acaoSistema>;
 }
 
 <style>
@@ -205,7 +205,7 @@
                                 Selecione os Módulos e/ou Ações que o usuário poderá acessar
                             </h5>
                         </div>
-                        @if (Model.IdPerfilUsuario > 1 || Model.IdPerfilUsuario < 5)
+                        @if (Model.IdPerfilUsuario > 1 || Model.IdPerfilUsuario < 4)
                         {
                             <div class="card-footer">
                                 <div class="form-group">
@@ -217,7 +217,7 @@
 
                                 <div class="button-group">
                                     <button type="button" class="btn-rounded bg-blue mt-3 mb-3" onclick="setAutorizacaoUsuario('@Model.Cpf');">Salvar</button>
-                                    <button id="recarregarPagina" class="btn-rounded2 bg-red mt-3 mb-3">⟳</button>
+                                    @* <button id="recarregarPagina" class="btn-rounded2 bg-red mt-3 mb-3">⟳</button> *@
                                 </div>
                             </div>
                         }
@@ -529,16 +529,13 @@
 
         // Defina um array com os perfis
         let perfis = [
-            { value: 'recrutamentoSelecao', label: 'Recrutamento e Seleção ' },
-            { value: 'comunicacao', label: 'Comunicação ' },
-            { value: 'atendentesCentral', label: 'Atendentes Central ' },
-            { value: 'tecnicosAtividade', label: 'Técnicos de Atividade ' },
-            { value: 'educacao', label: 'Educação ' },
-            { value: 'saude', label: 'Saúde ' },
-            { value: 'lazer', label: 'Lazer ' },
-            { value: 'nutricao', label: 'Nutrição ' },
-            { value: 'cultura', label: 'Cultura ' },
-            { value: 'relatorio', label: 'Relatórios ' },
+            // { value: 'recrutamentoSelecao', label: 'Recrutamento e Seleção ' },
+            // { value: 'comunicacao', label: 'Comunicação ' },
+            // { value: 'atendentesCentral', label: 'Atendentes Central ' },
+            // { value: 'tecnicosAtividade', label: 'Técnicos de Atividade ' },
+            // { value: 'educacao', label: 'Educação ' },
+            // { value: 'saude', label: 'Saúde ' },
+            // { value: 'lazer', label: 'Lazer ' },
         ];
 
         // Função para gerar dinamicamente as checkboxes

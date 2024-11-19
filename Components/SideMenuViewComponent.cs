@@ -35,7 +35,7 @@ namespace SiteSesc.Controllers
             {
                 //var botoesPerfil = await _context.BotaoPerfil.Where(b => b.IdPerfilUsuario == idPerfil).Select(a => a.IdBotaoSideMenu).ToListAsync();
                 //ViewBag.Botoes = await _context.BotaoSideMenu.Where(b => botoesPerfil.Contains(b.Id) && b.IsAdmin).ToListAsync();
-                if (idPerfil != (int)PerfilUsuarioEnum.Administrador && idPerfil != (int)PerfilUsuarioEnum.SysAdmin && idPerfil != (int)PerfilUsuarioEnum.Coordernador)
+                if (idPerfil != (int)PerfilUsuarioEnum.Administrador && idPerfil != (int)PerfilUsuarioEnum.SysAdmin)
                 {
                     List<int> modulosUsuario = await _usuarioRepository.GetModulosByUsuario(Convert.ToInt32(idUsuario));
                     if (modulosUsuario.Count() > 0)

@@ -172,7 +172,7 @@ namespace SiteSesc.Controllers
             if (templateTermo != null)
             {
                 var responsavel = await _clienteRepository.ObterResponsavel(cliente.Cduop, cliente.Sqmatric);
-                if (responsavel.Count() > 0)
+                if (responsavel?.Count() > 0)
                     cliente = ClienteCentral.SetResponsavel(cliente, responsavel.FirstOrDefault());
 
                 var endereco = new Models.ApiPagamento.Endereco();

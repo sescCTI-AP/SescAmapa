@@ -138,15 +138,6 @@ namespace SiteSesc.Areas.Admin.Controllers
             var usuarioLogado = await _usuarioRepository.GetUsuarioById(Convert.ToInt32(idUsuario));
             if (usuario != null)
             {
-                if (usuarioLogado.IdPerfilUsuario != (int)PerfilUsuarioEnum.Coordernador && usuarioLogado.IdPerfilUsuario != (int)PerfilUsuarioEnum.SysAdmin && usuarioLogado.IdPerfilUsuario != (int)PerfilUsuarioEnum.Coordernador && usuarioLogado.IdPerfilUsuario != (int)PerfilUsuarioEnum.Funcionario)
-                {
-                    return Json(new
-                    {
-                        Code = 2,
-                        Message = "Você não tem autorização para realizar essa ação!",
-                        ClassAlert = "warning"
-                    });
-                }
                 usuario.IsAtivo = autorizacao.isAtivo;
                 usuario.IdPerfilUsuario = perfil;
 
@@ -224,7 +215,7 @@ namespace SiteSesc.Areas.Admin.Controllers
 
             // Verifica se o usuário logado tem permissão para alterar o e-mail
             var usuarioLogado = await _usuarioRepository.GetUsuarioById(Convert.ToInt32(idUsuario));
-            if (usuarioLogado == null || usuarioLogado.IdPerfilUsuario != (int)PerfilUsuarioEnum.SysAdmin && usuarioLogado.IdPerfilUsuario != (int)PerfilUsuarioEnum.Coordernador && usuarioLogado.IdPerfilUsuario != (int)PerfilUsuarioEnum.Funcionario)
+            if (usuarioLogado == null || usuarioLogado.IdPerfilUsuario != (int)PerfilUsuarioEnum.SysAdmin && usuarioLogado.IdPerfilUsuario != (int)PerfilUsuarioEnum.Funcionario)
             {
                 return new JsonResult(new
                 {

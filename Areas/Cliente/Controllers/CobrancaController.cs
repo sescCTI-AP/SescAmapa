@@ -69,7 +69,7 @@ namespace SiteSesc.Areas.Cliente.Controllers
             var turma = Util.CdelementToTurma(cdelement);
             var clienteCentral = await _clienteRepository.ObterClientePorCpf(cpf);
             var cobrancas = await _cobrancaRepository.ObterProximasCobrancasPorCpf(cpf);
-            cobrancas = cobrancas.Where(c => c.cdelement == cdelement && c.strecebido == 0).ToList();
+            cobrancas = cobrancas?.Where(c => c.cdelement == cdelement && c.strecebido == 0).ToList();
             if (inscricao == true)
             {
                 if (cobrancas.Any())
