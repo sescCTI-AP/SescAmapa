@@ -9,6 +9,7 @@ using SiteSesc.Models.ApiPagamento;
 using SiteSesc.Models.ApiPagamento.Cielo;
 using SiteSesc.Models.ApiPagamento.Cielo.ViewModel;
 using SiteSesc.Models.ApiPagamento.Pix;
+using SiteSesc.Models.ApiPagamentoV2;
 using SiteSesc.Models.DB2;
 using SiteSesc.Models.Enums;
 using SiteSesc.Models.ViewModel;
@@ -35,6 +36,7 @@ namespace SiteSesc.Areas.Cliente.Controllers
         private CobrancaRepository _cobrancaRepository;
         private readonly SafeExecutor _safeExecutor;
         private readonly EmailService _emailService;
+        private readonly ApiPagamentoV2Service _apiPagamentoV2Service;
 
 
         public cobrancaController(SiteSescContext context,
@@ -46,7 +48,8 @@ namespace SiteSesc.Areas.Cliente.Controllers
             ClienteRepository clienteRepository,
             CobrancaRepository cobrancaRepository,
             SafeExecutor safeExecutor,
-            EmailService emailService)
+            EmailService emailService,
+            ApiPagamentoV2Service apiPagamentoV2Service)
         {
             this.configuration = configuration;
             cache = memoryCache;
@@ -59,6 +62,7 @@ namespace SiteSesc.Areas.Cliente.Controllers
             _safeExecutor = safeExecutor;
             _cobrancaRepository = cobrancaRepository;
             _emailService = emailService;
+            _apiPagamentoV2Service = apiPagamentoV2Service;
         }
 
         [Route("atividade/{cdelement}/{cpf}/{inscricao?}")]
@@ -105,9 +109,9 @@ namespace SiteSesc.Areas.Cliente.Controllers
         public async Task<IActionResult> GeraPix(DadosCobranca dados, decimal? valorRecarga = null)
         {
             var clienteCentral = await _clienteRepository.ObterClientePorCpf(dados.CPF);
-            var responsavel = await _clienteRepository.ObterResponsavel(clienteCentral.Cduop, clienteCentral.Sqmatric);
-            var cpfPagador = responsavel.Count() > 0 ? responsavel.FirstOrDefault().CPF : clienteCentral.Nucpf;
-            var nomePagador = responsavel.Count() > 0 ? responsavel.FirstOrDefault().NOME : clienteCentral.Nmcliente.Trim();
+           // var responsavel = await _clienteRepository.ObterResponsavel(clienteCentral.Cduop, clienteCentral.Sqmatric);
+            //var cpfPagador = responsavel.Count() > 0 ? responsavel.FirstOrDefault().CPF : clienteCentral.Nucpf;
+            //var nomePagador = responsavel.Count() > 0 ? responsavel.FirstOrDefault().NOME : clienteCentral.Nmcliente.Trim();
             int tipo = Util.GetTipoPix(dados.IDCLASSE);
             if (clienteCentral != null)
             {
@@ -118,14 +122,38 @@ namespace SiteSesc.Areas.Cliente.Controllers
                     if (cobrancaAtualizada != null)
                     {
                         cobrancaAtualizada.atividade = cobrancaAtualizada.atividade.Replace("\"", "");
-                        var getPix = await _cobrancaRepository.GetPix(new PixCobranca(cobrancaAtualizada, clienteCentral, tipo, cpfPagador, nomePagador));
-                        if (getPix != null)
+
+                        var request = new CobrancaPixRequest
                         {
-                            var imagemPix = Util.GerarQrCode(getPix.textoImagemQRcode);
-                            return PartialView(new PixViewModel(cobrancaAtualizada, imagemPix, getPix.textoImagemQRcode));
+                            Cpf = dados.CPF,
+                            CdUop = dados.CDUOP,
+                            SqMatric = dados.SQMATRIC,
+                            CdElement = cobrancaAtualizada.cdelement,
+                            SqCobranca = cobrancaAtualizada.sqcobranca,
+                            ValorRecebido = cobrancaAtualizada.valorRecebido,
+                            ValorJuros = cobrancaAtualizada.jurosMora,
+                            ValorDesconto = cobrancaAtualizada.descontoConcedido,
+                            ValorAcresimo = cobrancaAtualizada.jurosMora + cobrancaAtualizada.multa,
+                            NumCartao = clienteCentral.Numcartao,
+                            Pix = new PixRequest 
+                            {
+                                Nome = clienteCentral.Nmcliente,
+                                Cpf = clienteCentral.Nucpf,
+                                Valor = cobrancaAtualizada.valorRecebido,
+                                DescricaoPagamento = cobrancaAtualizada.atividade
+                            }
+                        };
+
+                        var getPix = await _apiPagamentoV2Service.CobrancaPixCriarAsync(request);
+
+                       // var getPix = await _cobrancaRepository.GetPix(new PixCobranca(cobrancaAtualizada, clienteCentral, tipo, cpfPagador, nomePagador));
+                        if (getPix.IsSuccess)
+                        {
+                            var imagemPix = Util.GerarQrCode(getPix.Content.PixCopiaECola);
+                            return PartialView(new PixViewModel(cobrancaAtualizada, imagemPix, getPix.Content.PixCopiaECola));
                         }
                     }
-                }
+                }/*
                 else if (tipo == (int)TipoPix.Recarga)
                 {
                     if (valorRecarga != null && valorRecarga > 0)
@@ -138,7 +166,7 @@ namespace SiteSesc.Areas.Cliente.Controllers
                         }
                     }
 
-                }
+                }*/
             }
             return PartialView();
         }
@@ -198,8 +226,10 @@ namespace SiteSesc.Areas.Cliente.Controllers
                 {
                     var cobranca = new COBRANCA(dados.IDCLASSE, dados.CDELEMENT, dados.SQCOBRANCA, 0);
                     var cobrancaAtualizada = await _cobrancaRepository.ObterValorAtualizado(cobranca);
-                    if (cobranca != null)
+
+                    if (cobrancaAtualizada != null)
                     {
+                        /*
                         var cobrancaValor = new CobrancaValor
                         {
                             IDCLASSE = cobrancaAtualizada.idclasse,
@@ -211,11 +241,40 @@ namespace SiteSesc.Areas.Cliente.Controllers
                             Multa = cobrancaAtualizada.multa,
                             OutrosRecebimentos = cobrancaAtualizada.outrosRecebimentos,
                             DescontoConcedido = cobrancaAtualizada.descontoConcedido
+                        };*/
+                       // payment.Amount = cobrancaValor.ValorRecebido;
+                       // var transacao = new Transacao(payment, cobrancaValor);
+                       // var efetuaPagamento = await _cobrancaRepository.PagamentoCartao(transacao);
+
+
+                        var request = new CobrancaCartaoCieloRequest
+                        {
+                            Cpf = dados.CPF,
+                            CdUop = dados.CDUOP,
+                            SqMatric = dados.SQMATRIC,                            
+                            CdElement = cobrancaAtualizada.cdelement,
+                            SqCobranca = cobrancaAtualizada.sqcobranca,
+                            ValorRecebido = cobrancaAtualizada.valorRecebido,
+                            ValorJuros = cobrancaAtualizada.jurosMora,
+                            ValorDesconto = cobrancaAtualizada.descontoConcedido,
+                            ValorAcresimo = cobrancaAtualizada.jurosMora + cobrancaAtualizada.multa,                            
+                            CartaoCielo = new CartaoCieloRequest
+                            {
+                                Nome = payment.Name,
+                                Cpf = payment.Identity,
+                                NumeroCartao = payment.CardNumber,
+                                DataExpiracao = payment.ExpirationDate,
+                                CodigoSeguranca = payment.SecurityCode,
+                                Valor = payment.Amount,
+                                Bandeira = "Visa"                            
+                            }
+                        
                         };
-                        payment.Amount = cobrancaValor.ValorRecebido;
-                        var transacao = new Transacao(payment, cobrancaValor);
-                        var efetuaPagamento = await _cobrancaRepository.PagamentoCartao(transacao);
-                        if (efetuaPagamento == "Cobrança paga com sucesso.")
+
+                        var efetuaPagamento = await _apiPagamentoV2Service.CobrancaCartaoCieloAsync(request);
+
+                       // if (efetuaPagamento == "Cobrança paga com sucesso.")
+                        if (efetuaPagamento.IsSuccess)
                         {
                             return Json(new
                             {

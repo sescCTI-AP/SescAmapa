@@ -5,6 +5,7 @@ using SiteSesc.Data;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using SiteSesc.Repositories;
 using SiteSesc.Services;
+using SiteSesc.Configuracoes;
 
 
 namespace SiteSesc
@@ -30,6 +31,19 @@ namespace SiteSesc
             services.Configure<EmailSettings>(Configuration.GetSection("EmailSettings"));
             services.Configure<Ambiente>(Configuration.GetSection("Ambiente"));
 
+            #region ApiPagamentoV2
+            ConfigurationApi.ApiPagamentoV2Url = Configuration.GetSection("ApiPagamentoV2").GetValue<string>("Url") ?? string.Empty;
+            ConfigurationApi.ApiPagamentoV2ClientId = Configuration.GetSection("ApiPagamentoV2").GetValue<string>("client_id") ?? string.Empty;
+            ConfigurationApi.ApiPagamentoV2ClientSecret = Configuration.GetSection("ApiPagamentoV2").GetValue<string>("client_secret") ?? string.Empty;
+
+            services.AddHttpClient<ApiPagamentoV2Service>(client =>
+            {
+                client.BaseAddress = new Uri(ConfigurationApi.ApiPagamentoV2Url);
+                client.DefaultRequestHeaders.Add("ContentType", "application/json");
+                client.DefaultRequestHeaders.Add("client_id", ConfigurationApi.ApiPagamentoV2ClientId);
+                client.DefaultRequestHeaders.Add("client_secret", ConfigurationApi.ApiPagamentoV2ClientSecret);
+            });
+            #endregion
             // using Microsoft.AspNetCore.Authentication.Cookies;
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(options =>
