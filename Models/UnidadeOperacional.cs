@@ -1,6 +1,7 @@
 ﻿using Humanizer;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
+using SiteSesc.Helpers;
 
 
 namespace SiteSesc.Models

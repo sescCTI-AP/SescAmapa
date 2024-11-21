@@ -52,8 +52,8 @@ namespace SiteSesc.Repositories
 
             int totalRecords = await query.CountAsync();
             var records = await query.Skip((pageNumber - 1) * pageSize)
-                                     .Take(pageSize)
-                                     .ToListAsync();
+            .Take(pageSize)
+            .ToListAsync();
 
             if (records.Count() > 0)
             {
@@ -95,8 +95,8 @@ namespace SiteSesc.Repositories
 
             int totalRecords = await query.CountAsync();
             var records = await query.Skip((pageNumber - 1) * pageSize)
-                                     .Take(pageSize)
-                                     .ToListAsync();
+            .Take(pageSize)
+            .ToListAsync();
 
             return new PaginatedList<AtividadeOnLine>(records, totalRecords, pageNumber, pageSize);
         }
@@ -999,20 +999,20 @@ namespace SiteSesc.Repositories
                 if (todosOsAnos)
                 {
                     atividades = await _dbContext.AtividadeOnLine
-                                     .Include(a => a.Arquivo)
-                                     .Include(a => a.SubArea)
-                                     .Include(a => a.Usuario)
-                                     .Include(a => a.UnidadeOperacional).Where(a => a.DataDesativacao == null)
-                                     .ToListAsync();
+                    .Include(a => a.Arquivo)
+                    .Include(a => a.SubArea)
+                    .Include(a => a.Usuario)
+                    .Include(a => a.UnidadeOperacional).Where(a => a.DataDesativacao == null)
+                    .ToListAsync();
                 }
                 else
                 {
                     atividades = await _dbContext.AtividadeOnLine
-                                     .Include(a => a.Arquivo)
-                                     .Include(a => a.SubArea)
-                                     .Include(a => a.Usuario)
-                                     .Include(a => a.UnidadeOperacional).Where(a => a.Ano >= DateTime.Now.Year && a.IsAtivo && a.DataDesativacao == null)
-                                     .ToListAsync();
+                    .Include(a => a.Arquivo)
+                    .Include(a => a.SubArea)
+                    .Include(a => a.Usuario)
+                    .Include(a => a.UnidadeOperacional).Where(a => a.Ano >= DateTime.Now.Year && a.IsAtivo && a.DataDesativacao == null)
+                    .ToListAsync();
                 }
 
                 if (atividades != null)
