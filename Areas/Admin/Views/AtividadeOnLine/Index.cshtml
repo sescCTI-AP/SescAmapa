@@ -244,7 +244,7 @@ else if (ViewBag.Inscrito == 3)
                 buttons: [
                     ['<button><b>Confirmar</b></button>', function (instance, toast) {
                         $.ajax({
-                            url: '/admin/atividades/remover-atividade/' + id,
+                            url: '/admin/atividades/alterar-status-atividade/' + id,
                             type: 'GET',
                             dataType: "json",
                             contentType: 'application/json; charset=utf-8',

@@ -21,7 +21,7 @@
     }
     .container-center {
         display: flex;
-        justify-content: center;
+        justify-content: end;
         align-items: center;
         /* height: 80vh; */
     }
@@ -66,20 +66,20 @@
 <p>@ViewBag.Msg</p>
 <div class="container text-center">
     <img src="~/images/static/logo-sesc.webp" style="width: 200px" class="mb-3 mt-5" />
-    <h4 class="mt-5">Escolha uma das categorias abaixo conforme o seu perfil</h4>
+    @* <h4 class="mt-5">Escolha uma das categorias abaixo conforme o seu perfil</h4> *@
     <div class="mt-5 container-center">
         <div class="row">
-            <div class="col-md-6 col-xs-12">
-                <a href="@Url.Action("Create", "SolicitacaoCadastroCliente", new {categoria = 2})">
-                    <div class="card  bg-blue text-center">
-                        <div class="card-body">
-                            <img src="~/images/static/avatar-de-perfil.png" class="img-categoria" />
-                            <h4 class="text-white">Público em geral</h4>
-                            <span>Categoria destinada às pessoas que não possui vínculo empregatício no ramo de bens, serviços e turismo</span>
-                        </div>
-                    </div>
-                </a>
-            </div>
+            @* <div class="col-md-6 col-xs-12"> *@
+            @*     <a href="@Url.Action("Create", "SolicitacaoCadastroCliente", new {categoria = 2})"> *@
+            @*         <div class="card  bg-blue text-center"> *@
+            @*             <div class="card-body"> *@
+            @*                 <img src="~/images/static/avatar-de-perfil.png" class="img-categoria" /> *@
+            @*                 <h4 class="text-white">Público em geral</h4> *@
+            @*                 <span>Categoria destinada às pessoas que não possui vínculo empregatício no ramo de bens, serviços e turismo</span> *@
+            @*             </div> *@
+            @*         </div> *@
+            @*     </a> *@
+            @* </div> *@
             <div class="col-md-6 col-xs-12">
                 <a href="@Url.Action("Create", "SolicitacaoCadastroCliente", new {categoria = 0})">
                     <div class="card  bg-yellow text-center">
