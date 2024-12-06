@@ -172,7 +172,7 @@ namespace SiteSesc.Areas.Cliente.Controllers
                         var getPix = await _apiPagamentoV2Service.RecargaPixCriarAsync(request);
 
                         //var getPix = await _cobrancaRepository.GetPixRecarga(new PixRecarga(valorRecarga, cpfPagador, nomePagador, clienteCentral));
-                        if (getPix != null)
+                        if (getPix.IsSuccess)
                         {
                             var imagemPix = Util.GerarQrCode(getPix.Content.PixCopiaECola);
                             return PartialView(new PixViewModel(getPix.Content.Valor, "Recarga Pix Credencial", getPix.Content.DataCriacao, imagemPix, getPix.Content.PixCopiaECola));
