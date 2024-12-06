@@ -49,31 +49,32 @@ namespace SiteSesc.Services
                 return new ResponseApi<string?>(null, "Error Interno no Servidor", false);
             }
         }
-        /*
-        public async Task<ResponseApi<RecargaPixResponse>> RecargaPixCriarAsync(RecargaPixRequest request)
+        
+        public async Task<ResponseApi<RecargaPixResponse?>> RecargaPixCriarAsync(RecargaPixRequest request)
         {
             try
             {
                 string jsonContent = System.Text.Json.JsonSerializer.Serialize(request);
                 var conteudo = new StringContent(jsonContent, Encoding.UTF8, "application/json");
-                HttpResponseMessage response = await _httpClient.PostAsync($"{ConfigurationApi.ApiPagamentoV2Url}/v2/recarga/pix-criar", conteudo);
+                HttpResponseMessage response = await _httpClient.PostAsync("/v2/recarga/pix-criar", conteudo);
 
                 var responseDataString = await response.Content.ReadAsStringAsync();
 
                 if (!response.IsSuccessStatusCode)
-                    return new ResponseApi<RecargaPixResponse>(null, "Falhar Interna no Servidor", false);
+                    return new ResponseApi<RecargaPixResponse?>(null, "Falhar Interna no Servidor", false);
 
                 var responseData = JsonConvert.DeserializeObject<ResponseApi<RecargaPixResponse>>(responseDataString);
 
-                return new ResponseApi<RecargaPixResponse>(responseData.Content, "Operacao realizada com sucesso !!!");
+                return new ResponseApi<RecargaPixResponse?>(responseData?.Content, "Operacao realizada com sucesso !!!");
 
             }
             catch (Exception ex)
             {
-                return new ResponseApi<RecargaPixResponse>(null, "Error Interno no Servidor", false);
+                return new ResponseApi<RecargaPixResponse?>(null, "Error Interno no Servidor", false);
             }
 
         }
+        /*
         public async Task<ResponseApi<string>> RecargaCartaoCieloAsync(RecargaCartaoCieloRequest request)
         {
             try

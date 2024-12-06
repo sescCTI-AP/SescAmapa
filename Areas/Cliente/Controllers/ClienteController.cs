@@ -111,6 +111,7 @@ namespace SiteSesc.Areas.Cliente.Controllers
             // Anonimizar CPF do cliente antes de passar para a View
             ViewBag.Usuario = usuario;
             ViewBag.TipoCategoria = await _clienteRepository.ObtemTipoCategoria(clienteCentral.Cdcategori);
+            ViewBag.Categoria = await _clienteRepository.ObtemCategoria(clienteCentral.Cdcategori);
 
             return View(clienteCentral);
         }

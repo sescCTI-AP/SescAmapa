@@ -1,4 +1,5 @@
-﻿using SiteSesc.Services;
+﻿using SiteSesc.Models.ApiPagamentoV2;
+using SiteSesc.Services;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SiteSesc.Models.ApiPagamento.Pix
@@ -34,6 +35,14 @@ namespace SiteSesc.Models.ApiPagamento.Pix
             Codigo = pix.textoImagemQRcode;
         }
 
+        public PixViewModel(decimal valor, string descricao, string dataCriacao, string imagem, string codigo)
+        {
+            Valor = valor.ToString().Replace(".", ",");
+            Atividade = descricao;
+            DataCriacao = dataCriacao;
+            TextoImagem = imagem;
+            Codigo = codigo;
+        }
 
     }
 }

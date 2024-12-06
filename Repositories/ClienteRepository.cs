@@ -126,6 +126,28 @@ namespace SiteSesc.Repositories
             }
         }
 
+        public async Task<string> ObtemCategoria(int id)
+        {
+            try
+            {
+                if (_apiClient.token == null) await _apiClient.ObtemLoginApp();
+                var response = await _apiClient.Cliente.GetAsync($"/v1/cliente/categoria/{id}");
+                if (response.IsSuccessStatusCode)
+                {
+                    var successContent = await response.Content.ReadAsStringAsync();
+                    return successContent;
+                }
+                var errorContent = await response.Content.ReadAsStringAsync();
+                Console.WriteLine(errorContent);
+                return null;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return null;
+            }
+        }
+
         public async Task<CLIENTELA> GetClienteCentralAtendimento(int cdUop, int sqMatric)
         {
             try

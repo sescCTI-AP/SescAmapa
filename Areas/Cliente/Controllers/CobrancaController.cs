@@ -153,20 +153,33 @@ namespace SiteSesc.Areas.Cliente.Controllers
                             return PartialView(new PixViewModel(cobrancaAtualizada, imagemPix, getPix.Content.PixCopiaECola));
                         }
                     }
-                }/*
+                }
                 else if (tipo == (int)TipoPix.Recarga)
                 {
                     if (valorRecarga != null && valorRecarga > 0)
                     {
-                        var getPix = await _cobrancaRepository.GetPixRecarga(new PixRecarga(valorRecarga, cpfPagador, nomePagador, clienteCentral));
+                        var request = new RecargaPixRequest
+                        {
+                            Nome = clienteCentral.Nmcliente,
+                            Cpf = clienteCentral.Nucpf,
+                            NumCartao = clienteCentral.Numcartao,
+                            Sqmatric = clienteCentral.Sqmatric,
+                            Cduop = clienteCentral.Cduop,
+                            Valor = Convert.ToDecimal(valorRecarga),
+                            DescricaoPagamento = "Recarga Pix Credencial Sesc"
+                        };
+
+                        var getPix = await _apiPagamentoV2Service.RecargaPixCriarAsync(request);
+
+                        //var getPix = await _cobrancaRepository.GetPixRecarga(new PixRecarga(valorRecarga, cpfPagador, nomePagador, clienteCentral));
                         if (getPix != null)
                         {
-                            var imagemPix = Util.GerarQrCode(getPix.textoImagemQRcode);
-                            return PartialView(new PixViewModel((decimal)valorRecarga, getPix, "RECARGA PIX - SITE SESC", imagemPix));
+                            var imagemPix = Util.GerarQrCode(getPix.Content.PixCopiaECola);
+                            return PartialView(new PixViewModel(getPix.Content.Valor, "Recarga Pix Credencial", getPix.Content.DataCriacao, imagemPix, getPix.Content.PixCopiaECola));
                         }
                     }
 
-                }*/
+                }
             }
             return PartialView();
         }
