@@ -191,30 +191,48 @@ namespace SiteSesc.Areas.Cliente.Controllers
             {
                 if (dados.IDCLASSE == "CART")
                 {
-                    var recarga = new CartaoCredito(dados, payment);
-                    var retornoRecarga = await _cobrancaRepository.Recarga(recarga);
-                    if (retornoRecarga != null)
+                    var cliente = await _clienteRepository.ObterClientePorCpf(dados.CPF);
+
+                    //var recarga = new CartaoCredito(dados, payment);
+
+                    var request = new RecargaCartaoCieloRequest
                     {
-                        if (retornoRecarga != "Cartão recarregado com sucesso.")
-                        {
-                            var response = JsonConvert.DeserializeObject(retornoRecarga);
-                            if (response is ApiResponse)
-                            {
-                                if (response.Success == false)
-                                {
-                                    return Json(new
-                                    {
-                                        code = 1,
-                                        msg = response.Message
-                                    });
-                                }
-                            }
-                        }
+                        Nome = payment.Name,
+                        Cpf = payment.Identity,
+                        NumCartao = cliente.Numcartao,
+                        Sqmatric = dados.SQMATRIC,
+                        Cduop = dados.CDUOP,
+                        Valor = payment.Amount,
+                        Parcela = 1,
+                        NumeroCartaoCredito = payment.CardNumber,
+                        DataExpiracaoCartaoCredito = payment.ExpirationDate,
+                        CodigoSegurancaCartaoCredito = payment.SecurityCode,
+                        BandeiraCartaoCredito = Util.IdentificarBandeira(payment.CardNumber)
+                    };
+
+                    var retornoRecarga = await _apiPagamentoV2Service.RecargaCartaoCieloAsync(request);
+                    if (retornoRecarga.IsSuccess)
+                    {
+                        //if (retornoRecarga != "Cartão recarregado com sucesso.")
+                        //{
+                        //    var response = JsonConvert.DeserializeObject(retornoRecarga);
+                        //    if (response is ApiResponse)
+                        //    {
+                        //        if (response.Success == false)
+                        //        {
+                        //            return Json(new
+                        //            {
+                        //                code = 1,
+                        //                msg = response.Message
+                        //            });
+                        //        }
+                        //    }
+                        //}
 
                         var usuario = await _usuarioRepository.GetUsuarioCpf(dados.CPF);
                         if (!string.IsNullOrEmpty(usuario.Email))
                         {
-                            var numeroCartao = recarga.Payment.CreditCard.CardNumber;
+                            var numeroCartao = payment.CardNumber;
                             var cartaoFormatado = "xxxx.xxxx.xxxx." + numeroCartao.Substring(numeroCartao.Length - 4);
 
                             Dictionary<string, string> listaParametrosEmail = new Dictionary<string, string>
@@ -255,22 +273,22 @@ namespace SiteSesc.Areas.Cliente.Controllers
                             OutrosRecebimentos = cobrancaAtualizada.outrosRecebimentos,
                             DescontoConcedido = cobrancaAtualizada.descontoConcedido
                         };*/
-                       // payment.Amount = cobrancaValor.ValorRecebido;
-                       // var transacao = new Transacao(payment, cobrancaValor);
-                       // var efetuaPagamento = await _cobrancaRepository.PagamentoCartao(transacao);
+                        // payment.Amount = cobrancaValor.ValorRecebido;
+                        // var transacao = new Transacao(payment, cobrancaValor);
+                        // var efetuaPagamento = await _cobrancaRepository.PagamentoCartao(transacao);
 
 
                         var request = new CobrancaCartaoCieloRequest
                         {
                             Cpf = dados.CPF,
                             CdUop = dados.CDUOP,
-                            SqMatric = dados.SQMATRIC,                            
+                            SqMatric = dados.SQMATRIC,
                             CdElement = cobrancaAtualizada.cdelement,
                             SqCobranca = cobrancaAtualizada.sqcobranca,
                             ValorRecebido = cobrancaAtualizada.valorRecebido,
                             ValorJuros = cobrancaAtualizada.jurosMora,
                             ValorDesconto = cobrancaAtualizada.descontoConcedido,
-                            ValorAcresimo = cobrancaAtualizada.jurosMora + cobrancaAtualizada.multa,                            
+                            ValorAcresimo = cobrancaAtualizada.jurosMora + cobrancaAtualizada.multa,
                             CartaoCielo = new CartaoCieloRequest
                             {
                                 Nome = payment.Name,
@@ -279,9 +297,9 @@ namespace SiteSesc.Areas.Cliente.Controllers
                                 DataExpiracao = payment.ExpirationDate,
                                 CodigoSeguranca = payment.SecurityCode,
                                 Valor = payment.Amount,
-                                Bandeira = "Visa"                            
+                                Bandeira = Util.IdentificarBandeira(payment.CardNumber)
                             }
-                        
+
                         };
 
                         var efetuaPagamento = await _apiPagamentoV2Service.CobrancaCartaoCieloAsync(request);

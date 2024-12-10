@@ -74,38 +74,31 @@ namespace SiteSesc.Services
             }
 
         }
-        /*
-        public async Task<ResponseApi<string>> RecargaCartaoCieloAsync(RecargaCartaoCieloRequest request)
+        
+        public async Task<ResponseApi<string?>> RecargaCartaoCieloAsync(RecargaCartaoCieloRequest request)
         {
             try
             {
-                string jsonContent = System.Text.Json.JsonSerializer.Serialize(request);
+                string jsonContent = System.Text.Json.JsonSerializer.Serialize(request);   
+                var conteudo = new StringContent(jsonContent, Encoding.UTF8, "application/json");
 
-                using (HttpClient httpClient = new HttpClient())
-                {
-                    httpClient.DefaultRequestHeaders.Add("ContentType", "application/json");
-                    httpClient.DefaultRequestHeaders.Add("client_id", ConfigurationApi.ApiPagamentoV2ClientId);
-                    httpClient.DefaultRequestHeaders.Add("client_secret", ConfigurationApi.ApiPagamentoV2ClientSecret);
+                HttpResponseMessage response = await _httpClient.PostAsync($"/v2/recarga/cartao-credito", conteudo);
 
-                    var conteudo = new StringContent(jsonContent, Encoding.UTF8, "application/json");
+                if (!response.IsSuccessStatusCode)
+                    return new ResponseApi<string?>(null, "Falhar Interna no Servidor", false);
 
-                    HttpResponseMessage response = await httpClient.PostAsync($"{ConfigurationApi.ApiPagamentoV2Url}/v2/recarga/cartao-credito", conteudo);
+                var responseDataString = await response.Content.ReadAsStringAsync();
+                var responseData = JsonConvert.DeserializeObject<ResponseApi<string>>(responseDataString);
 
-                    if (!response.IsSuccessStatusCode)
-                        return new ResponseApi<string>(null, "Falhar Interna no Servidor", false);
-
-                    var responseDataString = await response.Content.ReadAsStringAsync();
-                    var responseData = JsonConvert.DeserializeObject<ResponseApi<string>>(responseDataString);
-
-                    return new ResponseApi<string>(responseData.Content, "Operacao realizada com sucesso !!!");
-                }
+                return new ResponseApi<string?>(responseData?.Content, "Operacao realizada com sucesso !!!");
+                
             }
             catch (Exception ex)
             {
-                return new ResponseApi<string>(null, "Error Interno no Servidor", false);
+                return new ResponseApi<string?>(null, "Error Interno no Servidor", false);
             }
 
         }
-        */
+        
     }
 }
