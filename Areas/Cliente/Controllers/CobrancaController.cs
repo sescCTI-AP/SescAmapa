@@ -296,7 +296,7 @@ namespace SiteSesc.Areas.Cliente.Controllers
                                 NumeroCartao = payment.CardNumber,
                                 DataExpiracao = payment.ExpirationDate,
                                 CodigoSeguranca = payment.SecurityCode,
-                                Valor = payment.Amount,
+                                Valor = cobrancaAtualizada.valorRecebido,
                                 Bandeira = Util.IdentificarBandeira(payment.CardNumber)
                             }
 
