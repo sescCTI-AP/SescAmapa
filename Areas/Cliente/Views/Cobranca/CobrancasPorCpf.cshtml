@@ -7,7 +7,6 @@
 
 @await Component.InvokeAsync("SideMenu", new { area = "cliente" })
 
-
 <section id="hero" class="d-flex flex-column justify-content-center">
     <div class="container" data-aos="zoom-in" data-aos-delay="100">
         @if (Model?.Any() == true)
@@ -94,7 +93,7 @@
         {
             <p>Não há cobranças no momento.</p>
         }
-        </<div>
+    </div>
 </section>
 
 <div id="modalContainer"></div>

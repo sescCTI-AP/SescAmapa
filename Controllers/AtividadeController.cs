@@ -212,8 +212,8 @@ namespace SiteSesc.Controllers
         [Authorize]
         [Route("inscrever")]
         public async Task<IActionResult> Inscrever(Inscricao inscricao)
-        {
-                var inscricaoAtividade = new Inscricao
+        { 
+            var inscricaoAtividade = new Inscricao
             {
                 CDPROGRAMA = Convert.ToInt32(inscricao.CDPROGRAMA),
                 CDCONFIG = Convert.ToInt32(inscricao.CDCONFIG),

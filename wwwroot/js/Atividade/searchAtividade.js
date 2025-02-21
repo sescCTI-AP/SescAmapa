@@ -147,33 +147,33 @@ function getAtividadesId(id) {
             console.log(data);
             data.forEach(atividade => {
                 const htmlContent = `
-                               <div class="col-xxl-3 col-lg-4 col-md-6 card-pill" data-category="category-${atividade.idCategory}">
-                                <div class="course-item mb-30">
-                                    <div class="course-img">
-                                        <img src="${atividade.courseImage}" alt="${atividade.courseTitle}" loading="lazy" >
-                                    </div>
-                                    <div class="course-content">
-                                            <div class="course-content-top">
-                                                <div class="course-top-title">
-                                                    <h6>${atividade.courseCategory}</h6>
-                                                </div>
-                                            </div>
-                                            <h5 class="course-content-title"><a href="/atividade/detalhes/${atividade.cdElement}">${atividade.courseTitle}</a></h5>
-                                            <div class="course-content-bottom">
-                                                <div class="course-bottom-info">
-                                                    <span>${atividade.courseLocation}</span>
-                                                </div>
-                                                <div class="course-bottom-price">
-                                                    <label>A partir de</label><span>${atividade.coursePrice}</span>
-                                                </div>
-                                            </div>
-                                                    <a href="/atividade/detalhes/${atividade.cdElement}" class="theme-btn course-btn">Clique aqui</a>
-                                        <div class="course-hover-cart-btn">
-                                        </div>
-                                    </div>
+                   <div class="col-xxl-3 col-lg-4 col-md-6 card-pill" data-category="category-${atividade.idCategory}">
+                    <div class="course-item mb-30">
+                        <div class="course-img">
+                            <img src="${atividade.courseImage}" alt="${atividade.courseTitle}" loading="lazy" >
+                        </div>
+                        <div class="course-content">
+                            <div class="course-content-top">
+                                <div class="course-top-title">
+                                    <h6>${atividade.courseCategory}</h6>
                                 </div>
                             </div>
-                        `;
+                            <h5 class="course-content-title"><a href="/atividade/detalhes/${atividade.cdElement}">${atividade.courseTitle}</a></h5>
+                            <div class="course-content-bottom">
+                                <div class="course-bottom-info">
+                                    <span>${atividade.courseLocation}</span>
+                                </div>
+                                <div class="course-bottom-price">
+                                    <label>A partir de</label><span>${atividade.coursePrice}</span>
+                                </div>
+                            </div>
+                                <a href="/atividade/detalhes/${atividade.cdElement}" class="theme-btn course-btn">Clique aqui</a>
+                            <div class="course-hover-cart-btn">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                `;
                 container.insertAdjacentHTML('beforeend', htmlContent);
             });
         })

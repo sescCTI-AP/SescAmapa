@@ -8,6 +8,8 @@ using SiteSesc.Models.ApiPagamento;
 using SiteSesc.Helpers;
 using SiteSesc.Models.ViewModel;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.DotNet.Scaffolding.Shared.Messaging;
+using Newtonsoft.Json;
 using static SiteSesc.Models.Status;
 
 namespace SiteSesc.Areas.Admin.Controllers
@@ -87,8 +89,7 @@ namespace SiteSesc.Areas.Admin.Controllers
                 .OrderByDescending(s => s.DiasEmAnalise) // Ordena de forma decrescente pelos dias em análise
                 .Select(s => s.Solicitacao) // Retorna apenas as solicitações (sem o campo extra de dias)
                 .ToList();
-
-            // Filtro de status
+            
             var listaFiltro = Filtro.GetLista();
             ViewBag.idStatus = new SelectList(listaFiltro, "Id", "Nome", idStatus);
 
@@ -112,12 +113,7 @@ namespace SiteSesc.Areas.Admin.Controllers
                 
             }
             var arquivosSolicitacao = await _solicitacaoCadastroRepository.GetArquivosSolicitacao(id);
-
-            if (!string.IsNullOrEmpty(validacao))
-            {
-                ViewBag.Validacao = validacao;
-            }
-
+            
             ViewBag.MsgRapidas = await _mensagemRapidaRepository.GetMensagensRapidas();
             ViewBag.Arquivos = arquivosSolicitacao;
             ViewBag.Historico = await _solicitacaoCadastroRepository.GetHistorico(id);
@@ -128,6 +124,7 @@ namespace SiteSesc.Areas.Admin.Controllers
         [PermissionFilter((int)Permissao.Cadastrar, (int)EnumModuloSistema.Clientes)]
         public async Task<IActionResult> AddCliente(Guid id)
         {
+            
             var solicitacao = await _solicitacaoCadastroRepository.GetSoliticacao(id);
 
             var cpfCadastro = string.IsNullOrEmpty(solicitacao.Cpf) ? solicitacao.Usuario.Cpf : solicitacao.Cpf;
@@ -142,11 +139,14 @@ namespace SiteSesc.Areas.Admin.Controllers
                     var fotoPerfil = arquivosSolicitacao.FirstOrDefault(a => a.Tipo == "FotoPerfil").Arquivo.CaminhoVirtualFormatado();
                     var foto = await Util.DownloadImageAsBase64(fotoPerfil);
                     cliente.FOTO64 = foto;
-                    //Salva cliente no db2
-                    var clienteAdd = await _clienteRepository.AddClienteDb2(cliente);
-                    ClienteAdd cli = clienteAdd as ClienteAdd;
-                    if (cli != null)
+                   
+                    var responseJson = await _clienteRepository.AddClienteDb2(cliente);
+                    
+                    if (responseJson?.success == true)
                     {
+                        
+                        var cli  = JsonConvert.DeserializeObject<ClienteAdd>(JsonConvert.SerializeObject(responseJson.data));
+                        
                         var hst = new HstSolicitacao
                         {
                             Observacao = "Cliente adicionado na central de atendimento.",
@@ -154,21 +154,20 @@ namespace SiteSesc.Areas.Admin.Controllers
                             IdUsuario = Convert.ToInt32(idUsuario),
                             IdSolicitacaoCadastroCliente = solicitacao.Id
                         };
-                        var addHistorico = await _solicitacaoCadastroRepository.AddHistorico(hst, 5);
-                        //return RedirectToAction("SolicitacaoCadastroCliente", "ClienteAdmin" , new {validacao = "1-" + clienteAdd.CDUOP });
-                        return RedirectToAction("Details", "ClienteAdmin", new { id = id, validacao = "1-" + clienteAdd.CDUOP.ToString() });
-
+                        await _solicitacaoCadastroRepository.AddHistorico(hst, 5);
+                        
+                        return Json(new { success = true, message = responseJson.message });
                     }
-
-
-                    return RedirectToAction("Index", "ClienteAdmin", new { id = id , validacao = "2-"+clienteAdd});
+                    
+                    string errorMessage = responseJson?.error?.ToString() ?? "Erro desconhecido";
+                    return Json(new { success = false, error = errorMessage });
                 }
             }
             catch (Exception e)
             {
-                return RedirectToAction("Details", "ClienteAdmin", new { id = id , validacao = "3-" +e.Message });
+                return Json(new { success = false, error = $"Erro inesperado na API" });
             }
-            return RedirectToAction("Details", "ClienteAdmin", new { id = id , validacao = "4-0" });
+            return Json(new { success = false, error = "Algo de errado não está certo" });
         }
 
         [HttpPost]

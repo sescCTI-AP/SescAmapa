@@ -253,7 +253,7 @@ namespace SiteSesc.Models
                 {
                     NUCGCCEI = s.CnpjEmpresa,
                     CDCATEGORI = cdcategoria,
-                    CDNIVEL = null,
+                    CDNIVEL = Convert.ToInt16(s.IdEscolaridade),
                     NUDV = 0,
                     SQTITULMAT = s.Sqtitulmat,
                     CDUOTITUL = s.Cduotitul,
@@ -288,7 +288,7 @@ namespace SiteSesc.Models
                     DSPARENTSC = null,
                     FOTO = null,
                     STEMICART = 1,
-                    TEOBS = "Cadastro submetido via cadastro web",
+                    TEOBS = "Cadastro submetido via web",
                     NRVIACART = 1,
                     NMSOCIAL = s.NomeSocial,
                     TELEFONE = s.TelefonePrimario,

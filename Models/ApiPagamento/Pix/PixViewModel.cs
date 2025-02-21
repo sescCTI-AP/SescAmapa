@@ -19,7 +19,8 @@ namespace SiteSesc.Models.ApiPagamento.Pix
         public PixViewModel(CobrancaAtualizada cobranca, string imagem, string codigo)
         {
             Atividade = cobranca.atividade;
-            Valor = cobranca.valorRecebido.ToString().Replace(".", ",");
+            //Valor = cobranca.valorRecebido.ToString().Replace(".", ",");
+            Valor = cobranca.valorRecebido.ToString("F2", new System.Globalization.CultureInfo("pt-BR"));
             Referencia = $"{cobranca.vencimento.Month}/{cobranca.vencimento.Year}";
             TextoImagem = imagem;
             Codigo = codigo;

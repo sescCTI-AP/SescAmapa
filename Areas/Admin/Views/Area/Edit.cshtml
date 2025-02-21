@@ -9,28 +9,25 @@
 <hr />
 <div class="row">
 
-        <form asp-action="EditPost">
-            <input type="hidden" name="id" value="@Model.Id" />
-            <div class="form-group">
-                <label for="nome" class="control-label">Nome</label>
-                <input id="nome" name="nome" class="form-control" value="@Model.Nome"/>
-            </div>
+    <form asp-action="EditPost">
+        <input type="hidden" name="id" value="@Model.Id" />
+        <div class="form-group">
+            <label for="nome" class="control-label">Nome</label>
+            <input id="nome" name="nome" class="form-control" value="@Model.Nome"/>
+        </div>
 
-            <div class="form-group">
-                @Html.LabelFor(model => model.Descricao)
-                @Html.TextAreaFor(model => model.Descricao, new { @class = "form-control", @row = 5 })
-                @Html.ValidationMessageFor(model => model.Descricao, "", new { @class = "text-danger" })
-            </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.Descricao)
+            @Html.TextAreaFor(model => model.Descricao, new { @class = "form-control", @row = 5 })
+            @Html.ValidationMessageFor(model => model.Descricao, "", new { @class = "text-danger" })
+        </div>
 
-            <div class="form-group mt-3" >
-            <a asp-action="Index" class="btn btn-danger">Voltar</a>
-                <input type="submit" value="Salvar" class="btn btn-primary" />
+        <div class="form-group mt-3" >
+        <a asp-action="Index" class="btn btn-danger">Voltar</a>
+            <input type="submit" value="Salvar" class="btn btn-primary" />
 
-            </div>
-        </form>
-
-    </div>
-
+        </div>
+    </form>
 </div>
 
 <div class="p-3">

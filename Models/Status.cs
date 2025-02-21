@@ -21,7 +21,8 @@ namespace SiteSesc.Models
                     new Status{Id = 1, Nome = "Pendente"},
                     new Status{Id = 9, Nome = "Renovação"},
                     new Status{Id = 4, Nome = "Enviado para correção"},
-                    new Status{Id = 8, Nome = "Finalizado"}
+                    new Status{Id = 8, Nome = "Finalizado"},
+                    new Status{Id = 5, Nome = "Aprovado"}
             };
             }
         }

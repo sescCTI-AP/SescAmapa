@@ -362,7 +362,7 @@ namespace SiteSesc.Repositories
         }
 
 
-        public async Task<dynamic> AddClienteDb2(ClienteAdd cliente)
+        public async Task<dynamic?> AddClienteDb2(ClienteAdd cliente)
         {
             try
             {
@@ -370,20 +370,21 @@ namespace SiteSesc.Repositories
                 var contentJson = JsonConvert.SerializeObject(cliente);
                 var response = await _apiClient.Cliente.PostAsync($"/v1/cliente/AddClienteDb2",
                     new StringContent(contentJson, Encoding.UTF8, "application/json"));
-                if (response.IsSuccessStatusCode)
+
+                var responseContent = await response.Content.ReadAsStringAsync();
+                var apiResponse = JsonConvert.DeserializeObject<dynamic>(responseContent);
+
+                if (response.IsSuccessStatusCode && apiResponse?.success == true)
                 {
-                    var successContent = await response.Content.ReadAsStringAsync();
-                    var retorno = JsonConvert.DeserializeObject<ClienteAdd>(successContent);
-                    return retorno;
+                    return apiResponse;
                 }
-                var errorContent = await response.Content.ReadAsStringAsync();
-                Console.WriteLine(errorContent);
-                return errorContent;
+                
+                return new { success = false, error = apiResponse?.error?.ToString() ?? "Erro desconhecido" };
             }
             catch (Exception e)
             {
                 Console.WriteLine(e);
-                return e.Message;
+                return new { success = false, error = e.Message };
             }
         }
 

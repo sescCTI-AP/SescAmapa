@@ -53,7 +53,7 @@ namespace SiteSesc.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            return View(cidade);
+            return View();
         }
 
         // GET: Admin/Cidade/Create

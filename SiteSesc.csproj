@@ -11,6 +11,10 @@
     <Content Remove="Migrations\**" />
     <EmbeddedResource Remove="Migrations\**" />
     <None Remove="Migrations\**" />
+    <Content Remove="appsettings.json" />
+    <None Include="appsettings.json">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
   <ItemGroup>
@@ -19,7 +23,6 @@
 
   <ItemGroup>
     <Content Remove="appsettings.Development.json" />
-    <Content Remove="appsettings.json" />
     <Content Remove="Models\Edital\ViewModel\Edit.cshtml" />
     <Content Remove="Views\ConteudoEstatico\Credencial - Cópia.cshtml" />
   </ItemGroup>
@@ -62,9 +65,6 @@
   <ItemGroup>
     <None Include="appsettings.Development.json">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </None>
-    <None Include="appsettings.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="wwwroot\js\Cancelamento\cancelamento.js" />
     <None Include="wwwroot\js\Cobranca\pix.js" />

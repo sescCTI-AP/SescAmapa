@@ -130,16 +130,16 @@ namespace SiteSesc.Areas.Cliente.Controllers
                             SqMatric = dados.SQMATRIC,
                             CdElement = cobrancaAtualizada.cdelement,
                             SqCobranca = cobrancaAtualizada.sqcobranca,
-                            ValorRecebido = cobrancaAtualizada.valorRecebido,
-                            ValorJuros = cobrancaAtualizada.jurosMora,
-                            ValorDesconto = cobrancaAtualizada.descontoConcedido,
-                            ValorAcresimo = cobrancaAtualizada.jurosMora + cobrancaAtualizada.multa,
+                            ValorRecebido = Math.Round(cobrancaAtualizada.valorRecebido, 2),
+                            ValorJuros = Math.Round(cobrancaAtualizada.jurosMora, 2),
+                            ValorDesconto = Math.Round(cobrancaAtualizada.descontoConcedido, 2),
+                            ValorAcresimo = Math.Round(cobrancaAtualizada.jurosMora + cobrancaAtualizada.multa, 2),
                             NumCartao = clienteCentral.Numcartao,
                             Pix = new PixRequest 
                             {
                                 Nome = clienteCentral.Nmcliente,
                                 Cpf = clienteCentral.Nucpf,
-                                Valor = cobrancaAtualizada.valorRecebido,
+                                Valor = Math.Round(cobrancaAtualizada.valorRecebido, 2),
                                 DescricaoPagamento = cobrancaAtualizada.atividade
                             }
                         };
@@ -285,10 +285,10 @@ namespace SiteSesc.Areas.Cliente.Controllers
                             SqMatric = dados.SQMATRIC,
                             CdElement = cobrancaAtualizada.cdelement,
                             SqCobranca = cobrancaAtualizada.sqcobranca,
-                            ValorRecebido = cobrancaAtualizada.valorRecebido,
-                            ValorJuros = cobrancaAtualizada.jurosMora,
-                            ValorDesconto = cobrancaAtualizada.descontoConcedido,
-                            ValorAcresimo = cobrancaAtualizada.jurosMora + cobrancaAtualizada.multa,
+                            ValorRecebido = Math.Round(cobrancaAtualizada.valorRecebido, 2),
+                            ValorJuros = Math.Round(cobrancaAtualizada.jurosMora, 2),
+                            ValorDesconto = Math.Round(cobrancaAtualizada.descontoConcedido, 2),
+                            ValorAcresimo = Math.Round(cobrancaAtualizada.jurosMora + cobrancaAtualizada.multa, 2),
                             CartaoCielo = new CartaoCieloRequest
                             {
                                 Nome = payment.Name,
@@ -296,7 +296,7 @@ namespace SiteSesc.Areas.Cliente.Controllers
                                 NumeroCartao = payment.CardNumber,
                                 DataExpiracao = payment.ExpirationDate,
                                 CodigoSeguranca = payment.SecurityCode,
-                                Valor = payment.Amount,
+                                Valor = Math.Round(cobrancaAtualizada.valorRecebido, 2),
                                 Bandeira = Util.IdentificarBandeira(payment.CardNumber)
                             }
 
