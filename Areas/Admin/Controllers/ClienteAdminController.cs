@@ -156,7 +156,8 @@ namespace SiteSesc.Areas.Admin.Controllers
                         };
                         await _solicitacaoCadastroRepository.AddHistorico(hst, 5);
                         
-                        return Json(new { success = true, message = responseJson.message });
+                        string successMessage = responseJson?.message?.ToString() ?? "Cliente cadastrado com sucesso";
+                        return Json(new { success = true, message = successMessage});
                     }
                     
                     string errorMessage = responseJson?.error?.ToString() ?? "Erro desconhecido";
