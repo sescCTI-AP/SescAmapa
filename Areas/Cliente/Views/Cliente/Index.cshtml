@@ -307,12 +307,12 @@
     }
 </style>
 
+
 @await Component.InvokeAsync("SideMenu", new { area = "cliente" })
 
 @if (!clienteCredenciado)
 {
     <section id="hero" class="d-flex flex-column justify-content-center">
-
         <div class="container" data-aos="zoom-in" data-aos-delay="100">
             <h1 class="PrimeiroSegundoNome">Olá, @Util.PrimeiroSegundoNome(Model.Nmcliente.ToLower()).</h1>
             @if (ViewBag.HasSolicitacao ?? false)
@@ -632,19 +632,17 @@ else
             });
         </script>
     }
+    
     <script>
-
-
         document.addEventListener('DOMContentLoaded', function () {
             fetch('/cliente/get-credencial/' + '@Model?.Nucpf')
-                .then(response => response.text())
-                .then(data => {
-                    // console.log(data);
-                    document.getElementById('img-credencial').src = data;
-                })
-                .catch(error => console.error('Erro ao buscar credencial:', error));
-
-
+            .then(response => response.text())
+            .then(data => {
+                //console.log(data);
+                document.getElementById('img-credencial').src = data;
+            })
+            .catch(error => console.error('Erro ao buscar credencial:', error));
+            
             $('#loadPartialButton').click(function () {
                 $.ajax({
                     url: '/cliente/partialview-recarga/' + '@Model?.Nucpf',
@@ -796,50 +794,50 @@ else
                     data.forEach(dependente => {
 
                         const htmlContent = `
-                                                    <div class="col-lg-4 col-md-6 container-dep ${dependente.nmcliente.split(' ')[0]}">
-                                                        <div class="portfolio-wrap">
-                                                            <img src="${dependente.fotoCliente}" class="img-fluid img-circular" alt="">
-                                                            <div class="portfolio-info">
-                                                                <h4>${dependente.nmcliente}</h4>
-                                                                <div class="portfolio-links">
-                                                                    <a href="/cliente?cpfDependente=${dependente.nucpf}" class="portfolio-lightbox" title="${dependente.nmcliente}">
-                                                                        <i class="bx bx-search-alt"></i>
-                                                                    </a>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                               `;
+                            <div class="col-lg-4 col-md-6 container-dep ${dependente.nmcliente.split(' ')[0]}">
+                                <div class="portfolio-wrap">
+                                    <img src="${dependente.fotoCliente}" class="img-fluid img-circular" alt="">
+                                    <div class="portfolio-info">
+                                        <h4>${dependente.nmcliente}</h4>
+                                        <div class="portfolio-links">
+                                            <a href="/cliente?cpfDependente=${dependente.nucpf}" class="portfolio-lightbox" title="${dependente.nmcliente}">
+                                                <i class="bx bx-search-alt"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            `;
 
 
                         const htmlContentAgendamento = `
-                                                        <div class="col-md">
-                                                            <a href="/cliente/agendamento-escolar/${dependente.nucpf}">
-                                                                <div class="card card-accordion shadow-border rounded-20 mt-2">
-                                                                    <div class="card-body p-2">
-                                                                        <div class="col-md-12">
-                                                                            <div class="row">
-                                                                                <div class="col-md-2">
-                                                                                    <img src="${dependente.fotoCliente}" style="height: 100px; width: 100px; border-radius:100px; object-fit: cover; border: 5px solid white" alt="">
-                                                                                </div>
-                                                                                <div class="col-md-6">
-                                                                                    <p class="text-bold mb-0">
-                                                                                        ${dependente.nmcliente}
-                                                                                    </p>
-                                                                                    <p class="mb-0">
-                                                                                        Matrícula: ${dependente.matricula}
-                                                                                    </p>
-                                                                                    <p class="mb-0">
-                                                                                        CPF: ${dependente.nucpf}
-                                                                                    </p>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </a>
-                                                        </div>
-                                                       `;
+                            <div class="col-md">
+                                <a href="/cliente/agendamento-escolar/${dependente.nucpf}">
+                                    <div class="card card-accordion shadow-border rounded-20 mt-2">
+                                        <div class="card-body p-2">
+                                            <div class="col-md-12">
+                                                <div class="row">
+                                                    <div class="col-md-2">
+                                                        <img src="${dependente.fotoCliente}" style="height: 100px; width: 100px; border-radius:100px; object-fit: cover; border: 5px solid white" alt="">
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <p class="text-bold mb-0">
+                                                            ${dependente.nmcliente}
+                                                        </p>
+                                                        <p class="mb-0">
+                                                            Matrícula: ${dependente.matricula}
+                                                        </p>
+                                                        <p class="mb-0">
+                                                            CPF: ${dependente.nucpf}
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                           `;
                         container.insertAdjacentHTML('beforeend', htmlContent);
                         containerAgendamento.insertAdjacentHTML('beforeend', htmlContentAgendamento);
                     });
@@ -856,21 +854,21 @@ else
                     data.forEach(matricula => {
                         console.log(matricula);
                         const htmlContent = `
-                                                    <div class="resume-item pb-0">
-                                                        <h4>
-                                                            ${matricula.progocorr.dsusuario}
-                                                        </a></h4>
-                                                        <ul>
-                                                            <li>
-                                                                <a href="cliente/cobrancas/atividade/${matricula.cdelement}/@Model?.Nucpf" class="nav-link scrollto p-0 text-black">
-                                                                    <i class="fa fa-money"> </i>
-                                                                    <span> Mensalidades </span>
-                                                                </a>
-                                                            </li>
+                            <div class="resume-item pb-0">
+                                <h4>
+                                    ${matricula.progocorr.dsusuario}
+                                </a></h4>
+                                <ul>
+                                    <li>
+                                        <a href="cliente/cobrancas/atividade/${matricula.cdelement}/@Model?.Nucpf" class="nav-link scrollto p-0 text-black">
+                                            <i class="fa fa-money"> </i>
+                                            <span> Mensalidades </span>
+                                        </a>
+                                    </li>
 
-                                                        </ul>
-                                                    </div>
-                                                `;
+                                </ul>
+                            </div>
+                        `;
                         container.insertAdjacentHTML('beforeend', htmlContent);
                     });
 
@@ -940,51 +938,51 @@ else
                         const valorOriginal = formatCurrency(cobrancas.valorOriginal);
                         const valorRecebido = formatCurrency(cobrancas.valorRecebido);
                         const htmlContent = `
-                                                        <div class="col-lg-4 col-md-6 d-flex align-items-stretch" data-aos="zoom-in" data-aos-delay="100" id="div-${cobrancas.cdelement}-${cobrancas.sqcobranca}">
-                                                            <div class="icon-box">
-                                                                <i class="" style="font-size: 48px"></i>
-                                                                <h4><a href="">${cobrancas.atividade}</a></h4>
-                                                                <h6>Vencimento: ${vencimento}</h6>
-                                                                <h5>Valor original: ${valorOriginal}</h5>
-                                                                <h5>Valor atualizado: ${valorRecebido}</h5>
-                                                                <br>
-                                                                <hr>
-                                                                <div class="row">
-                                                                    <span style="font-style: italic; margin-bottom: 20px;">Pague agora <br> Selecione uma forma de pagamento</span>
-                                                                    <div class="row">
-                                                                        <div class="col-md">
-                                                                            <a id="btn-${cobrancas.cdelement}-${cobrancas.sqcobranca}" class="btn-transparent" onclick="exibeFormCredito('OCRID','${cobrancas.cdelement}',${cobrancas.sqcobranca})">
-                                                                                <div class="card border-radius-30 btn-pgto text-center bg-hover-green">
-                                                                                    <div class="card-body pt-4">
-                                                                                        <i class="bx bxs-credit-card-alt font-size-48"></i><br />
-                                                                                        <span>Cartão de crédito</span>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </a>
-                                                                        </div>
-                                                                        <div class="col-md">
-                                                                            <div class="form-pix" id="form-pix-${cobrancas.cdelement}-${cobrancas.sqcobranca}">
-                                                                                <input hidden name="dados.IDCLASSE" value="OCRID" />
-                                                                                <input hidden name="dados.CDUOP" value="@Model.Cduop" />
-                                                                                <input hidden name="dados.SQMATRIC" value="@Model.Sqmatric" />
-                                                                                <input hidden name="dados.CPF" value="@Model.Nucpf" />
-                                                                                <input hidden name="dados.CDELEMENT" value="${cobrancas.cdelement}" />
-                                                                                <input hidden name="dados.SQCOBRANCA" value="${cobrancas.sqcobranca}" />
-                                                                                <a class="btn-transparent" onclick="geraPix('form-pix-${cobrancas.cdelement}-${cobrancas.sqcobranca}')">
-                                                                                    <div class="card border-radius-30 btn-pgto text-center bg-hover-green">
-                                                                                        <div class="card-body pt-4">
-                                                                                            <i class="fa-brands fa-pix font-size-48"></i><br />
-                                                                                            <span>Pix</span>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </a>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
+                            <div class="col-lg-4 col-md-6 d-flex align-items-stretch" data-aos="zoom-in" data-aos-delay="100" id="div-${cobrancas.cdelement}-${cobrancas.sqcobranca}">
+                                <div class="icon-box">
+                                    <i class="" style="font-size: 48px"></i>
+                                    <h4><a href="">${cobrancas.atividade}</a></h4>
+                                    <h6>Vencimento: ${vencimento}</h6>
+                                    <h5>Valor original: ${valorOriginal}</h5>
+                                    <h5>Valor atualizado: ${valorRecebido}</h5>
+                                    <br>
+                                    <hr>
+                                    <div class="row">
+                                        <span style="font-style: italic; margin-bottom: 20px;">Pague agora <br> Selecione uma forma de pagamento</span>
+                                        <div class="row">
+                                            <div class="col-md">
+                                                <a id="btn-${cobrancas.cdelement}-${cobrancas.sqcobranca}" class="btn-transparent" onclick="exibeFormCredito('OCRID','${cobrancas.cdelement}',${cobrancas.sqcobranca})">
+                                                    <div class="card border-radius-30 btn-pgto text-center bg-hover-green">
+                                                        <div class="card-body pt-4">
+                                                            <i class="bx bxs-credit-card-alt font-size-48"></i><br />
+                                                            <span>Cartão de crédito</span>
+                                                        </div>
+                                                    </div>
+                                                </a>
+                                            </div>
+                                            <div class="col-md">
+                                                <div class="form-pix" id="form-pix-${cobrancas.cdelement}-${cobrancas.sqcobranca}">
+                                                    <input hidden name="dados.IDCLASSE" value="OCRID" />
+                                                    <input hidden name="dados.CDUOP" value="@Model.Cduop" />
+                                                    <input hidden name="dados.SQMATRIC" value="@Model.Sqmatric" />
+                                                    <input hidden name="dados.CPF" value="@Model.Nucpf" />
+                                                    <input hidden name="dados.CDELEMENT" value="${cobrancas.cdelement}" />
+                                                    <input hidden name="dados.SQCOBRANCA" value="${cobrancas.sqcobranca}" />
+                                                    <a class="btn-transparent" onclick="geraPix('form-pix-${cobrancas.cdelement}-${cobrancas.sqcobranca}')">
+                                                        <div class="card border-radius-30 btn-pgto text-center bg-hover-green">
+                                                            <div class="card-body pt-4">
+                                                                <i class="fa-brands fa-pix font-size-48"></i><br />
+                                                                <span>Pix</span>
                                                             </div>
                                                         </div>
-                                                `;
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            `;
                         container.insertAdjacentHTML('beforeend', htmlContent);
                     });
                 })

@@ -384,7 +384,7 @@ namespace SiteSesc.Repositories
             catch (Exception e)
             {
                 Console.WriteLine(e);
-                return new { success = false, error = e.Message };
+                return new { success = false, error =$"Erro no retorno da Api: {e.Message}"};
             }
         }
 

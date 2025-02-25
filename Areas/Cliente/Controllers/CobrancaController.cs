@@ -108,6 +108,16 @@ namespace SiteSesc.Areas.Cliente.Controllers
         [Route("gerar-pix")]
         public async Task<IActionResult> GeraPix(DadosCobranca dados, decimal? valorRecarga = null)
         {
+            
+            var agora = DateTime.Now.TimeOfDay;
+            var horarioLimite = new TimeSpan(23, 30, 0); 
+
+            if (agora >= horarioLimite)
+            {
+                return Json(new { success = false, message = "Não é permitido realizar recarga/pagamento no PIX entre às 23h31min e 23h59min" });
+            }
+            
+            
             var clienteCentral = await _clienteRepository.ObterClientePorCpf(dados.CPF);
            // var responsavel = await _clienteRepository.ObterResponsavel(clienteCentral.Cduop, clienteCentral.Sqmatric);
             //var cpfPagador = responsavel.Count() > 0 ? responsavel.FirstOrDefault().CPF : clienteCentral.Nucpf;
