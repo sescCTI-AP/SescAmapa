@@ -8,6 +8,7 @@
         public int CdUop { get; set; }
         public string CdElement { get; set; } = null!;
         public int SqCobranca { get; set; }
+        public decimal Multa { get; set; }
         public decimal ValorRecebido { get; set; }
         public decimal ValorJuros { get; set; }
         public decimal ValorAcresimo { get; set; }

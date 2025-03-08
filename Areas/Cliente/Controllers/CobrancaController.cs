@@ -143,6 +143,7 @@ namespace SiteSesc.Areas.Cliente.Controllers
                             ValorRecebido = Math.Round(cobrancaAtualizada.valorRecebido, 2),
                             ValorJuros = Math.Round(cobrancaAtualizada.jurosMora, 2),
                             ValorDesconto = Math.Round(cobrancaAtualizada.descontoConcedido, 2),
+                            Multa = cobrancaAtualizada.multa,
                             ValorAcresimo = Math.Round(cobrancaAtualizada.jurosMora + cobrancaAtualizada.multa, 2),
                             NumCartao = clienteCentral.Numcartao,
                             Pix = new PixRequest 
