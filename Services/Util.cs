@@ -21,7 +21,7 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace SiteSesc.Services
 {
-    public class Util
+    public static class Util
     {
         public static string LimparCpf(string cpf) => cpf.Replace("-", "").Replace(".", "");
         public static string PrimeiroSegundoNome(string nomeCompleto)

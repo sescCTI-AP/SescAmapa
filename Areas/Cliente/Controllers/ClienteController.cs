@@ -14,6 +14,10 @@ using SiteSesc.Repositories;
 using SiteSesc.Services;
 using System.Runtime.CompilerServices;
 using static System.Runtime.InteropServices.JavaScript.JSType;
+using QRCoder;
+using System.Drawing;
+using System.Drawing.Imaging;
+using System.IO;
 
 namespace SiteSesc.Areas.Cliente.Controllers
 {
